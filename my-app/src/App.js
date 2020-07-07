@@ -7,6 +7,8 @@ const App = () => {
   const [value, setValue] = useState('');
 
   const handleOnClick = async () => {
+    const response = await getName();
+    console.log(response);
     if (hide === true) {
       const response = await getName();
       console.log(response);
