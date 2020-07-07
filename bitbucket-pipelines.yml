@@ -17,6 +17,6 @@ pipelines:
               AWS_SECRET_ACCESS_KEY: 'JlHyFwiR/m4a7VNZFnljJCY3zGDoRo3acuWPR1e9'
               AWS_DEFAULT_REGION: 'eu-central-1'
               S3_BUCKET: 'keepershomeclient'
-              EXPIRES: '2018-10-01'
+              EXPIRES: '2021-10-01'
               LOCAL_PATH: 'artifact'
               ACL: 'public-read'
