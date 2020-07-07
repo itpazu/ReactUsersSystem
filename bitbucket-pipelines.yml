@@ -5,7 +5,7 @@ pipelines:
     - step:
         script:
           - mkdir artifact
-          - echo "Pipelines is awesome!" > artifact/my-app/public/index.html
+          - echo "Pipelines is awesome!" > artifact/my-app/build/index.html
         artifacts:
           - artifact/*
     - step:
