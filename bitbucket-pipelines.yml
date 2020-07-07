@@ -3,12 +3,6 @@ image: atlassian/default-image:2
 pipelines:
   default:
     - step:
-        script:
-          - mkdir artifact
-          - echo "Pipelines is awesome!" > artifact/index.html
-        artifacts:
-          - artifact/*
-    - step:
         deployment: production
         script:
           - pipe: atlassian/aws-s3-deploy:0.3.7
@@ -18,5 +12,5 @@ pipelines:
               AWS_DEFAULT_REGION: 'eu-central-1'
               S3_BUCKET: 'keepershomeclient'
               EXPIRES: '2021-10-01'
-              LOCAL_PATH: 'artifact'
+              LOCAL_PATH: 'my-app/build'
               ACL: 'public-read'
