@@ -4,7 +4,5 @@ import axios from 'axios';
 //   'http://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
 
 export const getName = () => {
-  return axios.get(
-    `http://KeepersHomeStaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com/get_doc`
-  );
+  return axios.get(`https://keepers-home-stage.keeperschildsafety.net/get_doc`);
 };

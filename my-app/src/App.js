@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import './App.css';
+import { theme } from './lib/themeProvider';
 import { getName } from './lib/api';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+const useStyles = makeStyles((theme) => ({}));
 
 const App = () => {
   const [hide, setHide] = useState(true);
@@ -21,10 +26,10 @@ const App = () => {
   };
 
   return (
-    <>
-      <button onClick={handleOnClick}>Click here to show the name!</button>
+    <ThemeProvider theme={theme}>
+      <Button onClick={handleOnClick}>Click here to show the name!</Button>
       <div className={hide === true ? 'hide' : ''}>Welcome {value}!</div>
-    </>
+    </ThemeProvider>
   );
 };
 
