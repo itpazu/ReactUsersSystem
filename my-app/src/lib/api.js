@@ -1,56 +1,28 @@
 import axios from 'axios';
 
-// const baseURL =
-//   'http://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
+const baseURL =
+  'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
 
-export const getName = () => {
-  return axios.get(`https://keepers-home-stage.keeperschildsafety.net/get_doc`);
-};
+// const baseURL = 'http://127.0.0.1:5000';
 
 export const LogIn = (data) => {
-  console.log(data);
-  return axios.post(
-    'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com/login',
-    data,
-    { withCredentials: true }
-  );
-};
-// export const LogIn = (data) => {
-//   return axios.post('http://127.0.0.1:5000/login', data);
-// };
-// export const authenticateUser = () => {
-//   // const options = { headers: { Authorization: token } };
-//   // const option = {
-//   //   headers: {
-//   //     'Content-Type': 'application/json; charset=utf-8',
-//   //     Accept: 'application/json',
-//   //   },
-//   //   credentials: 'include', // <= that's what changed
-//   // };
-//   return axios.get('http://127.0.0.1:5000/api/auth', {
-//     withCredentials: true,
-//     credentials: 'cross-site',
-//   });
-// };
-export const authenticateUser = () => {
-  const userId = { user_id: '00000007' };
-  return axios.post(
-    'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com/',
-    { user_id: '00000007' },
-    { withCredentials: true }
-  );
+  return axios.post(`${baseURL}/login`, data, { withCredentials: true });
 };
 
-// export const authenticateUser = () => {
-//   const userId = { user_id: '00000007' };
+export const authenticateUser = (data, csrf) => {
+  const headers = {
+    headers: {
+      credentials: 'cross-site',
+      withCredentials: true,
+      Authorization: csrf,
+    },
+    withCredentials: true,
+  };
 
-//   return axios.post('http://127.0.0.1:5000/', userId, {
-//     withCredentials: true,
-//   });
-// };
+  console.log(headers);
+  return axios.post(`${baseURL}/test`, data, headers);
+};
 
 export const Logout = () => {
-  return axios.get(
-    'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com/logout'
-  );
+  return axios.get(`${baseURL}/logout`);
 };

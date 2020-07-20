@@ -8,6 +8,7 @@ import EmailField from './EmailField';
 import PasswordField from './PasswordField';
 import { makeStyles } from '@material-ui/core/styles';
 import { LogIn, authenticateUser, Logout } from '../lib/api';
+import cookie from 'js-cookie';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     borderRadius: '20%',
     marginBottom: theme.spacing(2),
+    height: '25px',
   },
   textField: {
     marginTop: theme.spacing(2),
@@ -59,15 +61,23 @@ const LoginForm = () => {
     e.preventDefault();
     // console.log(userInput);
     const response = await LogIn(userInput);
+    console.log(response);
+    const userId = response.data.user_id;
+    const csrfToken = response.headers.authorization;
+    cookie.set('user_id', userId);
+    cookie.set('csrf_token', csrfToken);
   };
   const handleFetch = async () => {
-    const getToken = await authenticateUser();
+    const userId = cookie.get('user_id');
+    const csrf = cookie.get('csrf_token');
+    const getToken = await authenticateUser({ user_id: userId }, csrf);
+    console.log(getToken);
   };
 
-  const handlelogout = async () => {
-    const logOut = await Logout();
-    console.log(logOut);
+  const handlelogout = () => {
+    cookie.remove('csrf_token');
   };
+
   return (
     <>
       <Container className={classes.header} component='main' maxWidth='xs'>
