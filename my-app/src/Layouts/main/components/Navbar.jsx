@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -26,9 +26,7 @@ const NavBar = (props) => {
   return (
     <AppBar className={classes.root}>
       <Toolbar>
-        <NavLink to='/'>
-          <h1>Home</h1>
-        </NavLink>
+        <Link to='/'>Home</Link>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <IconButton className={classes.signOutButton} color='inherit'>

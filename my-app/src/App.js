@@ -4,7 +4,7 @@ import { theme } from './theme/themeProvider';
 import { getName } from './lib/api';
 import { ThemeProvider } from '@material-ui/core/styles';
 import LoginForm from './components/LoginForm';
-import NavBar from './Layouts/main/Navbar.jsx';
+import Main from './Layouts/main/main';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
     <Router>
       <ThemeProvider theme={theme}>
         <LoginForm />
-        <NavBar />
+        <Main />
       </ThemeProvider>
     </Router>
   );
