@@ -1,5 +1,5 @@
-import React from 'react';
+import React from 'react'
 
-const StylingContext = React.createContext({});
+const StylingContext = React.createContext({})
 
-export default StylingContext;
+export default StylingContext
