@@ -4,7 +4,6 @@ import Main from './Layouts/main/main'
 import LoginForm from './components/LoginForm.jsx'
 import cookie from 'js-cookie'
 import { LogIn, authenticateUser } from './lib/api'
-import NavBar from './Layouts/main/components/Navbar'
 
 const Routes = () => {
     const [userInput, setUserInput] = useState({ email: '', password: '' })
