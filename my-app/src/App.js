@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { theme } from './theme/themeProvider';
-import { getName } from './lib/api';
 import { ThemeProvider } from '@material-ui/core/styles';
-import LoginForm from './components/LoginForm';
-import LogIn from './views/LogIn';
-import Main from './Layouts/main/main';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import MinimalLayout from './Layouts/minimal/Minimal';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Routes from './Routes'
 
 const App = () => {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        {/* <LoginForm /> */}
-
-        {/* <Main /> */}
-        <MinimalLayout>
-          <LogIn />
-        </MinimalLayout>
+        <Router>
+          <Routes />
+        </Router>
       </ThemeProvider>
     </Router>
-  );
-};
+  )
+}
 
-export default App;
+export default App

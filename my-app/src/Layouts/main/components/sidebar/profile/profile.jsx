@@ -1,34 +1,33 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { Avatar, Typography } from '@material-ui/core';
+import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
+import { makeStyles } from '@material-ui/styles'
+import { Avatar, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minHeight: 'fit-content',
+    minHeight: 'fit-content'
   },
   avatar: {
     width: 60,
-    height: 60,
+    height: 60
   },
   name: {
-    marginTop: theme.spacing(1),
-  },
-}));
+    marginTop: theme.spacing(1)
+  }
+}))
 
 const Profile = (props) => {
-  const { ...rest } = props;
-  const classes = useStyles();
+  const { ...rest } = props
+  const classes = useStyles()
 
   const user = {
     name: 'Shen Zhi',
-    avatar: '',
-    bio: 'Brain Director',
-  };
+    avatar: '/images/avatars/avatar_11.png',
+    bio: 'Brain Director'
+  }
 
   return (
     <div {...rest} className={classes.root}>
@@ -44,7 +43,7 @@ const Profile = (props) => {
       </Typography>
       <Typography variant='body2'>{user.bio}</Typography>
     </div>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

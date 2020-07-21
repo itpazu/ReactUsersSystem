@@ -9,53 +9,57 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 56,
     height: '100%',
     [theme.breakpoints.up('sm')]: {
-      paddingTop: 64,
-    },
+      paddingTop: 64
+    }
   },
   shiftContent: {
-    paddingLeft: 240,
+    paddingLeft: 240
   },
   content: {
-    height: '100%',
-  },
-}));
+    height: '100%'
+  }
+}))
 
 const Main = (props) => {
-  const { children } = props;
-  const classes = useStyles();
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
-    defaultMatches: true,
-  });
+  const { children, token, handleLogout } = props
 
-  const [openSidebar, setOpenSidebar] = useState(false);
+  const classes = useStyles()
+  const theme = useTheme()
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
+    defaultMatches: true
+  })
+
+  const [openSidebar, setOpenSidebar] = useState(false)
 
   const handleSidebarOpen = () => {
-    setOpenSidebar(true);
-  };
+    setOpenSidebar(true)
+  }
 
   const handleSidebarClose = () => {
-    setOpenSidebar(false);
-  };
+    setOpenSidebar(false)
+  }
 
-  const shouldOpenSidebar = isDesktop ? true : openSidebar;
+  const shouldOpenSidebar = isDesktop ? true : openSidebar
 
   return (
     <div
       className={{
         [classes.root]: true,
-        [classes.shiftContent]: isDesktop,
+        [classes.shiftContent]: isDesktop
       }}
     >
-      <TopBar onSidebarOpen={handleSidebarOpen} />
-      <Sidebar
-        onClose={handleSidebarClose}
-        open={shouldOpenSidebar}
-        variant={isDesktop ? 'persistent' : 'temporary'}
-      />
-      <main className={classes.content}>{children}</main>
+      <TopBar onSidebarOpen={handleSidebarOpen} token={token} handleLogout={handleLogout} />
+      {token &&
+        <>
+          <Sidebar
+            onClose={handleSidebarClose}
+            open={shouldOpenSidebar}
+            variant={isDesktop ? 'persistent' : 'temporary'}
+          />
+          <main className={classes.content}>{children}</main>
+        </>}
     </div>
-  );
-};
+  )
+}
 
-export default Main;
+export default Main

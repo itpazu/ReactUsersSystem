@@ -1,20 +1,20 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
+import React from 'react'
+import TextField from '@material-ui/core/TextField'
 
-function EmailField(props) {
+function EmailField (props) {
   return (
     <TextField
       type='Email'
       required
       className={props.classNameEmailField}
-      label={props.lableEmailField}
+      label={props.labelEmailField}
       variant='outlined'
       name={props.nameField}
       onChange={props.handleInputChange}
       autoComplete='on'
       value={props.userInputEmail}
     />
-  );
+  )
 }
 
-export default EmailField;
+export default EmailField

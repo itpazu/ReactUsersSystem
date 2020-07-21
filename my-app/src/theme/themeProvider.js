@@ -1,6 +1,6 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import palette from './palette';
-import { typography } from './typography';
+import { createMuiTheme } from '@material-ui/core/styles'
+import palette from './palette'
+import { typography } from './typography'
 
 export const theme = createMuiTheme({
   palette,
@@ -8,14 +8,14 @@ export const theme = createMuiTheme({
   props: {
     MuiButton: {
       variant: 'contained',
-      color: 'primary',
+      color: 'primary'
     },
     Link: {
-      color: 'white',
-    },
+      color: 'white'
+    }
   },
   zIndex: {
     appBar: 1200,
-    drawer: 1100,
-  },
-});
+    drawer: 1100
+  }
+})
