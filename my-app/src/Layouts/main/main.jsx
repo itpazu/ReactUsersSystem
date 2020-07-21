@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
-import NavBar from './components/Navbar';
+import TopBar from './components/TopBar/TopBar';
 import Sidebar from './components/sidebar/sidebar';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Main = (props) => {
   const { children } = props;
-
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
@@ -48,7 +47,7 @@ const Main = (props) => {
         [classes.shiftContent]: isDesktop,
       }}
     >
-      <NavBar onSidebarOpen={handleSidebarOpen} />
+      <TopBar onSidebarOpen={handleSidebarOpen} />
       <Sidebar
         onClose={handleSidebarClose}
         open={shouldOpenSidebar}

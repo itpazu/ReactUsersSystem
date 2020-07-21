@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = (props) => {
+const TopBar = (props) => {
   const { className, onSidebarOpen, ...rest } = props;
 
   const classes = useStyles();
@@ -43,4 +43,4 @@ const NavBar = (props) => {
   );
 };
 
-export default NavBar;
+export default TopBar;
