@@ -16,11 +16,7 @@ const Topbar = (props) => {
 
   return (
     <AppBar {...rest} className={classes.root} color='primary' position='fixed'>
-      <Toolbar>
-        <RouterLink to='/'>
-          <div>placeholder</div>
-        </RouterLink>
-      </Toolbar>
+      <Toolbar></Toolbar>
     </AppBar>
   );
 };
