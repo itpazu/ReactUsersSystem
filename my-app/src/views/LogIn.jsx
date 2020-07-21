@@ -10,9 +10,9 @@ import {
   Link,
   Typography,
 } from '@material-ui/core';
-// import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
-// import { Facebook as FacebookIcon, Google as GoogleIcon } from '../../icons';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const schema = {
   email: {
@@ -146,8 +146,13 @@ const SignIn = (props) => {
     }));
   }, [formState.values]);
 
-  //   const handleBack = () => {
-  //     history.goBack();
+  const [togglePasswordView, setTogglePasswordView] = useState(true);
+
+  const toggleShowPassword = () => {
+    setTogglePasswordView(!togglePasswordView);
+  };
+  //   const handleMouseDownPassword = (event) => {
+  //     event.preventDefault();
   //   };
 
   const handleChange = (event) => {
@@ -182,68 +187,13 @@ const SignIn = (props) => {
     <div className={classes.root}>
       <Grid className={classes.grid} container>
         <Grid className={classes.quoteContainer} item lg={5}>
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography className={classes.quoteText} variant='h1'>
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
-              </Typography>
-              <div className={classes.person}>
-                <Typography className={classes.name} variant='body1'>
-                  Takamaru Ayako
-                </Typography>
-                <Typography className={classes.bio} variant='body2'>
-                  Manager at inVision
-                </Typography>
-              </div>
-            </div>
-          </div>
+          <div className={classes.quote}></div>
         </Grid>
         <Grid className={classes.content} item lg={7} xs={12}>
-          {/* <div className={classes.content}> */}
-          {/* <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-            </div> */}
           <div className={classes.contentBody}>
             <form className={classes.form} onSubmit={handleSignIn}>
               <Typography className={classes.title} variant='h2'>
                 Sign in
-              </Typography>
-              <Typography color='textSecondary' gutterBottom>
-                Sign in with social media
-              </Typography>
-              <Grid className={classes.socialButtons} container spacing={2}>
-                <Grid item>
-                  <Button
-                    color='primary'
-                    onClick={handleSignIn}
-                    size='large'
-                    variant='contained'
-                  >
-                    <Typography className={classes.socialIcon} />
-                    Login with Facebook
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={handleSignIn}
-                    size='large'
-                    variant='contained'
-                  >
-                    {/* <GoogleIcon className={classes.socialIcon} /> */}
-                    Login with Google
-                  </Button>
-                </Grid>
-              </Grid>
-              <Typography
-                align='center'
-                className={classes.sugestion}
-                color='textSecondary'
-                variant='body1'
-              >
-                or login with email address
               </Typography>
               <TextField
                 className={classes.textField}
@@ -269,9 +219,27 @@ const SignIn = (props) => {
                 label='Password'
                 name='password'
                 onChange={handleChange}
-                type='password'
+                type={togglePasswordView ? 'password' : 'text'}
                 value={formState.values.password || ''}
                 variant='outlined'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={toggleShowPassword}
+                        // onMouseDown={handleMouseDownPassword}
+                        edge='end'
+                      >
+                        {togglePasswordView ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button
                 className={classes.signInButton}
@@ -285,9 +253,9 @@ const SignIn = (props) => {
                 Sign in now
               </Button>
               <Typography color='textSecondary' variant='body1'>
-                Don't have an account?{' '}
+                Forgoet password ? {'   '}{' '}
                 <Link component={RouterLink} to='/sign-up' variant='h6'>
-                  Sign up
+                  Reset password
                 </Link>
               </Typography>
             </form>

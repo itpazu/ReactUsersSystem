@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-import TextField from '@material-ui/core/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import Visibility from '@material-ui/icons/Visibility'
-import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import IconButton from '@material-ui/core/IconButton'
+import React, { useState } from 'react';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
 
-function PasswordField (props) {
-  const [togglePasswordView, setTogglePasswordView] = useState(true)
+function PasswordField(props) {
+  const [togglePasswordView, setTogglePasswordView] = useState(true);
 
   const toggleShowPassword = () => {
-    setTogglePasswordView(!togglePasswordView)
-  }
+    setTogglePasswordView(!togglePasswordView);
+  };
 
   const handleMouseDownPassword = (event) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   return (
     <TextField
@@ -38,10 +38,10 @@ function PasswordField (props) {
               {togglePasswordView ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
-        )
+        ),
       }}
     />
-  )
+  );
 }
 
-export default PasswordField
+export default PasswordField;
