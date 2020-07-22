@@ -26,11 +26,9 @@ const TopBar = (props) => {
   return (
     <AppBar className={classes.root}>
       <Toolbar>
-        {token ?
-          <Link to="/">
-            <img alt='logo' src='/images/logos/keepers_child_safety_2nd_icon.png' height="50" width="50" />
-          </Link>
-          : <Link to='/'>Home</Link>}
+        <Link to="/">
+          <img alt='logo' src='/images/logos/keepers_child_safety_2nd_icon.png' height="50" width="50" />
+        </Link>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <IconButton className={classes.signOutButton} color='inherit'>
