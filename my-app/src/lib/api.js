@@ -27,3 +27,20 @@ export const authenticateUser = (data, csrf) => {
 export const Logout = () => {
   return axios.get(`${baseURL}/logout`)
 }
+
+export const register = newUser => {
+  return axios.post(`${baseURL}/add_user`, {
+    first_name: newUser.firstName,
+    last_name: newUser.lastName,
+    email: newUser.email,
+    password: newUser.password,
+    user_id: newUser.userId,
+    admin: newUser.admin
+  }).then(res => {
+    console.log(res)
+  })
+}
+
+export const deleteUser = userId => {
+  return axios.delete(`${baseURL}/delete_user/${userId}`)
+}

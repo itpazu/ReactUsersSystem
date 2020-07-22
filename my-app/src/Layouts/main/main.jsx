@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Main = (props) => {
-  const { children, token, handleLogout } = props
+  const { children, token } = props
   const context = useContext(Context)
   const classes = useStyles()
   const theme = useTheme()
@@ -53,7 +53,6 @@ const Main = (props) => {
         >
           <TopBar
             onSidebarOpen={handleSidebarOpen}
-            handleLogout={handleLogout}
           />
 
           <Sidebar

@@ -6,6 +6,8 @@ import cookie from 'js-cookie'
 import { authenticateUser, LogIn } from './lib/api'
 import Minimal from './Layouts/minimal/Minimal'
 import Context from './context/Context'
+import UserList from './views/UserList/UserList'
+import RouteWithLayout from './components/RouteWithLayout'
 
 const Routes = () => {
   const [userInput, setUserInput] = useState({ email: '', password: '' })
@@ -29,9 +31,15 @@ const Routes = () => {
     setIsAuthenticated(true)
   }
 
+  const handleLogout = () => {
+    cookie.remove('csrf_token')
+    setIsAuthenticated(false)
+  }
+
   return (
     <Switch>
-      <Context.Provider value={{ handleSubmittedForm, isAuthenticated }}>
+      <Context.Provider value={{ handleSubmittedForm, isAuthenticated, handleLogout }}>
+        {!isAuthenticated && <Redirect exact from="/" to="/login" />}
         <Route exact path='/'>
           <Main />
         </Route>
@@ -40,6 +48,7 @@ const Routes = () => {
             <SignIn />
           </Minimal>
         </Route>
+        <RouteWithLayout component={UserList} layout={Main} exact path="/users" />
       </Context.Provider>
     </Switch>
   )

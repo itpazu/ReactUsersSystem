@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles'
 import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import InputIcon from '@material-ui/icons/Input'
+import Context from '../../../../context/Context'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,9 +20,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const TopBar = (props) => {
-  const { className, onSidebarOpen, handleLogout, token, ...rest } = props
+  const { className, onSidebarOpen, token, ...rest } = props
 
   const classes = useStyles()
+
+  const context = useContext(Context)
 
   return (
     <AppBar className={classes.root}>
@@ -32,7 +35,7 @@ const TopBar = (props) => {
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <IconButton className={classes.signOutButton} color='inherit'>
-            <InputIcon onClick={handleLogout} />
+            <InputIcon onClick={context.handleLogout} />
           </IconButton>
         </Hidden>
         <Hidden lgUp>
