@@ -12,8 +12,8 @@ const Routes = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const handleSubmittedForm = async (mail, pass) => {
-    setUserInput({ email: mail, password: pass });
     const userInput = { email: mail, password: pass };
+    setUserInput(userInput)
     const response = await LogIn(userInput);
     const userId = response.data.user_id;
     const csrfToken = response.headers.authorization;
@@ -24,7 +24,7 @@ const Routes = () => {
   const handleFetch = async () => {
     const userId = cookie.get('user_id');
     const csrf = cookie.get('csrf_token');
-    const getToken = await authenticateUser({ user_id: userId }, csrf);
+    await authenticateUser({ user_id: userId }, csrf);
     setIsAuthenticated(true);
   };
 
