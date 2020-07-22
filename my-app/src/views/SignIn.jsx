@@ -1,41 +1,48 @@
-import React, { useState, useEffect } from 'react'
-import validate from 'validate.js'
-import { makeStyles } from '@material-ui/styles'
+import React, { useState, useEffect, useContext } from 'react';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
+import validate from 'validate.js';
+import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
   Button,
+  IconButton,
   TextField,
-  Typography
-} from '@material-ui/core'
+  Link,
+  Typography,
+} from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Context from '../context/Context';
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
     email: true,
     length: {
-      maximum: 64
-    }
+      maximum: 64,
+    },
   },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 128
-    }
-  }
-}
+      maximum: 128,
+    },
+  },
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    height: '100%'
+    height: '100%',
   },
   grid: {
-    height: '100%'
+    height: '100%',
   },
   quoteContainer: {
     [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   quote: {
     backgroundColor: theme.palette.neutral,
@@ -43,31 +50,31 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: 'url(/images/frame_2.png)',
+    backgroundImage: 'url(/images/auth.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
   },
   quoteInner: {
     textAlign: 'center',
-    flexBasis: '600px'
+    flexBasis: '600px',
   },
   quoteText: {
     color: theme.palette.white,
-    fontWeight: 300
+    fontWeight: 300,
   },
   name: {
     marginTop: theme.spacing(3),
-    color: theme.palette.white
+    color: theme.palette.white,
   },
   bio: {
-    color: theme.palette.white
+    color: theme.palette.white,
   },
   contentContainer: {},
   content: {
     height: '100%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   contentHeader: {
     display: 'flex',
@@ -75,18 +82,18 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    paddingRight: theme.spacing(2),
   },
   logoImage: {
-    marginLeft: theme.spacing(4)
+    marginLeft: theme.spacing(4),
   },
   contentBody: {
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   },
   form: {
     paddingLeft: 100,
@@ -95,33 +102,33 @@ const useStyles = makeStyles((theme) => ({
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
-    }
+      paddingRight: theme.spacing(2),
+    },
   },
   title: {
-    marginTop: theme.spacing(16)
+    marginTop: theme.spacing(16),
   },
   socialButtons: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   socialIcon: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
-  suggestion: {
-    marginTop: theme.spacing(2)
+  sugestion: {
+    marginTop: theme.spacing(2),
   },
   textField: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   signInButton: {
-    margin: theme.spacing(2, 0)
-  }
-}))
+    margin: theme.spacing(2, 0),
+  },
+}));
 
 const SignIn = (props) => {
-  const { history, handleSubmittedForm } = props
-
-  const classes = useStyles()
+  const { history } = props;
+  const context = useContext(Context);
+  const classes = useStyles();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -131,47 +138,64 @@ const SignIn = (props) => {
   });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema)
+    const errors = validate(formState.values, schema);
+    console.log(errors);
 
     setFormState((formState) => ({
       ...formState,
       isValid: errors ? false : true,
-      errors: errors || {}
-    }))
-  }, [formState.values])
+      errors: errors || {},
+    }));
+  }, [formState.values]);
+  console.log(formState);
+  const [togglePasswordView, setTogglePasswordView] = useState(true);
+
+  const toggleShowPassword = () => {
+    setTogglePasswordView(!togglePasswordView);
+  };
+  //   const handleMouseDownPassword = (event) => {
+  //     event.preventDefault();
+  //   };
 
   const handleChange = (event) => {
-    event.persist()
+    event.persist();
 
     setFormState((formState) => ({
       ...formState,
       values: {
         ...formState.values,
+        //field name
         [event.target.name]:
           event.target.type === 'checkbox'
-            ? event.target.checked
-            : event.target.value
+            ? event.target.checked //true/flase
+            : event.target.value, // value inserted
       },
       touched: {
         ...formState.touched,
-        [event.target.name]: true
-      }
-    }))
-  }
+        [event.target.name]: true,
+      },
+    }));
+  };
 
   const handleSignIn = (event) => {
-    event.preventDefault()
-    history.push('/')
-  }
+    event.preventDefault();
+    console.log(formState.values.email);
+    context.handleSubmittedForm(
+      formState.values.email,
+      formState.values.password
+    );
+
+    history.push('/');
+  };
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false
+    formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container>
         <Grid className={classes.quoteContainer} item lg={5}>
-          <div className={classes.quote} />
+          <div className={classes.quote}></div>
         </Grid>
         <Grid className={classes.content} item lg={7} xs={12}>
           <div className={classes.contentBody}>
@@ -195,7 +219,7 @@ const SignIn = (props) => {
               />
               <TextField
                 className={classes.textField}
-                error={hasError('password')}
+                error={hasError('password')} //returns a boolean > if true, present erros
                 fullWidth
                 helperText={
                   hasError('password') ? formState.errors.password[0] : null
@@ -203,9 +227,27 @@ const SignIn = (props) => {
                 label='Password'
                 name='password'
                 onChange={handleChange}
-                type='password'
+                type={togglePasswordView ? 'password' : 'text'}
                 value={formState.values.password || ''}
                 variant='outlined'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={toggleShowPassword}
+                        // onMouseDown={handleMouseDownPassword}
+                        edge='end'
+                      >
+                        {togglePasswordView ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button
                 className={classes.signInButton}
@@ -215,16 +257,23 @@ const SignIn = (props) => {
                 size='large'
                 type='submit'
                 variant='contained'
-                onClick={handleSubmittedForm}
               >
                 Sign in now
               </Button>
+              <Typography color='textSecondary' variant='body1'>
+                Forgoet password ? {'   '}{' '}
+                <Link component={RouterLink} to='/sign-up' variant='h6'>
+                  Reset password
+                </Link>
+              </Typography>
             </form>
           </div>
+          {/* </div> */}
         </Grid>
       </Grid>
     </div>
-  )
-}
+  );
+};
 
-export default SignIn
+export default withRouter(SignIn);
+// export default SignIn;
