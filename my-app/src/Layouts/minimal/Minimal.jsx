@@ -1,16 +1,16 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Topbar from './components/TopBar/TopBar';
+import React from 'react'
+import { makeStyles } from '@material-ui/styles'
+import TopBar from './components/TopBar/TopBar'
 
 const useStyles = makeStyles(() => ({
   root: {
     paddingTop: 64,
-    height: '100%',
+    height: '100%'
   },
   content: {
-    height: '100%',
-  },
-}));
+    height: '100%'
+  }
+}))
 
 const Minimal = (props) => {
   const { children } = props
@@ -20,11 +20,11 @@ const Minimal = (props) => {
   return (
     <div className={classes.root}>
       <div>
-        <Topbar />
+        <TopBar />
       </div>
       <main className={classes.content}>{children}</main>
     </div>
-  );
-};
+  )
+}
 
-export default Minimal;
+export default Minimal

@@ -1,24 +1,24 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar } from '@material-ui/core';
+import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
+import { makeStyles } from '@material-ui/styles'
+import { AppBar, Toolbar } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   root: {
-    boxShadow: 'none',
-  },
-}));
+    boxShadow: 'none'
+  }
+}))
 
-const Topbar = (props) => {
-  const { className, ...rest } = props;
+const TopBar = (props) => {
+  const { className, ...rest } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <AppBar {...rest} className={classes.root} color='primary' position='fixed'>
-      <Toolbar></Toolbar>
+      <Toolbar />
     </AppBar>
-  );
-};
+  )
+}
 
-export default Topbar;
+export default TopBar
