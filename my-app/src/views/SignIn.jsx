@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
@@ -13,6 +13,7 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Context from '../context/Context';
 
 const schema = {
   email: {
@@ -126,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = (props) => {
   const { history } = props;
-
+  const context = useContext(Context);
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
@@ -138,6 +139,7 @@ const SignIn = (props) => {
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
+    console.log(errors);
 
     setFormState((formState) => ({
       ...formState,
@@ -145,7 +147,7 @@ const SignIn = (props) => {
       errors: errors || {},
     }));
   }, [formState.values]);
-
+  console.log(formState);
   const [togglePasswordView, setTogglePasswordView] = useState(true);
 
   const toggleShowPassword = () => {
@@ -177,6 +179,12 @@ const SignIn = (props) => {
 
   const handleSignIn = (event) => {
     event.preventDefault();
+    console.log(formState.values.email);
+    context.handleSubmittedForm(
+      formState.values.email,
+      formState.values.password
+    );
+
     history.push('/');
   };
 
@@ -267,5 +275,5 @@ const SignIn = (props) => {
   );
 };
 
-// export default withRouter(SignIn);
-export default SignIn;
+export default withRouter(SignIn);
+// export default SignIn;
