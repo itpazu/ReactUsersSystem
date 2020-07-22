@@ -34,8 +34,8 @@ const TopBar = (props) => {
         </Link>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
-          <IconButton className={classes.signOutButton} color='inherit'>
-            <InputIcon onClick={context.handleLogout} />
+          <IconButton onClick={context.handleLogout} className={classes.signOutButton} color='inherit'>
+            <InputIcon />
           </IconButton>
         </Hidden>
         <Hidden lgUp>
