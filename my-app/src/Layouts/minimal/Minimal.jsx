@@ -13,9 +13,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Minimal = (props) => {
-  const { children } = props;
+  const { children } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
