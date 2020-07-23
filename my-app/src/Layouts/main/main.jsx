@@ -4,6 +4,7 @@ import { useMediaQuery } from '@material-ui/core'
 import TopBar from './components/TopBar/TopBar'
 import Sidebar from './components/sidebar/sidebar'
 import Context from '../../context/Context'
+import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Main = (props) => {
-  const { children, token } = props
+  const { children } = props
   const context = useContext(Context)
   const classes = useStyles()
   const theme = useTheme()
@@ -30,7 +31,7 @@ const Main = (props) => {
     defaultMatches: true
   })
 
-  const [openSidebar, setOpenSidebar] = useState(false);
+  const [openSidebar, setOpenSidebar] = useState(false)
 
   const handleSidebarOpen = () => {
     setOpenSidebar(true)
@@ -41,15 +42,15 @@ const Main = (props) => {
   }
 
   const shouldOpenSidebar = isDesktop ? true : openSidebar
-  console.log(context.isAuthenticated)
+
   return (
     <>
       {context.isAuthenticated && (
         <div
-          className={{
+          className={clsx({
             [classes.root]: true,
             [classes.shiftContent]: isDesktop
-          }}
+          })}
         >
           <TopBar
             onSidebarOpen={handleSidebarOpen}
