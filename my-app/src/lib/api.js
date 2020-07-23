@@ -33,9 +33,7 @@ export const register = newUser => {
     first_name: newUser.firstName,
     last_name: newUser.lastName,
     email: newUser.email,
-    password: newUser.password,
-    user_id: newUser.userId,
-    admin: newUser.admin
+    role: newUser.role
   }).then(res => {
     console.log(res)
   })

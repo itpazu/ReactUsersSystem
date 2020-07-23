@@ -70,11 +70,8 @@ const UsersToolbar = props => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [admin, setAdmin] = useState(false)
-  const [id, setId] = useState('')
+  const [role, setRole] = useState('user')
   const [deleteId, setDeleteId] = useState('')
-
 
   const classes = useStyles()
 
@@ -106,16 +103,8 @@ const UsersToolbar = props => {
     setEmail(event.target.value)
   }
 
-  const handleIdChange = (event) => {
-    setId(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
-
-  const handleAdminChange = (event) => {
-    setAdmin(event.target.value)
+  const handleRoleChange = (event) => {
+    setRole(event.target.value)
   }
 
   const handleAddUserSubmit = (event) => {
@@ -124,9 +113,7 @@ const UsersToolbar = props => {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      password: password,
-      id: id,
-      admin: admin
+      role: role
     }
     register(newUser).then(res => {
       console.log(res)
@@ -183,30 +170,16 @@ const UsersToolbar = props => {
           value={email}
           onChange={handleEmailChange}
         />
-        <TextField
-          id="standard-basic"
-          type="password"
-          label="Password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <TextField
-          id="standard-basic"
-          type="number"
-          label="ID"
-          value={id}
-          onChange={handleIdChange}
-        />
         <FormControl className={classes.formControl}>
-          <InputLabel id="demo-simple-select-label">Admin?</InputLabel>
+          <InputLabel id="demo-simple-select-label">Role?</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={admin}
-            onChange={handleAdminChange}
+            value={role}
+            onChange={handleRoleChange}
           >
-            <MenuItem value="false">No</MenuItem>
-            <MenuItem value="true">Yes</MenuItem>
+            <MenuItem value="user">User</MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
           </Select>
         </FormControl>
         <Button type="submit">Submit</Button>
