@@ -164,11 +164,10 @@ const SignIn = (props) => {
       ...formState,
       values: {
         ...formState.values,
-        //field name
         [event.target.name]:
           event.target.type === 'checkbox'
-            ? event.target.checked //true/flase
-            : event.target.value // value inserted
+            ? event.target.checked
+            : event.target.value
       },
       touched: {
         ...formState.touched,
