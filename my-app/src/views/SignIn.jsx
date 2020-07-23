@@ -126,7 +126,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignIn = (props) => {
-  const { history } = props;
   const context = useContext(Context);
   const classes = useStyles();
 
@@ -139,7 +138,6 @@ const SignIn = (props) => {
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
-    console.log(errors);
 
     setFormState((formState) => ({
       ...formState,
@@ -147,7 +145,6 @@ const SignIn = (props) => {
       errors: errors || {},
     }));
   }, [formState.values]);
-  console.log(formState);
   const [togglePasswordView, setTogglePasswordView] = useState(true);
 
   const toggleShowPassword = () => {
@@ -185,7 +182,7 @@ const SignIn = (props) => {
       formState.values.password
     );
 
-    history.push('/');
+    // history.push('/');
   };
 
   const hasError = (field) =>
