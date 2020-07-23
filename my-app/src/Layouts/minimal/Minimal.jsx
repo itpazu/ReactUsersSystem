@@ -27,7 +27,6 @@ const Minimal = (props) => {
       </div>
       <main className={classes.content}>
         <SignIn></SignIn>
-        <Link to='/divo/'> click me</Link>
       </main>
 
       <Router></Router>
