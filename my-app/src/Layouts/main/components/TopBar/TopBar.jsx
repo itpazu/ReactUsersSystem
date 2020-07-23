@@ -1,27 +1,28 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import InputIcon from '@material-ui/icons/Input';
-import Context from '../../../../context/Context';
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { makeStyles } from '@material-ui/styles'
+import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
+import InputIcon from '@material-ui/icons/Input'
+import Context from '../../../../context/Context'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: 'none',
-    height: '60px',
+    height: '60px'
   },
   flexGrow: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   signOutButton: {
-    marginLeft: theme.spacing(1),
-  },
-}));
+    marginLeft: theme.spacing(1)
+  }
+}))
 
 const TopBar = (props) => {
-  const { className, onSidebarOpen, handleLogout, token, ...rest } = props;
   const context = useContext(Context);
   const classes = useStyles();
+  const { className, onSidebarOpen, token, ...rest } = props
 
   return (
     <AppBar className={classes.root}>
@@ -55,7 +56,7 @@ const TopBar = (props) => {
         </Hidden>
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-export default TopBar;
+export default TopBar
