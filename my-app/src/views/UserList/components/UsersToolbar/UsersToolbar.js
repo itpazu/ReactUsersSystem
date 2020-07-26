@@ -9,14 +9,14 @@ import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import { register, deleteUser } from '../../../../lib/api'
-
+import cookie from 'js-cookie'
 import SearchInput from '../../../../components/SearchInput/SearchInput'
 
-function rand() {
+function rand () {
   return Math.round(Math.random() * 20) - 10
 }
 
-function getModalStyle() {
+function getModalStyle () {
   const top = 50 + rand()
   const left = 50 + rand()
 
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     position: 'absolute',
-    width: 400,
+    width: 500,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -109,18 +109,23 @@ const UsersToolbar = props => {
 
   const handleAddUserSubmit = (event) => {
     event.preventDefault()
+    const userId = cookie.get('user_id')
+    const csrf = cookie.get('csrf_token')
     const newUser = {
-      firstName: firstName,
-      lastName: lastName,
+      first_name: firstName,
+      last_name: lastName,
       email: email,
-      role: role
+      role: role,
+      user_id: userId
     }
-    register(newUser).then(res => {
-      console.log(res)
-      handleCloseAdd()
-    }).catch(err => {
-      console.log(err)
-    })
+    register(newUser, csrf)
+      .then((res) => {
+        console.log(res)
+        handleCloseAdd()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const handleDeleteIdChange = (event) => {

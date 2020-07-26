@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Divider, Drawer } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -11,6 +11,7 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import Profile from './profile/profile'
 import SidebarNav from './sideBarNav/sideBarNav'
+import Context from '../../../../context/Context'
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -40,16 +41,13 @@ const Sidebar = (props) => {
 
   const classes = useStyles()
 
+  const context = useContext(Context)
+
   const pages = [
     {
       title: 'Dashboard',
       href: '/dashboard',
       icon: <DashboardIcon />
-    },
-    {
-      title: 'Users',
-      href: '/users',
-      icon: <PeopleIcon />
     },
     {
       title: 'Products',
@@ -92,7 +90,7 @@ const Sidebar = (props) => {
       variant={variant}
     >
       <div {...rest} className={classes.root}>
-        <Profile />
+        <Profile profile={context.userInput} />
         <Divider className={classes.divider} />
         <SidebarNav className={classes.nav} pages={pages} />
       </div>

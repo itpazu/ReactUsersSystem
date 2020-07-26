@@ -23,10 +23,11 @@ const Profile = (props) => {
   const { ...rest } = props
   const classes = useStyles()
 
+  const userName = props.profile.first_name.charAt(0).toUpperCase() + props.profile.first_name.slice(1) + ' ' + props.profile.last_name.charAt(0).toUpperCase() + props.profile.last_name.slice(1)
+
   const user = {
-    name: 'Shen Zhi',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: 'Brain Director'
+    name: userName,
+    avatar: '/images/empty-avatar.png'
   }
 
   return (
