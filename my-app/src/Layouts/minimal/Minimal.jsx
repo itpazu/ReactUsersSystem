@@ -1,24 +1,24 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/styles'
-import TopBar from './components/TopBar/TopBar'
-import SignIn from '../../views/SignIn'
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
-import { LoginRoute } from '../../privateRoutes/PrivateRoute'
+import React from 'react';
+import { makeStyles } from '@material-ui/styles';
+import TopBar from './components/TopBar/TopBar';
+import SignIn from '../../views/SignIn';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { LoginRoute } from '../../privateRoutes/PrivateRoute';
 
 const useStyles = makeStyles(() => ({
   root: {
     paddingTop: 64,
-    height: '100%'
+    height: '100%',
   },
   content: {
-    height: '100%'
-  }
-}))
+    height: '100%',
+  },
+}));
 
 const Minimal = (props) => {
-  const { children } = props
+  const { children } = props;
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>
@@ -28,9 +28,8 @@ const Minimal = (props) => {
       <main className={classes.content}>
         <SignIn />
       </main>
-      <Router />
     </div>
-  )
-}
+  );
+};
 
-export default Minimal
+export default Minimal;

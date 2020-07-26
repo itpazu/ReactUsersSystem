@@ -62,10 +62,8 @@ const Main = (props) => {
           open={shouldOpenSidebar}
           variant={isDesktop ? 'persistent' : 'temporary'}
         />
-        <main>
-          {children}
-          <PrivateRoute exact path='/users' component={UserList} />
-        </main>
+        <main>{children}</main>
+        <PrivateRoute exact path='/users' component={UserList} />
       </div>
     </Router>
   );
