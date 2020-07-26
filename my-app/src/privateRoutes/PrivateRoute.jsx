@@ -4,8 +4,6 @@ import Context from '../context/Context';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const context = useContext(Context);
-  console.log(context.isAuthenticated);
-  // const { auth } = rest;
 
   return (
     <Route
