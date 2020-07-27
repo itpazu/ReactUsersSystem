@@ -18,12 +18,19 @@ const UserList = () => {
 
   const [allUsersList, setAllUsersList] = useState([])
 
-  const getAllUsers = async () => {
-    const response = await allUsers()
-    setAllUsersList(response.data.users)
-  }
-
-  useEffect(() => { getAllUsers() }, [])
+  useEffect(() => {
+    let mounted = true
+    async function getAllUsers () {
+      const response = await allUsers()
+      setAllUsersList(response.data.users)
+    }
+    if (mounted) {
+      getAllUsers()
+    }
+    return function cleanup () {
+      mounted = false
+    }
+  }, [])
 
   const newUsersList = allUsersList.map(el =>
     ({
