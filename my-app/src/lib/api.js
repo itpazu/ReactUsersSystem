@@ -1,14 +1,14 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const baseURL =
-  'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
+  'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com'
 
 // const baseURL = 'http://127.0.0.1:5000';
 
 export const LogIn = (data) => {
-  console.log(data);
-  return axios.post(`${baseURL}/login`, data, { withCredentials: true });
-};
+  console.log(data)
+  return axios.post(`${baseURL}/login`, data, { withCredentials: true })
+}
 
 // remote
 export const authenticateUser = (data, csrf) => {
@@ -16,12 +16,12 @@ export const authenticateUser = (data, csrf) => {
     headers: {
       credentials: 'cross-site',
       withCredentials: true,
-      Authorization: csrf,
+      Authorization: csrf
     },
-    withCredentials: true,
-  };
-  return axios.post(`${baseURL}/test`, data, headers);
-};
+    withCredentials: true
+  }
+  return axios.post(`${baseURL}/test`, data, headers)
+}
 
 // for local server only:
 // export const authenticateUser = (data, csrf, JwtToken) => {
@@ -39,24 +39,28 @@ export const authenticateUser = (data, csrf) => {
 // };
 
 export const Logout = () => {
-  return axios.get(`${baseURL}/logout`);
-};
+  return axios.get(`${baseURL}/logout`)
+}
 
 export const register = (newUser, authenticationInfo) => {
-  const csrf = authenticationInfo.csrf_token;
+  const csrf = authenticationInfo.csrf_token
   // const JwtToken = authenticationInfo.Jwt_token; //local serverOnly
   const headers = {
     headers: {
       credentials: 'cross-site',
       withCredentials: true,
-      Authorization: csrf,
+      Authorization: csrf
       // token: JwtToken, // local serveronly
     },
-    withCredentials: true,
-  };
-  return axios.post(`${baseURL}/add_user`, newUser, headers);
-};
+    withCredentials: true
+  }
+  return axios.post(`${baseURL}/add_user`, newUser, headers)
+}
 
 export const deleteUser = (userId) => {
-  return axios.delete(`${baseURL}/delete_user/${userId}`);
-};
+  return axios.delete(`${baseURL}/delete_user/${userId}`)
+}
+
+export const allUsers = () => {
+  return axios.get(`${baseURL}/all_users`)
+}
