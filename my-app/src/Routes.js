@@ -6,7 +6,6 @@ import { authenticateUser, LogIn } from './lib/api';
 import Minimal from './Layouts/minimal/Minimal';
 import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
-import UserList from './views/UserList/UserList';
 
 const Routes = (props) => {
   const [userInput, setUserInput] = useState(null);
@@ -24,19 +23,37 @@ const Routes = (props) => {
       setUserInput(response.data);
       const userId = response.data.user_id;
       const csrfToken = response.headers.authorization;
+      //local server only
+      const JwtToken = response.headers.token;
       cookie.set('user_id', userId);
       cookie.set('csrf_token', csrfToken);
-      handleFetch();
-    } catch (error) {}
+      //local server only
+      cookie.set('jwt_token', JwtToken);
+      try {
+        return await handleFetch();
+      } catch (error) {
+        throw error;
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleFetch = async () => {
     const userId = cookie.get('user_id');
     const csrf = cookie.get('csrf_token');
+    // for local development only
+    const token = cookie.get('jwt_token'); ///error planting
+    // const token = 'skjfdhhkjdsnhkjhdsf';
+
     try {
-      await authenticateUser({ user_id: userId }, csrf);
+      //added token for local server only
       setIsAuthenticated(true);
-    } catch (error) {}
+
+      await authenticateUser({ user_id: userId }, csrf, token);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const LogOut = () => {

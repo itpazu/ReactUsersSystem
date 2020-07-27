@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
@@ -7,10 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import { register, deleteUser } from '../../../../lib/api';
 import cookie from 'js-cookie';
-
 import SearchInput from '../../../../components/SearchInput/SearchInput';
 
 function rand() {
@@ -64,17 +62,37 @@ const useStyles = makeStyles((theme) => ({
 
 const UsersToolbar = (props) => {
   const { className, ...rest } = props;
-
   const [modalStyle] = useState(getModalStyle);
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('user');
   const [deleteId, setDeleteId] = useState('');
-
+  const [studentToAdd, setStudentToAdd] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    role: '',
+    user_id: '',
+  });
+  const [authenticationInfo, setAuthenticationInfo] = useState('');
   const classes = useStyles();
+
+  useEffect(() => {
+    const userId = cookie.get('user_id');
+    const csrf = cookie.get('csrf_token');
+    // local server only:
+    // const JwtToken = cookie.get('jwt_token');
+    //
+    setAuthenticationInfo({
+      csrf_token: csrf,
+      //localServerOnly:
+      // Jwt_token: JwtToken,
+    });
+
+    setStudentToAdd((prevState) => ({
+      ...prevState,
+      user_id: userId,
+    }));
+  }, []);
 
   const handleOpenAdd = () => {
     setOpenAdd(true);
@@ -92,41 +110,24 @@ const UsersToolbar = (props) => {
     setOpenDelete(false);
   };
 
-  const handleLastNameChange = (event) => {
-    setLastName(event.target.value);
-  };
-
-  const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
+  const handleOnInputChange = (event) => {
+    const { value, name } = event.target;
+    setStudentToAdd((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleAddUserSubmit = (event) => {
     event.preventDefault();
-    const userId = cookie.get('user_id');
-    const csrf = cookie.get('csrf_token');
-    const newUser = {
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      role: role,
-      user_id: userId,
-    };
 
-    register(newUser, csrf)
+    register(studentToAdd, authenticationInfo)
       .then((res) => {
         console.log(res);
         handleCloseAdd();
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data);
       });
   };
 
@@ -146,6 +147,7 @@ const UsersToolbar = (props) => {
       });
   };
 
+  console.log(studentToAdd);
   const addBody = (
     <div
       style={modalStyle}
@@ -153,38 +155,49 @@ const UsersToolbar = (props) => {
       onSubmit={handleAddUserSubmit}
     >
       <h2 id='simple-modal-title'>Add a new user:</h2>
-      <form className={classes.root} noValidate autoComplete='off'>
+      <form className={classes.root} autoComplete='off'>
         <TextField
+          required
           id='standard-basic'
           type='text'
           label='Last Name'
-          value={lastName}
-          onChange={handleLastNameChange}
+          value={studentToAdd.last_name}
+          onChange={handleOnInputChange}
+          name='last_name'
         />
         <TextField
+          required
           id='standard-basic'
           type='text'
           label='First Name'
-          value={firstName}
-          onChange={handleFirstNameChange}
+          value={studentToAdd.first_name}
+          onChange={handleOnInputChange}
+          name='first_name'
         />
         <TextField
+          required
           id='standard-basic'
           type='email'
           label='Email'
-          value={email}
-          onChange={handleEmailChange}
+          value={studentToAdd.email}
+          onChange={handleOnInputChange}
+          name='email'
         />
         <FormControl className={classes.formControl}>
-          <InputLabel id='demo-simple-select-label'>Role?</InputLabel>
+          <InputLabel htmlFor='role'>Role</InputLabel>
           <Select
-            labelId='demo-simple-select-label'
-            id='demo-simple-select'
-            value={role}
-            onChange={handleRoleChange}
+            required
+            native
+            value={studentToAdd.role}
+            onChange={handleOnInputChange}
+            inputProps={{
+              name: 'role',
+              id: 'age-native-simple',
+            }}
           >
-            <MenuItem value='user'>User</MenuItem>
-            <MenuItem value='admin'>Admin</MenuItem>
+            <option aria-label='None' value='' />
+            <option value='admin'>Admin</option>
+            <option value='user'>User</option>
           </Select>
         </FormControl>
         <Button type='submit'>Submit</Button>
