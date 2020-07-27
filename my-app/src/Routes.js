@@ -26,7 +26,7 @@ const Routes = (props) => {
       cookie.set('csrf_token', csrfToken)
       cookie.set('jwt_token', JwtToken)
       try {
-        return await handleFetch();
+        return await handleFetch()
       } catch (error) {
         throw error
       }
