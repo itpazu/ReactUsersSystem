@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Children } from 'react';
-import { Switch, Route } from 'react-router-dom';
-import Main from './Layouts/main/main';
+import { Switch } from 'react-router-dom';
+import adminLayout from './Layouts/adminLayout/adminLayout'
+import userLayout from './Layouts/userLayout/userLayout'
 import cookie from 'js-cookie';
 import { authenticateUser, LogIn } from './lib/api';
 import Minimal from './Layouts/minimal/Minimal';
@@ -11,9 +12,7 @@ const Routes = (props) => {
   const [userInput, setUserInput] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // const role = 'user'
-
-  useEffect(() => {}, []);
+  useEffect(() => { }, [])
 
   const handleSubmittedForm = async (mail, pass) => {
     const userInput = { email: mail, password: pass };
@@ -62,18 +61,17 @@ const Routes = (props) => {
   };
   console.log(userInput);
   return (
-    <Context.Provider value={{ handleSubmittedForm, isAuthenticated, LogOut }}>
+    <Context.Provider value={{ handleSubmittedForm, isAuthenticated, LogOut, userInput }}>
       <Switch>
         <PrivateRoute
           exact
           path='/'
-          // component={role === 'admin' ? Main : }
-          component={Main}
+          component={userInput.role === 'admin' ? adminLayout : userLayout}
         />
         <LoginRoute exact path='/login' component={Minimal} />
       </Switch>
     </Context.Provider>
-  );
-};
+  )
+}
 
-export default Routes;
+export default Routes

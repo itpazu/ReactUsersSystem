@@ -1,9 +1,9 @@
-import { Route, Redirect } from 'react-router-dom';
-import React, { useContext } from 'react';
-import Context from '../context/Context';
+import { Route, Redirect } from 'react-router-dom'
+import React, { useContext } from 'react'
+import Context from '../context/Context'
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
-  const context = useContext(Context);
+  const context = useContext(Context)
 
   return (
     <Route
@@ -15,17 +15,17 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
           <Redirect
             to={{
               pathname: '/login',
-              state: { from: props.location },
+              state: { from: props.location }
             }}
           />
         )
       }
     ></Route>
-  );
-};
+  )
+}
 
 export const LoginRoute = ({ component: Component, ...rest }) => {
-  const context = useContext(Context);
+  const context = useContext(Context)
 
   return (
     <Route
@@ -38,5 +38,5 @@ export const LoginRoute = ({ component: Component, ...rest }) => {
         )
       }
     ></Route>
-  );
-};
+  )
+}
