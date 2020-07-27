@@ -140,16 +140,22 @@ const SignIn = () => {
     touched: {},
     errors: {}
   })
-  const [signInButton, setSignInButton] = useState(false)
 
   useEffect(() => {
     const errors = validate(formState.values, schema)
 
-    setFormState((formState) => ({
-      ...formState,
-      isValid: errors ? false : true,
-      errors: errors || {}
-    }))
+    let mounted = true
+
+    if (mounted) {
+      setFormState((formState) => ({
+        ...formState,
+        isValid: errors ? false : true,
+        errors: errors || {}
+      }))
+    }
+    return function cleanup () {
+      mounted = false
+    }
   }, [formState.values])
   const [togglePasswordView, setTogglePasswordView] = useState(true)
 
@@ -179,20 +185,23 @@ const SignIn = () => {
   const handleSignIn = async (event) => {
     event.preventDefault()
     setResponse({ activateAlert: false })
-    setSignInButton(true)
+    setFormState({
+      isValid: true,
+      values: {},
+      touched: {},
+      errors: {}
+    })
     try {
       const submitForm = await context.handleSubmittedForm(
         formState.values.email,
         formState.values.password
       )
-      setSignInButton(false)
     } catch (error) {
       setResponse({
         activateAlert: true,
         success: false,
         message: JSON.stringify(error.response.data)
       })
-      setSignInButton(false)
     }
   }
 
@@ -264,7 +273,7 @@ const SignIn = () => {
               <Button
                 className={classes.signInButton}
                 color='primary'
-                disabled={signInButton}
+                disabled={!formState.isValid}
                 fullWidth
                 size='large'
                 type='submit'
