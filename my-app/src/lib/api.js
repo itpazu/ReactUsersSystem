@@ -44,6 +44,8 @@ export const Logout = () => {
 
 export const register = (newUser, authenticationInfo) => {
   const csrf = authenticationInfo.csrf_token;
+  const body = newUser;
+  body.user_id = authenticationInfo.user_id;
   // const JwtToken = authenticationInfo.Jwt_token; //local serverOnly
   const headers = {
     headers: {
@@ -54,7 +56,7 @@ export const register = (newUser, authenticationInfo) => {
     },
     withCredentials: true,
   };
-  return axios.post(`${baseURL}/add_user`, newUser, headers);
+  return axios.post(`${baseURL}/add_user`, body, headers);
 };
 
 export const deleteUser = (userId) => {

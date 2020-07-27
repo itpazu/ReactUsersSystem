@@ -10,6 +10,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { register, deleteUser } from '../../../../lib/api';
 import cookie from 'js-cookie';
 import SearchInput from '../../../../components/SearchInput/SearchInput';
+import Alert from '@material-ui/lab/Alert';
+import validate from 'validate.js';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -27,7 +29,10 @@ function getModalStyle() {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    display: 'grid',
+    marginBottom: theme.spacing(2),
+  },
   row: {
     height: '42px',
     display: 'flex',
@@ -37,11 +42,14 @@ const useStyles = makeStyles((theme) => ({
   spacer: {
     flexGrow: 1,
   },
-  importButton: {
+  TopButtons: {
     marginRight: theme.spacing(1),
   },
-  exportButton: {
-    marginRight: theme.spacing(1),
+  inputFields: {
+    marginBottom: theme.spacing(1),
+  },
+  submitButton: {
+    marginTop: theme.spacing(2),
   },
   searchInput: {
     marginRight: theme.spacing(1),
@@ -60,46 +68,88 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const schema = {
+  first_name: {
+    presence: { allowEmpty: false, message: 'required field' },
+    length: {
+      maximum: 16,
+      minimum: 2,
+    },
+  },
+  last_name: {
+    presence: { allowEmpty: false, message: 'required field' },
+    length: {
+      maximum: 16,
+      minimum: 2,
+    },
+  },
+  email: {
+    presence: { allowEmpty: false, message: 'required field' },
+    email: true,
+    length: {
+      maximum: 64,
+    },
+  },
+};
+
 const UsersToolbar = (props) => {
   const { className, ...rest } = props;
   const [modalStyle] = useState(getModalStyle);
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteId, setDeleteId] = useState('');
-  const [studentToAdd, setStudentToAdd] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    role: '',
-    user_id: '',
-  });
   const [authenticationInfo, setAuthenticationInfo] = useState('');
+  const [buttonDisable, setButtonDisable] = useState({ addUser: 'false' });
+  const [AddUserResponse, setAddUserResponse] = useState({
+    activateAlert: false,
+    message: '',
+  });
+
   const classes = useStyles();
+  const [formState, setFormState] = useState({
+    isValid: false,
+    values: {},
+    touched: {},
+    errors: {},
+  });
 
   useEffect(() => {
-    const userId = cookie.get('user_id');
-    const csrf = cookie.get('csrf_token');
+    const adminId = cookie.get('user_id');
+    const adminCsrf = cookie.get('csrf_token');
     // local server only:
     // const JwtToken = cookie.get('jwt_token');
     //
     setAuthenticationInfo({
-      csrf_token: csrf,
+      csrf_token: adminCsrf,
+      user_id: adminId,
       //localServerOnly:
       // Jwt_token: JwtToken,
     });
-
-    setStudentToAdd((prevState) => ({
-      ...prevState,
-      user_id: userId,
-    }));
   }, []);
+
+  useEffect(() => {
+    const errors = validate(formState.values, schema);
+
+    setFormState((prevState) => ({
+      ...prevState,
+
+      isValid: errors ? false : true,
+      errors: errors || {},
+    }));
+  }, [formState.values]);
 
   const handleOpenAdd = () => {
     setOpenAdd(true);
   };
 
-  const handleCloseAdd = () => {
+  const handleCloseAddUser = () => {
     setOpenAdd(false);
+    cleanFormFields();
+    setAddUserResponse({
+      activateAlert: false,
+      message: '',
+      success: false,
+    });
   };
 
   const handleOpenDelete = () => {
@@ -110,24 +160,48 @@ const UsersToolbar = (props) => {
     setOpenDelete(false);
   };
 
-  const handleOnInputChange = (event) => {
+  const handleOnAddUserInputChange = (event) => {
+    event.persist();
     const { value, name } = event.target;
-    setStudentToAdd((prevState) => ({
-      ...prevState,
-      [name]: value,
+
+    setFormState((formState) => ({
+      ...formState,
+      values: { ...formState.values, [name]: value },
+      touched: {
+        ...formState.touched,
+        [name]: true,
+      },
     }));
   };
 
   const handleAddUserSubmit = (event) => {
     event.preventDefault();
 
-    register(studentToAdd, authenticationInfo)
+    setAddUserResponse({
+      activateAlert: false,
+      message: '',
+      success: false,
+    });
+    register(formState.values, authenticationInfo)
       .then((res) => {
         console.log(res);
-        handleCloseAdd();
+        setAddUserResponse({
+          activateAlert: true,
+          message: res.data.message,
+          success: true,
+        });
+        setTimeout(() => {
+          handleCloseAddUser();
+        }, 2500);
       })
       .catch((err) => {
         console.log(err.response.data);
+        setAddUserResponse({
+          activateAlert: true,
+          message: JSON.stringify(err.response.data),
+          success: false,
+        });
+        cleanFormFields();
       });
   };
 
@@ -135,6 +209,14 @@ const UsersToolbar = (props) => {
     setDeleteId(event.target.id);
   };
 
+  const cleanFormFields = () => {
+    setFormState({
+      isValid: false,
+      values: {},
+      touched: {},
+      errors: {},
+    });
+  };
   const handleDeleteUserSubmit = (event) => {
     event.preventDefault();
     deleteUser(deleteId)
@@ -146,9 +228,10 @@ const UsersToolbar = (props) => {
         console.log(err);
       });
   };
+  const hasError = (field) =>
+    formState.touched[field] && formState.errors[field] ? true : false;
 
-  console.log(studentToAdd);
-  const addBody = (
+  const addUserBody = (
     <div
       style={modalStyle}
       className={classes.paper}
@@ -161,35 +244,49 @@ const UsersToolbar = (props) => {
           id='standard-basic'
           type='text'
           label='Last Name'
-          value={studentToAdd.last_name}
-          onChange={handleOnInputChange}
+          value={formState.values.last_name || ''}
+          onChange={handleOnAddUserInputChange}
           name='last_name'
+          className={classes.inputFields}
+          error={hasError('last_name')}
+          helperText={
+            hasError('last_name') ? formState.errors.last_name[0] : null
+          }
         />
         <TextField
           required
           id='standard-basic'
           type='text'
           label='First Name'
-          value={studentToAdd.first_name}
-          onChange={handleOnInputChange}
+          value={formState.values.first_name || ''}
+          onChange={handleOnAddUserInputChange}
           name='first_name'
+          className={classes.inputFields}
+          error={hasError('first_name')}
+          helperText={
+            hasError('first_name') ? formState.errors.first_name[0] : null
+          }
         />
         <TextField
           required
           id='standard-basic'
           type='email'
           label='Email'
-          value={studentToAdd.email}
-          onChange={handleOnInputChange}
+          value={formState.values.email || ''}
+          onChange={handleOnAddUserInputChange}
           name='email'
+          className={classes.inputFields}
+          error={hasError('email')}
+          helperText={hasError('email') ? formState.errors.email[0] : null}
         />
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor='role'>Role</InputLabel>
           <Select
             required
+            className={classes.inputFields}
             native
-            value={studentToAdd.role}
-            onChange={handleOnInputChange}
+            value={formState.values.role}
+            onChange={handleOnAddUserInputChange}
             inputProps={{
               name: 'role',
               id: 'age-native-simple',
@@ -200,8 +297,23 @@ const UsersToolbar = (props) => {
             <option value='user'>User</option>
           </Select>
         </FormControl>
-        <Button type='submit'>Submit</Button>
+        <Button
+          type='submit'
+          disabled={!formState.isValid}
+          className={classes.submitButton}
+        >
+          Submit
+        </Button>
       </form>
+
+      {AddUserResponse.activateAlert && (
+        <Alert
+          className={classes.submitButton}
+          severity={AddUserResponse.success ? 'success' : 'error'}
+        >
+          {AddUserResponse.message}
+        </Alert>
+      )}
     </div>
   );
 
@@ -230,9 +342,14 @@ const UsersToolbar = (props) => {
       <div {...rest} className={clsx(classes.root, className)}>
         <div className={classes.row}>
           <span className={classes.spacer} />
-          <Button className={classes.importButton}>Import</Button>
-          <Button className={classes.exportButton}>Export</Button>
-          <Button color='secondary' onClick={handleOpenAdd} variant='contained'>
+          <Button className={classes.TopButtons}>Import</Button>
+          <Button className={classes.TopButtons}>Export</Button>
+          <Button
+            className={classes.TopButtons}
+            color='secondary'
+            onClick={handleOpenAdd}
+            variant='contained'
+          >
             Add user
           </Button>
           <Button
@@ -253,11 +370,11 @@ const UsersToolbar = (props) => {
       <div>
         <Modal
           open={openAdd}
-          onClose={handleCloseAdd}
+          onClose={handleCloseAddUser}
           aria-labelledby='simple-modal-title'
           aria-describedby='simple-modal-description'
         >
-          {addBody}
+          {addUserBody}
         </Modal>
       </div>
       <div>

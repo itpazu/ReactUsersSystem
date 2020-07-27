@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = (props) => {
+const SignIn = () => {
   const context = useContext(Context);
   const classes = useStyles();
   const [response, setResponse] = useState({
@@ -134,7 +134,6 @@ const SignIn = (props) => {
     success: null,
     message: null,
   });
-  const { history } = props;
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -157,9 +156,6 @@ const SignIn = (props) => {
   const toggleShowPassword = () => {
     setTogglePasswordView(!togglePasswordView);
   };
-  //   const handleMouseDownPassword = (event) => {
-  //     event.preventDefault();
-  //   };
 
   const handleChange = (event) => {
     event.persist();
@@ -197,9 +193,14 @@ const SignIn = (props) => {
     }
   };
 
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
+  console.log(formState);
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container>
@@ -245,7 +246,7 @@ const SignIn = (props) => {
                       <IconButton
                         aria-label='toggle password visibility'
                         onClick={toggleShowPassword}
-                        // onMouseDown={handleMouseDownPassword}
+                        onMouseDown={handleMouseDownPassword}
                         edge='end'
                       >
                         {togglePasswordView ? (

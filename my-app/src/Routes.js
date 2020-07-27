@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Children } from 'react';
-import { Switch } from 'react-router-dom';
-import adminLayout from './Layouts/adminLayout/adminLayout'
-import userLayout from './Layouts/userLayout/userLayout'
+import { Switch, Route } from 'react-router-dom';
+import Main from './Layouts/main/main';
 import cookie from 'js-cookie';
 import { authenticateUser, LogIn } from './lib/api';
 import Minimal from './Layouts/minimal/Minimal';
@@ -9,10 +8,12 @@ import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
 
 const Routes = (props) => {
-  const [userInput, setUserInput] = useState({ email: '', password: '' });
+  const [userInput, setUserInput] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => { }, [])
+  // const role = 'user'
+
+  useEffect(() => {}, []);
 
   const handleSubmittedForm = async (mail, pass) => {
     const userInput = { email: mail, password: pass };
@@ -48,7 +49,6 @@ const Routes = (props) => {
     try {
       //added token for local server only
       setIsAuthenticated(true);
-
       await authenticateUser({ user_id: userId }, csrf, token);
     } catch (error) {
       throw error;
@@ -61,17 +61,18 @@ const Routes = (props) => {
   };
   console.log(userInput);
   return (
-    <Context.Provider value={{ handleSubmittedForm, isAuthenticated, LogOut, userInput }}>
+    <Context.Provider value={{ handleSubmittedForm, isAuthenticated, LogOut }}>
       <Switch>
         <PrivateRoute
           exact
           path='/'
-          component={userInput.role === 'admin' ? adminLayout : userLayout}
+          // component={role === 'admin' ? Main : }
+          component={Main}
         />
         <LoginRoute exact path='/login' component={Minimal} />
       </Switch>
     </Context.Provider>
-  )
-}
+  );
+};
 
-export default Routes
+export default Routes;
