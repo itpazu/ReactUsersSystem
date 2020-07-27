@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import { register, deleteUser } from '../../../../lib/api';
-import cookie from 'js-cookie';
-import SearchInput from '../../../../components/SearchInput/SearchInput';
+import React, { useState, useEffect } from 'react'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/styles'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
+import TextField from '@material-ui/core/TextField'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import InputLabel from '@material-ui/core/InputLabel'
+import { register, deleteUser } from '../../../../lib/api'
+import cookie from 'js-cookie'
+import SearchInput from '../../../../components/SearchInput/SearchInput'
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
+function rand () {
+  return Math.round(Math.random() * 20) - 10
 }
 
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+function getModalStyle () {
+  const top = 50 + rand()
+  const left = 50 + rand()
 
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
+    transform: `translate(-${top}%, -${left}%)`
+  }
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -32,19 +32,19 @@ const useStyles = makeStyles((theme) => ({
     height: '42px',
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   spacer: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   importButton: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   exportButton: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   searchInput: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   paper: {
     position: 'absolute',
@@ -52,102 +52,102 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 3)
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
-  },
-}));
+    minWidth: 120
+  }
+}))
 
 const UsersToolbar = (props) => {
-  const { className, ...rest } = props;
-  const [modalStyle] = useState(getModalStyle);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [deleteId, setDeleteId] = useState('');
+  const { className, ...rest } = props
+  const [modalStyle] = useState(getModalStyle)
+  const [openAdd, setOpenAdd] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+  const [deleteId, setDeleteId] = useState('')
   const [studentToAdd, setStudentToAdd] = useState({
     first_name: '',
     last_name: '',
     email: '',
     role: '',
-    user_id: '',
-  });
-  const [authenticationInfo, setAuthenticationInfo] = useState('');
-  const classes = useStyles();
+    user_id: ''
+  })
+  const [authenticationInfo, setAuthenticationInfo] = useState('')
+  const classes = useStyles()
 
   useEffect(() => {
-    const userId = cookie.get('user_id');
-    const csrf = cookie.get('csrf_token');
+    const userId = cookie.get('user_id')
+    const csrf = cookie.get('csrf_token')
     // local server only:
     // const JwtToken = cookie.get('jwt_token');
     //
     setAuthenticationInfo({
-      csrf_token: csrf,
-      //localServerOnly:
+      csrf_token: csrf
+      // localServerOnly:
       // Jwt_token: JwtToken,
-    });
+    })
 
     setStudentToAdd((prevState) => ({
       ...prevState,
-      user_id: userId,
-    }));
-  }, []);
+      user_id: userId
+    }))
+  }, [])
 
   const handleOpenAdd = () => {
-    setOpenAdd(true);
-  };
+    setOpenAdd(true)
+  }
 
   const handleCloseAdd = () => {
-    setOpenAdd(false);
-  };
+    setOpenAdd(false)
+  }
 
   const handleOpenDelete = () => {
-    setOpenDelete(true);
-  };
+    setOpenDelete(true)
+  }
 
   const handleCloseDelete = () => {
-    setOpenDelete(false);
-  };
+    setOpenDelete(false)
+  }
 
   const handleOnInputChange = (event) => {
-    const { value, name } = event.target;
+    const { value, name } = event.target
     setStudentToAdd((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const handleAddUserSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     register(studentToAdd, authenticationInfo)
       .then((res) => {
-        console.log(res);
-        handleCloseAdd();
+        console.log(res)
+        handleCloseAdd()
       })
       .catch((err) => {
-        console.log(err.response.data);
-      });
-  };
+        console.log(err.response.data)
+      })
+  }
 
   const handleDeleteIdChange = (event) => {
-    setDeleteId(event.target.id);
-  };
+    setDeleteId(event.target.id)
+  }
 
   const handleDeleteUserSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     deleteUser(deleteId)
       .then((res) => {
-        console.log(res);
-        handleCloseDelete();
+        console.log(res)
+        handleCloseDelete()
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
-  console.log(studentToAdd);
+  console.log(studentToAdd)
   const addBody = (
     <div
       style={modalStyle}
@@ -192,7 +192,7 @@ const UsersToolbar = (props) => {
             onChange={handleOnInputChange}
             inputProps={{
               name: 'role',
-              id: 'age-native-simple',
+              id: 'age-native-simple'
             }}
           >
             <option aria-label='None' value='' />
@@ -203,7 +203,7 @@ const UsersToolbar = (props) => {
         <Button type='submit'>Submit</Button>
       </form>
     </div>
-  );
+  )
 
   const deleteBody = (
     <div
@@ -223,7 +223,7 @@ const UsersToolbar = (props) => {
         <Button type='submit'>Submit</Button>
       </form>
     </div>
-  );
+  )
 
   return (
     <>
@@ -271,7 +271,7 @@ const UsersToolbar = (props) => {
         </Modal>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default UsersToolbar;
+export default UsersToolbar
