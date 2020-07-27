@@ -99,7 +99,6 @@ const UsersToolbar = (props) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [authenticationInfo, setAuthenticationInfo] = useState('');
-  const [buttonDisable, setButtonDisable] = useState({ addUser: 'false' });
   const [AddUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
     message: '',
