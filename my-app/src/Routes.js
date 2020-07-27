@@ -9,7 +9,7 @@ import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
 
 const Routes = (props) => {
-  const [userInput, setUserInput] = useState(null);
+  const [userInput, setUserInput] = useState({ email: '', password: '' });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => { }, [])
