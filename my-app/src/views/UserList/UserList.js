@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { UsersToolbar, UsersTable } from './components'
-import { v1 as uuid } from 'uuid'
 import { allUsers } from '../../lib/api'
 
 const useStyles = makeStyles(theme => ({
@@ -17,13 +16,10 @@ const UserList = () => {
   const classes = useStyles()
 
   const [allUsersList, setAllUsersList] = useState([])
+  const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
 
   useEffect(() => {
     let mounted = true
-    async function getAllUsers () {
-      const response = await allUsers()
-      setAllUsersList(response.data.users)
-    }
     if (mounted) {
       getAllUsers()
     }
@@ -34,7 +30,7 @@ const UserList = () => {
 
   const newUsersList = allUsersList.map(el =>
     ({
-      id: uuid(),
+      id: el._id,
       name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
       email: el.email,
       role: el.role,
@@ -42,11 +38,24 @@ const UserList = () => {
     })
   )
 
+  function updateDeleteUser (deleteUserName, deleteUserId) {
+    setDeleteThisUser({ name: deleteUserName, id: deleteUserId })
+  }
+
+  async function getAllUsers () {
+    const response = await allUsers()
+    setAllUsersList(response.data.users)
+  }
+
+  function handleUpdate () {
+    getAllUsers()
+  }
+
   return (
     <div className={classes.root}>
-      <UsersToolbar />
+      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} />
       <div className={classes.content}>
-        <UsersTable users={newUsersList} />
+        <UsersTable users={newUsersList} handleDeleteUser={updateDeleteUser} />
       </div>
     </div>
   )

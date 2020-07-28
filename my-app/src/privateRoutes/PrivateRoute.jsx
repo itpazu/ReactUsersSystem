@@ -11,16 +11,8 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
       render={(props) =>
         context.isAuthenticated ? (
           <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    ></Route>
+        ) : (<Redirect to={{ pathname: '/login', state: { from: props.location } }} />)}
+    />
   )
 }
 
@@ -32,11 +24,7 @@ export const LoginRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={(props) =>
         !context.isAuthenticated ? (
-          <Component {...props}></Component>
-        ) : (
-          <Redirect to='/' />
-        )
-      }
-    ></Route>
+          <Component {...props} />) : (<Redirect to='/' />)}
+    />
   )
 }

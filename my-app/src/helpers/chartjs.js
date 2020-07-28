@@ -1,6 +1,6 @@
 // ChartJS extension rounded bar chart
 // https://codepen.io/jedtrow/full/ygRYgo
-function draw() {
+function draw () {
   const { ctx } = this._chart
   const vm = this._view
   let { borderWidth } = vm
@@ -89,7 +89,7 @@ function draw() {
     startCorner = 0
   }
 
-  function cornerAt(index) {
+  function cornerAt (index) {
     return corners[(startCorner + index) % 4]
   }
 

@@ -196,6 +196,7 @@ const SignIn = () => {
         formState.values.email,
         formState.values.password
       )
+      return submitForm
     } catch (error) {
       setResponse({
         activateAlert: true,
@@ -262,9 +263,7 @@ const SignIn = () => {
                       >
                         {togglePasswordView ? (
                           <Visibility />
-                        ) : (
-                            <VisibilityOff />
-                          )}
+                        ) : (<VisibilityOff />)}
                       </IconButton>
                     </InputAdornment>
                   )

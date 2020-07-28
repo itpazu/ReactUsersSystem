@@ -7,14 +7,15 @@ import {
   CardActions,
   CardContent,
   Avatar,
-  Checkbox,
+  Radio,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
-  TablePagination
+  TablePagination,
+  RadioGroup
 } from '@material-ui/core'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
@@ -41,46 +42,19 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UsersTable = props => {
-  const { className, users, ...rest } = props
+  const { className, users, handleDeleteUser, ...rest } = props
 
   const classes = useStyles()
 
-  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectedUserId, setSelectedUserId] = useState('')
+  const [selectedUserName, setSelectedUserName] = useState('')
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [page, setPage] = useState(0)
 
-  const handleSelectAll = event => {
-    const { users } = props
-
-    let selectedUsers
-
-    if (event.target.checked) {
-      selectedUsers = users.map(user => user.id)
-    } else {
-      selectedUsers = []
-    }
-
-    setSelectedUsers(selectedUsers)
-  }
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id)
-    let newSelectedUsers = []
-
-    if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id)
-    } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1))
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1))
-    } else if (selectedIndex > 0) {
-      newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
-      )
-    }
-
-    setSelectedUsers(newSelectedUsers)
+  const handleRadioChange = (event) => {
+    setSelectedUserId(event.target.value)
+    setSelectedUserName(event.target.name)
+    handleDeleteUser(event.target.name, event.target.value)
   }
 
   const handlePageChange = (event, page) => {
@@ -99,70 +73,61 @@ const UsersTable = props => {
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedUsers.length === users.length}
-                      color="primary"
-                      indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
-                      }
-                      onChange={handleSelectAll}
-                    />
-                  </TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Registration date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
-                  <TableRow
-                    className={classes.tableRow}
-                    hover
-                    key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
-                        color="primary"
-                        onChange={event => handleSelectOne(event, user.id)}
-                        value="true"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className={classes.nameContainer}>
-                        <Avatar
-                          className={classes.avatar}
-                          src={user.avatarUrl}
-                        >
-                          {getInitials(user.name)}
-                        </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
-                      </div>
-                    </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      {user.role}
-                    </TableCell>
-                    <TableCell>
-                      {user.createdAt}
-                    </TableCell>
+            <RadioGroup value={selectedUserId} name={selectedUserName} onChange={handleRadioChange}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Role</TableCell>
+                    <TableCell>Registration date</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {users.slice(0, rowsPerPage).map(user => (
+                    <TableRow
+                      className={classes.tableRow}
+                      hover
+                      key={user.id}
+                      selected={selectedUserId.indexOf(user.id) !== -1}
+                    >
+                      <TableCell padding='checkbox'>
+                        <Radio
+                          color='primary'
+                          value={user.id}
+                          name={user.name}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div className={classes.nameContainer}>
+                          <Avatar
+                            className={classes.avatar}
+                            src={user.avatarUrl}
+                          >
+                            {getInitials(user.name)}
+                          </Avatar>
+                          <Typography variant='body1'>{user.name}</Typography>
+                        </div>
+                      </TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        {user.role}
+                      </TableCell>
+                      <TableCell>
+                        {user.createdAt}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </RadioGroup>
           </div>
         </PerfectScrollbar>
       </CardContent>
       <CardActions className={classes.actions}>
         <TablePagination
-          component="div"
+          component='div'
           count={users.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
