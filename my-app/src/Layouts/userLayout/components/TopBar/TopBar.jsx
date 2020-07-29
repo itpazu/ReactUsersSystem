@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const TopBar = (props) => {
   const context = useContext(Context)
   const classes = useStyles()
-  const { className, onSidebarOpen, token, ...rest } = props
+  const { onSidebarOpen } = props
 
   return (
     <AppBar className={classes.root}>

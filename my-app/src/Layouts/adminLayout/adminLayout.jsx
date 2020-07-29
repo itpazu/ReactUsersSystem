@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { makeStyles, useTheme } from '@material-ui/styles'
 import { useMediaQuery } from '@material-ui/core'
 import TopBar from './components/TopBar/TopBar'
 import Sidebar from './components/sidebar/sidebar'
-import Context from '../../context/Context'
 import clsx from 'clsx'
 import UserList from '../../views/UserList/UserList'
 import HomePage from '../../views/HomePage/HomePage'
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Main = (props) => {
   const { children } = props
-  const context = useContext(Context)
   const classes = useStyles()
   const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
