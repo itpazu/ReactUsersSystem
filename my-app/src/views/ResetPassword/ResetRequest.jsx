@@ -1,41 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { withRouter, Redirect } from 'react-router-dom';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Grid,
-  Button,
-  IconButton,
-  TextField,
-  Link,
-  Typography,
-} from '@material-ui/core';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Context from '../context/Context';
+import { Grid, Button, TextField, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { solicitNewPassword } from './../../lib/api';
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      maximum: 32,
+    },
     email: true,
-    length: {
-      maximum: 64,
-    },
-  },
-  password: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 128,
-    },
   },
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    height: '100%',
+    height: '-webkit-fill-available',
   },
   grid: {
     height: '100%',
@@ -124,15 +108,23 @@ const useStyles = makeStyles((theme) => ({
   signInButton: {
     margin: theme.spacing(2, 0),
   },
+  alert: {
+    height: '100px',
+    fontSize: '20px',
+    alignItems: 'center',
+  },
+  alertBeforeLaunch: {
+    display: 'none',
+  },
 }));
 
-const SignIn = () => {
-  const context = useContext(Context);
+const ResetRequest = () => {
   const classes = useStyles();
   const [response, setResponse] = useState({
     activateAlert: null,
     success: null,
-    message: null,
+    message: '',
+    redirect: null,
   });
   const [formState, setFormState] = useState({
     isValid: false,
@@ -144,69 +136,64 @@ const SignIn = () => {
   useEffect(() => {
     const errors = validate(formState.values, schema);
 
-    let mounted = true;
-
-    if (mounted) {
-      setFormState((formState) => ({
-        ...formState,
-        isValid: errors ? false : true,
-        errors: errors || {},
-      }));
-    }
-    return function cleanup() {
-      mounted = false;
-    };
+    setFormState((formState) => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {},
+    }));
   }, [formState.values]);
-  const [togglePasswordView, setTogglePasswordView] = useState(true);
-
-  const toggleShowPassword = () => {
-    setTogglePasswordView(!togglePasswordView);
-  };
 
   const handleChange = (event) => {
+    const { name, value, checked } = event.target;
     event.persist();
-
     setFormState((formState) => ({
       ...formState,
       values: {
         ...formState.values,
-        [event.target.name]:
-          event.target.type === 'checkbox'
-            ? event.target.checked
-            : event.target.value,
+        [name]: value,
       },
       touched: {
         ...formState.touched,
-        [event.target.name]: true,
+        [name]: true,
       },
     }));
   };
 
   const handleSignIn = async (event) => {
     event.preventDefault();
-    setResponse({ activateAlert: false });
+    setResponse((prevState) => ({
+      ...prevState,
+      activateAlert: false,
+    }));
+    setResponse((prevState) => ({ ...prevState, PassChangeErrorAlert: false }));
     setFormState({
       isValid: true,
       values: {},
       touched: {},
       errors: {},
     });
+
     try {
-      const submitForm = await context.handleSubmittedForm(
-        formState.values.email,
-        formState.values.password
-      );
+      const submitRequest = await solicitNewPassword({
+        email: formState.values.email,
+      });
+      console.log(submitRequest.data.message);
+      setResponse({
+        activateAlert: true,
+        success: true,
+        message: submitRequest.data.message,
+      });
+      setTimeout(() => {
+        setResponse({ redirect: true });
+      }, 3000);
     } catch (error) {
+      console.log(error.response.data);
       setResponse({
         activateAlert: true,
         success: false,
         message: JSON.stringify(error.response.data),
       });
     }
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
   };
 
   const hasError = (field) =>
@@ -218,11 +205,15 @@ const SignIn = () => {
         <Grid className={classes.quoteContainer} item lg={5}>
           <div className={classes.quote} />
         </Grid>
+
         <Grid className={classes.content} item lg={7} xs={12}>
           <div className={classes.contentBody}>
             <form className={classes.form} onSubmit={handleSignIn}>
               <Typography className={classes.title} variant='h2'>
-                Sign in
+                Password Reset
+              </Typography>
+              <Typography className={classes.title} variant='h5'>
+                Insert your email address:
               </Typography>
               <TextField
                 className={classes.textField}
@@ -231,45 +222,14 @@ const SignIn = () => {
                 helperText={
                   hasError('email') ? formState.errors.email[0] : null
                 }
-                label='Email address'
+                label='Email Address'
                 name='email'
                 onChange={handleChange}
                 type='text'
                 value={formState.values.email || ''}
                 variant='outlined'
               />
-              <TextField
-                className={classes.textField}
-                error={hasError('password')}
-                fullWidth
-                helperText={
-                  hasError('password') ? formState.errors.password[0] : null
-                }
-                label='Password'
-                name='password'
-                onChange={handleChange}
-                type={togglePasswordView ? 'password' : 'text'}
-                value={formState.values.password || ''}
-                variant='outlined'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        aria-label='toggle password visibility'
-                        onClick={toggleShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge='end'
-                      >
-                        {togglePasswordView ? (
-                          <Visibility />
-                        ) : (
-                          <VisibilityOff />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+
               <Button
                 className={classes.signInButton}
                 color='primary'
@@ -279,23 +239,15 @@ const SignIn = () => {
                 type='submit'
                 variant='contained'
               >
-                Sign in now
+                Submit request
               </Button>
-              <Typography color='textSecondary' variant='body1'>
-                Forgot your password? {'   '}{' '}
-                <RouterLink to='/reset_pass' variant='h6'>
-                  Reset password
-                </RouterLink>
-              </Typography>
               {response.activateAlert && (
-                <Alert
-                  className={classes.signInButton}
-                  severity={response.success ? 'success' : 'error'}
-                >
+                <Alert severity={response.success ? 'success' : 'error'}>
                   {response.message}
                 </Alert>
               )}
             </form>
+            {response.redirect && <Redirect to='/login' />}
           </div>
         </Grid>
       </Grid>
@@ -303,4 +255,4 @@ const SignIn = () => {
   );
 };
 
-export default withRouter(SignIn);
+export default withRouter(ResetRequest);

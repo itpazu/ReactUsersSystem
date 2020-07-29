@@ -7,6 +7,7 @@ import { authenticateUser, LogIn } from './lib/api';
 import Minimal from './Layouts/minimal/Minimal';
 import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
+import ResetPassword from './views/ResetPassword/ResetPassword';
 
 const Routes = (props) => {
   const [userInput, setUserInput] = useState({ email: '', password: '' });
@@ -20,14 +21,14 @@ const Routes = (props) => {
     try {
       const response = await LogIn(userInput);
       setUserInput(response.data);
-      const userId = response.data.user_id;
+      const userId = response.data._id;
       const csrfToken = response.headers.authorization;
       //local server only
-      const JwtToken = response.headers.token;
-      cookie.set('user_id', userId);
+      // const JwtToken = response.headers.token;
+      cookie.set('_id', userId);
       cookie.set('csrf_token', csrfToken);
       //local server only
-      cookie.set('jwt_token', JwtToken);
+      // cookie.set('jwt_token', JwtToken);
       try {
         return await handleFetch();
       } catch (error) {
@@ -39,17 +40,16 @@ const Routes = (props) => {
   };
 
   const handleFetch = async () => {
-    const userId = cookie.get('user_id');
+    const userId = cookie.get('_id');
     const csrf = cookie.get('csrf_token');
     // for local development only
-    const token = cookie.get('jwt_token'); // error planting
+    // const token = cookie.get('jwt_token'); // error planting
     // const token = 'skjfdhhkjdsnhkjhdsf'
 
     try {
       //added token for local server only
+      await authenticateUser({ _id: userId }, csrf);
       setIsAuthenticated(true);
-
-      await authenticateUser({ user_id: userId }, csrf, token);
     } catch (error) {
       throw error;
     }
@@ -70,6 +70,7 @@ const Routes = (props) => {
           component={userInput.role === 'admin' ? adminLayout : userLayout}
         />
         <LoginRoute exact path='/login' component={Minimal} />
+        <LoginRoute eaxct path='/change_pass' component={ResetPassword} />
       </Switch>
     </Context.Provider>
   );

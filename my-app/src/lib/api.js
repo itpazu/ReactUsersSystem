@@ -6,7 +6,6 @@ const baseURL =
 // const baseURL = 'http://127.0.0.1:5000'
 
 export const LogIn = (data) => {
-  console.log(data);
   return axios.post(`${baseURL}/login`, data, { withCredentials: true });
 };
 
@@ -15,7 +14,6 @@ export const authenticateUser = (data, csrf) => {
   const headers = {
     headers: {
       credentials: 'cross-site',
-      withCredentials: true,
       Authorization: csrf,
     },
     withCredentials: true,
@@ -45,12 +43,11 @@ export const Logout = () => {
 export const register = (newUser, authenticationInfo) => {
   const csrf = authenticationInfo.csrf_token;
   const body = newUser;
-  body.user_id = authenticationInfo.user_id;
+  body._id = authenticationInfo._id;
   // const JwtToken = authenticationInfo.Jwt_token; //local serverOnly
   const headers = {
     headers: {
       credentials: 'cross-site',
-      withCredentials: true,
       Authorization: csrf,
       // token: JwtToken, local server only
     },
@@ -65,4 +62,21 @@ export const deleteUser = (userId) => {
 
 export const allUsers = () => {
   return axios.get(`${baseURL}/all_users`);
+};
+
+export const checkTokenForPasswordReset = (userId, token) => {
+  const body = { _id: userId };
+  const headers = {
+    headers: {
+      token: token,
+    },
+  };
+  return axios.post(`${baseURL}/check_token`, body, headers);
+};
+
+export const changePassword = (data) => {
+  return axios.post(`${baseURL}/change_password`, data);
+};
+export const solicitNewPassword = (data) => {
+  return axios.post(`${baseURL}/newpass_solicit`, data);
 };

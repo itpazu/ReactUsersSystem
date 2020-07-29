@@ -2,7 +2,7 @@
   background-image: url(/images/google_pixel_3_app_presentation.jpg);
   background-repeat: no-repeat;
   background-size: cover;
-  height: 90vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,3 +15,7 @@
   font-size: 60px;
   font-weight: normal;
 }
+
+/* #root {
+  height: inherit;
+} */

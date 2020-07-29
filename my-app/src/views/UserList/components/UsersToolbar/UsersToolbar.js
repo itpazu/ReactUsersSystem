@@ -116,14 +116,15 @@ const UsersToolbar = (props) => {
   });
 
   useEffect(() => {
-    const adminId = cookie.get('user_id');
+    const adminId = cookie.get('_id');
+    console.log(adminId);
     const adminCsrf = cookie.get('csrf_token');
     // local server only:
     // const JwtToken = cookie.get('jwt_token')
 
     setAuthenticationInfo({
       csrf_token: adminCsrf,
-      user_id: adminId,
+      _id: adminId,
       // localServerOnly:
       // Jwt_token: JwtToken
     });
@@ -289,6 +290,7 @@ const UsersToolbar = (props) => {
             value={formState.values.role || ''}
             onChange={handleOnAddUserInputChange}
             error={hasError('role')}
+            name={'role'}
             inputProps={{
               name: 'role',
               id: 'age-native-simple',
