@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium
   },
   icon: {
-    color: colors.blueGrey[800],
+    color: theme.palette.icon,
     width: 24,
     height: 24,
     display: 'flex',
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   },
   active: {
-    color: colors.blueGrey[50],
+    color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
     '& $icon': {
-      color: colors.blueGrey[50]
+      color: theme.palette.primary.main
     }
   }
 }))
