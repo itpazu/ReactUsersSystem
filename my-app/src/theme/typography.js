@@ -1,6 +1,6 @@
 import palette from './palette'
 
-const typography = {
+export default {
   h1: {
     color: palette.text.primary,
     fontWeight: 500,
@@ -87,5 +87,3 @@ const typography = {
     textTransform: 'uppercase'
   }
 }
-
-export default typography

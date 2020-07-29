@@ -9,7 +9,8 @@ import Context from '../../../../context/Context'
 const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: 'none',
-    height: '60px'
+    height: '60px',
+    backgroundColor: theme.palette.info.light
   },
   flexGrow: {
     flexGrow: 1
