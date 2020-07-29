@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   },
   active: {
-    color: colors.blueGrey[800],
+    color: colors.blueGrey[50],
     fontWeight: theme.typography.fontWeightMedium,
     '& $icon': {
-      color: colors.blueGrey[800]
+      color: colors.blueGrey[50]
     }
   }
 }))
