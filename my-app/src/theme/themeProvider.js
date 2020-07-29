@@ -1,15 +1,11 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 import palette from './palette'
-import { typography } from './typography'
+import typography from './typography'
 
 export const theme = createMuiTheme({
   palette,
   typography,
   props: {
-    MuiButton: {
-      variant: 'contained',
-      color: 'primary'
-    },
     Link: {
       color: 'white'
     }
@@ -19,3 +15,5 @@ export const theme = createMuiTheme({
     drawer: 1100
   }
 })
+
+export default theme
