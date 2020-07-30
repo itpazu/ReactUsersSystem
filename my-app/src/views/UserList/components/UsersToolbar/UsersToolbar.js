@@ -355,14 +355,6 @@ const UsersToolbar = (props) => {
           >
             Delete user
           </Button>
-          <Button
-            color='primary'
-            onClick={() => {
-              LogOut();
-            }}
-          >
-            Logout
-          </Button>
         </div>
         <div className={classes.row}>
           <SearchInput
