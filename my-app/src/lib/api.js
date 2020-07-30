@@ -65,6 +65,7 @@ export const allUsers = () => {
 };
 
 export const checkTokenForPasswordReset = (userId, token) => {
+  console.log(userId, token);
   const body = { _id: userId };
   const headers = {
     headers: {
