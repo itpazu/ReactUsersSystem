@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/styles'
-import { Paper, TextField } from '@material-ui/core'
+import { Paper, TextField, Button } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
@@ -28,17 +28,23 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const SearchInput = props => {
-  const { className, onChange, style, users, selectedName, setSelectedName, ...rest } = props
+  const { className, onChange, style, users, selectedName, setSelectedName, getSingleUser, handleUpdate, ...rest } = props
 
   const classes = useStyles()
 
-  const handleSearchNameChange = (event) => {
-    setSelectedName(event.target.value)
+  const handleSearchNameChange = (event, value) => {
+    if (typeof value === 'object' && value !== null) {
+      setSelectedName(value.name)
+    } else {
+      setSelectedName(event.target.value)
+    }
   }
 
   const handleSearchNameClick = () => {
-    if (selectedName !== '' && selectedName !== undefined &&  !== null) {
-
+    if (selectedName !== '' && selectedName !== undefined && selectedName !== null && users.includes(selectedName)) {
+      getSingleUser()
+    } else if (selectedName === '') {
+      handleUpdate()
     }
   }
 
@@ -54,16 +60,19 @@ const SearchInput = props => {
         className={classes.input}
         id='free-solo-2-demo'
         disableClearable
+        onChange={handleSearchNameChange}
+        onInputChange={handleSearchNameChange}
+        onKeyDown={handleSearchNameChange}
         options={users.map((option) => option.name)}
         renderInput={(params) => (
           <TextField
             {...params}
             margin='normal'
             variant='outlined'
-            InputProps={{ ...params.InputProps, type: 'search' }}
           />
         )}
       />
+      <Button onClick={handleSearchNameClick} color='primary' variant='contained'>Search</Button>
     </Paper>
   )
 }
