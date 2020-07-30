@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import clsx from 'clsx'
-import PerfectScrollbar from 'react-perfect-scrollbar'
-import { makeStyles } from '@material-ui/styles'
+import React, { useState, useContext } from 'react';
+import clsx from 'clsx';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { makeStyles } from '@material-ui/styles';
 import {
   Card,
   CardActions,
@@ -15,65 +15,64 @@ import {
   TableRow,
   Typography,
   TablePagination,
-  RadioGroup
-} from '@material-ui/core'
-import 'react-perfect-scrollbar/dist/css/styles.css'
+  RadioGroup,
+} from '@material-ui/core';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import { getInitials } from '../../../../helpers';
 
-import { getInitials } from '../../../../helpers'
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {},
   content: {
-    padding: 0
+    padding: 0,
   },
   inner: {
-    minWidth: 1050
+    minWidth: 1050,
   },
   nameContainer: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   avatar: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   actions: {
-    justifyContent: 'flex-end'
-  }
-}))
+    justifyContent: 'flex-end',
+  },
+}));
 
-const UsersTable = props => {
-  const { className, users, handleDeleteUser, ...rest } = props
+const UsersTable = (props) => {
+  const { className, users, handleDeleteUser, ...rest } = props;
+  const classes = useStyles();
 
-  const classes = useStyles()
-
-  const [selectedUserId, setSelectedUserId] = useState('')
-  const [selectedUserName, setSelectedUserName] = useState('')
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [page, setPage] = useState(0)
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [selectedUserName, setSelectedUserName] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const handleRadioChange = (event) => {
-    setSelectedUserId(event.target.value)
-    setSelectedUserName(event.target.name)
-    handleDeleteUser(event.target.name, event.target.value)
-  }
+    setSelectedUserId(event.target.value);
+    setSelectedUserName(event.target.name);
+    handleDeleteUser(event.target.name, event.target.value);
+  };
 
   const handlePageChange = (event, page) => {
-    setPage(page)
-  }
+    setPage(page);
+  };
 
-  const handleRowsPerPageChange = event => {
-    setRowsPerPage(event.target.value)
-  }
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(event.target.value);
+  };
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-            <RadioGroup value={selectedUserId} name={selectedUserName} onChange={handleRadioChange}>
+            <RadioGroup
+              value={selectedUserId}
+              name={selectedUserName}
+              onChange={handleRadioChange}
+            >
               <Table>
                 <TableHead>
                   <TableRow>
@@ -85,7 +84,7 @@ const UsersTable = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {users.slice(0, rowsPerPage).map(user => (
+                  {users.slice(0, rowsPerPage).map((user) => (
                     <TableRow
                       className={classes.tableRow}
                       hover
@@ -111,12 +110,8 @@ const UsersTable = props => {
                         </div>
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        {user.role}
-                      </TableCell>
-                      <TableCell>
-                        {user.createdAt}
-                      </TableCell>
+                      <TableCell>{user.role}</TableCell>
+                      <TableCell>{user.createdAt}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -137,7 +132,7 @@ const UsersTable = props => {
         />
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
-export default UsersTable
+export default UsersTable;

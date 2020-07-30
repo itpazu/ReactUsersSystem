@@ -26,7 +26,6 @@ export const authenticateUser = (data, csrf) => {
 //   const headers = {
 //     headers: {
 //       credentials: 'cross-site',
-//       withCredentials: true,
 //       Authorization: csrf,
 //       token: JwtToken
 //     },
@@ -56,12 +55,30 @@ export const register = (newUser, authenticationInfo) => {
   return axios.post(`${baseURL}/add_user`, body, headers);
 };
 
-export const deleteUser = (userId) => {
-  return axios.delete(`${baseURL}/delete_user/${userId}`);
+export const deleteUser = (userId, authenticationInfo) => {
+  const body = { user_id: userId, _id: authenticationInfo._id };
+
+  const data = {
+    headers: {
+      credentials: 'cross-site',
+      Authorization: authenticationInfo.csrf_token,
+    },
+    withCredentials: true,
+    data: body,
+  };
+  return axios.delete(`${baseURL}/delete_user`, data);
 };
 
-export const allUsers = () => {
-  return axios.get(`${baseURL}/all_users`);
+export const allUsers = (userId, csrf) => {
+  const body = { _id: userId };
+  const headers = {
+    headers: {
+      credentials: 'cross-site',
+      Authorization: csrf,
+    },
+    withCredentials: true,
+  };
+  return axios.post(`${baseURL}/all_users`, body, headers);
 };
 
 export const checkTokenForPasswordReset = (userId, token) => {

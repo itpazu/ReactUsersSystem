@@ -108,7 +108,8 @@ const UsersToolbar = (props) => {
     activateAlert: false,
     message: '',
   });
-
+  const adminId = cookie.get('_id');
+  const adminCsrf = cookie.get('csrf_token');
   const classes = useStyles();
   const [formState, setFormState] = useState({
     isValid: false,
@@ -118,16 +119,9 @@ const UsersToolbar = (props) => {
   });
 
   useEffect(() => {
-    const adminId = cookie.get('_id');
-    const adminCsrf = cookie.get('csrf_token');
-    // local server only:
-    // const JwtToken = cookie.get('jwt_token')
-
     setAuthenticationInfo({
       csrf_token: adminCsrf,
       _id: adminId,
-      // localServerOnly:
-      // Jwt_token: JwtToken
     });
   }, []);
 
@@ -198,18 +192,21 @@ const UsersToolbar = (props) => {
         }, 2500);
       })
       .catch((err) => {
-        setAddUserResponse({
-          activateAlert: true,
-          message: JSON.stringify(err.response.data),
-          success: false,
-        });
-        cleanFormFields();
-        if (err.response.stauts === '402') {
-          context.Logout();
+        let error = err.response.status;
+        if (error == '402') {
+          setTimeout(() => {
+            LogOut();
+          }, 2500);
+        } else {
+          setAddUserResponse({
+            activateAlert: true,
+            message: JSON.stringify(err.response.data),
+            success: false,
+          });
+          cleanFormFields();
         }
       });
   };
-
   const cleanFormFields = () => {
     setFormState({
       isValid: false,
@@ -220,13 +217,18 @@ const UsersToolbar = (props) => {
   };
   const handleDeleteUserSubmit = (event) => {
     event.preventDefault();
-    deleteUser(deleteUserValues.id)
+    deleteUser(deleteUserValues.id, authenticationInfo)
       .then(() => {
         handleCloseDelete();
         onUpdate();
       })
       .catch((err) => {
-        console.log(err);
+        let error = err.response.status;
+        if (error == '402') {
+          setTimeout(() => {
+            LogOut();
+          }, 2500);
+        }
       });
   };
   const hasError = (field) =>
@@ -352,6 +354,14 @@ const UsersToolbar = (props) => {
             variant='contained'
           >
             Delete user
+          </Button>
+          <Button
+            color='primary'
+            onClick={() => {
+              LogOut();
+            }}
+          >
+            Logout
           </Button>
         </div>
         <div className={classes.row}>

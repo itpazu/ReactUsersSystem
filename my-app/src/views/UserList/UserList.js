@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { UsersToolbar, UsersTable } from './components';
 import { allUsers } from '../../lib/api';
+import Context from '../../context/Context';
+import cookie from 'js-cookie';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,9 +20,13 @@ const UserList = () => {
 
   const [allUsersList, setAllUsersList] = useState([]);
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' });
-
+  const context = useContext(Context);
+  const { LogOut } = context;
+  const userId = cookie.get('_id');
+  const csrf = cookie.get('csrf_token');
+  const [errorFetchUsers, setErrorFetchUsers] = useState(null);
   useEffect(() => {
-    getAllUsers();
+    getAllUsers(userId, csrf);
   }, []);
 
   const newUsersList = allUsersList.map((el) => ({
@@ -40,8 +47,17 @@ const UserList = () => {
   }
 
   async function getAllUsers() {
-    const response = await allUsers();
-    setAllUsersList(response.data.users);
+    try {
+      const response = await allUsers(userId, csrf);
+      setAllUsersList(response.data.users);
+    } catch (error) {
+      if (error.response.status == '402') {
+        console.log('error 402');
+        LogOut();
+      } else {
+        setErrorFetchUsers(true);
+      }
+    }
   }
 
   function handleUpdate() {
@@ -57,6 +73,11 @@ const UserList = () => {
       <div className={classes.content}>
         <UsersTable users={newUsersList} handleDeleteUser={updateDeleteUser} />
       </div>
+      {errorFetchUsers && (
+        <div>
+          <Alert type='error'> Failed to load users</Alert>
+        </div>
+      )}
     </div>
   );
 };
