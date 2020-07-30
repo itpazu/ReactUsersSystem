@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 const UserList = () => {
   const classes = useStyles()
 
-  const [allUsersList, setAllUsersList] = useState([])
+  const [newUsersList, setNewUsersList] = useState([])
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
   const [selectedName, setSelectedName] = useState('')
 
@@ -29,23 +29,21 @@ const UserList = () => {
     }
   }, [])
 
-  const newUsersList = allUsersList.map(el =>
-    ({
-      id: el._id,
-      name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
-      email: el.email,
-      role: el.role,
-      createdAt: el.creation_time
-    })
-  )
-
   function updateDeleteUser (deleteUserName, deleteUserId) {
     setDeleteThisUser({ name: deleteUserName, id: deleteUserId })
   }
 
   async function getAllUsers () {
     const response = await allUsers()
-    setAllUsersList(response.data.users)
+    setNewUsersList(response.data.users.map(el =>
+      ({
+        id: el._id,
+        name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
+        email: el.email,
+        role: el.role,
+        createdAt: el.creation_time
+      })
+    ))
   }
 
   function handleUpdate () {
@@ -60,16 +58,16 @@ const UserList = () => {
     }
   }
 
-  function getSingleUser () {
-    const singleSearch = search(selectedName, newUsersList)
-    return singleSearch
+  async function getSingleUser () {
+    const singleSearch = await search(selectedName, newUsersList)
+    setNewUsersList(singleSearch)
   }
 
   return (
     <div className={classes.root}>
-      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} selectedName={selectedName} setSelectedName={setSelectedName} getSingleUser={getSingleUser} />
+      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} selectedName={selectedName} getSingleUser={getSingleUser} handleUpdate={handleUpdate} setSelectedName={setSelectedName} />
       <div className={classes.content}>
-        <UsersTable users={newUsersList} getSingleUser={getSingleUser} handleDeleteUser={updateDeleteUser} />
+        <UsersTable users={newUsersList} handleDeleteUser={updateDeleteUser} />
       </div>
     </div>
   )

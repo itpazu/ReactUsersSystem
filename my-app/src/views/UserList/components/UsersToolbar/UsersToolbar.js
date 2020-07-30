@@ -96,7 +96,7 @@ const schema = {
 }
 
 const UsersToolbar = (props) => {
-  const { className, deleteUserValues, onUpdate, users, ...rest } = props
+  const { className, deleteUserValues, onUpdate, users, selectedName, setSelectedName, getSingleUser, handleUpdate, ...rest } = props
   const [modalStyle] = useState(getModalStyle)
   const [openAdd, setOpenAdd] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
@@ -350,6 +350,10 @@ const UsersToolbar = (props) => {
             className={classes.searchInput}
             placeholder='Search user'
             users={users}
+            selectedName={selectedName}
+            getSingleUser={getSingleUser}
+            handleUpdate={handleUpdate}
+            setSelectedName={setSelectedName}
           />
         </div>
       </div>
