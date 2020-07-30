@@ -30,7 +30,7 @@ const Routes = (props) => {
       //local server only
       // cookie.set('jwt_token', JwtToken);
       try {
-        return await handleFetch();
+        return await authenticate();
       } catch (error) {
         throw error;
       }
@@ -39,7 +39,7 @@ const Routes = (props) => {
     }
   };
 
-  const handleFetch = async () => {
+  const authenticate = async () => {
     const userId = cookie.get('_id');
     const csrf = cookie.get('csrf_token');
     // for local development only
@@ -47,7 +47,6 @@ const Routes = (props) => {
     // const token = 'skjfdhhkjdsnhkjhdsf'
 
     try {
-      //added token for local server only
       await authenticateUser({ _id: userId }, csrf);
       setIsAuthenticated(true);
     } catch (error) {

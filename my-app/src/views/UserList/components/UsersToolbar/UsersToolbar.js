@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,7 @@ import cookie from 'js-cookie';
 import SearchInput from '../../../../components/SearchInput/SearchInput';
 import Alert from '@material-ui/lab/Alert';
 import validate from 'validate.js';
+import Context from '../../../../context/Context';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -97,6 +98,8 @@ const schema = {
 
 const UsersToolbar = (props) => {
   const { className, deleteUserValues, onUpdate, ...rest } = props;
+  const context = useContext(Context);
+  const { LogOut } = context;
   const [modalStyle] = useState(getModalStyle);
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -195,13 +198,15 @@ const UsersToolbar = (props) => {
         }, 2500);
       })
       .catch((err) => {
-        console.log(err.response.data);
         setAddUserResponse({
           activateAlert: true,
           message: JSON.stringify(err.response.data),
           success: false,
         });
         cleanFormFields();
+        if (err.response.stauts === '402') {
+          context.Logout();
+        }
       });
   };
 
@@ -216,7 +221,7 @@ const UsersToolbar = (props) => {
   const handleDeleteUserSubmit = (event) => {
     event.preventDefault();
     deleteUser(deleteUserValues.id)
-      .then((res) => {
+      .then(() => {
         handleCloseDelete();
         onUpdate();
       })
