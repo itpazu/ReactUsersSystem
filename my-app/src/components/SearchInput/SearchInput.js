@@ -1,9 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import { Paper, Input } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/styles'
+import { Paper, TextField } from '@material-ui/core'
+import SearchIcon from '@material-ui/icons/Search'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,16 +20,27 @@ const useStyles = makeStyles(theme => ({
   },
   input: {
     flexGrow: 1,
+    width: '100%',
     fontSize: '14px',
     lineHeight: '16px',
     letterSpacing: '-0.05px'
   }
-}));
+}))
 
 const SearchInput = props => {
-  const { className, onChange, style, ...rest } = props;
+  const { className, onChange, style, users, selectedName, setSelectedName, ...rest } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
+
+  const handleSearchNameChange = (event) => {
+    setSelectedName(event.target.value)
+  }
+
+  const handleSearchNameClick = () => {
+    if (selectedName !== '' && selectedName !== undefined &&  !== null) {
+
+    }
+  }
 
   return (
     <Paper
@@ -37,20 +49,29 @@ const SearchInput = props => {
       style={style}
     >
       <SearchIcon className={classes.icon} />
-      <Input
-        {...rest}
+      <Autocomplete
+        freeSolo
         className={classes.input}
-        disableUnderline
-        onChange={onChange}
+        id='free-solo-2-demo'
+        disableClearable
+        options={users.map((option) => option.name)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            margin='normal'
+            variant='outlined'
+            InputProps={{ ...params.InputProps, type: 'search' }}
+          />
+        )}
       />
     </Paper>
-  );
-};
+  )
+}
 
 SearchInput.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
   style: PropTypes.object
-};
+}
 
-export default SearchInput;
+export default SearchInput

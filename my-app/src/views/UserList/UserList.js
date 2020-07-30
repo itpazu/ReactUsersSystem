@@ -17,6 +17,7 @@ const UserList = () => {
 
   const [allUsersList, setAllUsersList] = useState([])
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
+  const [selectedName, setSelectedName] = useState('')
 
   useEffect(() => {
     let mounted = true
@@ -51,11 +52,24 @@ const UserList = () => {
     getAllUsers()
   }
 
+  function search (nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].name === nameKey) {
+        return myArray[i]
+      }
+    }
+  }
+
+  function getSingleUser () {
+    const singleSearch = search(selectedName, newUsersList)
+    return singleSearch
+  }
+
   return (
     <div className={classes.root}>
-      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} />
+      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} selectedName={selectedName} setSelectedName={setSelectedName} getSingleUser={getSingleUser} />
       <div className={classes.content}>
-        <UsersTable users={newUsersList} handleDeleteUser={updateDeleteUser} />
+        <UsersTable users={newUsersList} getSingleUser={getSingleUser} handleDeleteUser={updateDeleteUser} />
       </div>
     </div>
   )

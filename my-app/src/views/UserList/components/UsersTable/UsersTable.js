@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UsersTable = props => {
-  const { className, users, handleDeleteUser, ...rest } = props
+  const { className, users, handleDeleteUser, getSingleUser, ...rest } = props
 
   const classes = useStyles()
 
