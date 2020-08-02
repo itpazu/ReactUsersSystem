@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const SearchInput = props => {
-  const { className, onChange, style, users, selectedName, setSelectedName, getSingleUser, handleUpdate, ...rest } = props
+  const { className, onChange, style, users, allUsers, selectedName, setSelectedName, getSingleUser, handleUpdate, getRelevantUsers, ...rest } = props
 
   const classes = useStyles()
 
@@ -41,10 +41,12 @@ const SearchInput = props => {
   }
 
   const handleSearchNameClick = () => {
-    if (selectedName !== '' && selectedName !== undefined && selectedName !== null && users.includes(selectedName)) {
+    if (selectedName !== '' && selectedName !== undefined && selectedName !== null && allUsers.filter(event => event.name.toLowerCase() === selectedName.toLowerCase()).length > 0) {
       getSingleUser()
     } else if (selectedName === '') {
       handleUpdate()
+    } else if (selectedName !== '' && selectedName !== undefined && selectedName !== null && allUsers.filter(event => event.name.toLowerCase().includes(selectedName.toLowerCase()).length > 0)) {
+      getRelevantUsers()
     }
   }
 
@@ -63,7 +65,7 @@ const SearchInput = props => {
         onChange={handleSearchNameChange}
         onInputChange={handleSearchNameChange}
         onKeyDown={handleSearchNameChange}
-        options={users.map((option) => option.name)}
+        options={allUsers.map((option) => option.name)}
         renderInput={(params) => (
           <TextField
             {...params}

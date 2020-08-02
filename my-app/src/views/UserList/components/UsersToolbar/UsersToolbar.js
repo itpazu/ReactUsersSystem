@@ -101,7 +101,7 @@ const UsersToolbar = (props) => {
   const { LogOut } = context
   const [openAdd, setOpenAdd] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
-  const { className, deleteUserValues, onUpdate, users, selectedName, setSelectedName, getSingleUser, handleUpdate, ...rest } = props
+  const { className, deleteUserValues, onUpdate, users, allUsers, selectedName, setSelectedName, getSingleUser, getRelevantUsers, handleUpdate, ...rest } = props
   const [modalStyle] = useState(getModalStyle)
   const [authenticationInfo, setAuthenticationInfo] = useState('')
   const [AddUserResponse, setAddUserResponse] = useState({

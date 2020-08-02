@@ -19,6 +19,7 @@ const UserList = () => {
   const classes = useStyles()
 
   const [newUsersList, setNewUsersList] = useState([])
+  const [allUsersList, setAllUsersList] = useState([])
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
   const [selectedName, setSelectedName] = useState('')
 
@@ -35,6 +36,15 @@ const UserList = () => {
     try {
       const response = await allUsers(userId, csrf)
       setNewUsersList(response.data.users.map(el =>
+        ({
+          id: el._id,
+          name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
+          email: el.email,
+          role: el.role,
+          createdAt: el.creation_time
+        })
+      ))
+      setAllUsersList(response.data.users.map(el =>
         ({
           id: el._id,
           name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
@@ -62,21 +72,36 @@ const UserList = () => {
   }
 
   function search (nameKey, myArray) {
-    for (var i = 0; i < myArray.length; i++) {
-      if (myArray[i].name === nameKey) {
-        return myArray[i]
+    const newName = nameKey.toLowerCase()
+    for (let i = 0; i < myArray.length; i++) {
+      if (myArray[i].name.toLowerCase() === newName) {
+        setNewUsersList([myArray[i]])
       }
     }
   }
 
-  async function getSingleUser () {
-    const singleSearch = await search(selectedName, newUsersList)
-    setNewUsersList(singleSearch)
+  function relevantSearches (nameKey, myArray) {
+    const newName = nameKey.toLowerCase()
+    const newArr = []
+    for (let i = 0; i < myArray.length; i++) {
+      if (myArray[i].name.includes(newName)) {
+        newArr.concat(myArray[i])
+      }
+    }
+    setNewUsersList(newArr)
+  }
+
+  function getSingleUser () {
+    search(selectedName, newUsersList)
+  }
+
+  function getRelevantUsers () {
+    relevantSearches(selectedName, newUsersList)
   }
 
   return (
     <div className={classes.root}>
-      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} selectedName={selectedName} getSingleUser={getSingleUser} handleUpdate={handleUpdate} setSelectedName={setSelectedName} />
+      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} allUsers={allUsersList} selectedName={selectedName} getSingleUser={getSingleUser} handleUpdate={handleUpdate} setSelectedName={setSelectedName} getRelevantUsers={getRelevantUsers} />
       <div className={classes.content}>
         <UsersTable users={newUsersList} handleDeleteUser={updateDeleteUser} />
       </div>
