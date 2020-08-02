@@ -22,6 +22,7 @@ const UserList = () => {
   const [allUsersList, setAllUsersList] = useState([])
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
   const [selectedName, setSelectedName] = useState('')
+  const [disabled, setDisabled] = useState(true)
 
   const context = useContext(Context)
   const { LogOut } = context
@@ -35,22 +36,24 @@ const UserList = () => {
   async function getAllUsers () {
     try {
       const response = await allUsers(userId, csrf)
-      setNewUsersList(response.data.users.map(el =>
+      setNewUsersList(response.data.users.map((el, index) =>
         ({
           id: el._id,
           name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
           email: el.email,
           role: el.role,
-          createdAt: el.creation_time
+          createdAt: el.creation_time,
+          count: index
         })
       ))
-      setAllUsersList(response.data.users.map(el =>
+      setAllUsersList(response.data.users.map((el, index) =>
         ({
           id: el._id,
           name: el.first_name.charAt(0).toUpperCase() + el.first_name.slice(1) + ' ' + el.last_name.charAt(0).toUpperCase() + el.last_name.slice(1),
           email: el.email,
           role: el.role,
-          createdAt: el.creation_time
+          createdAt: el.creation_time,
+          count: index
         })
       ))
     } catch (error) {
@@ -65,6 +68,15 @@ const UserList = () => {
 
   function updateDeleteUser (deleteUserName, deleteUserId) {
     setDeleteThisUser({ name: deleteUserName, id: deleteUserId })
+    updateDeleteButton(deleteUserName, deleteUserId)
+  }
+
+  function updateDeleteButton (deleteUserName, deleteUserId) {
+    if (deleteUserName !== '' && deleteUserName !== undefined && deleteUserName !== null && deleteUserId !== '' && deleteUserId !== undefined && deleteUserId !== null) {
+      setDisabled(false)
+    } else {
+      setDisabled(true)
+    }
   }
 
   function handleUpdate () {
@@ -92,16 +104,16 @@ const UserList = () => {
   }
 
   function getSingleUser () {
-    search(selectedName, newUsersList)
+    search(selectedName, allUsersList)
   }
 
   function getRelevantUsers () {
-    relevantSearches(selectedName, newUsersList)
+    relevantSearches(selectedName, allUsersList)
   }
 
   return (
     <div className={classes.root}>
-      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} allUsers={allUsersList} selectedName={selectedName} getSingleUser={getSingleUser} handleUpdate={handleUpdate} setSelectedName={setSelectedName} getRelevantUsers={getRelevantUsers} />
+      <UsersToolbar deleteUserValues={deleteThisUser} onUpdate={() => handleUpdate()} users={newUsersList} allUsers={allUsersList} selectedName={selectedName} getSingleUser={getSingleUser} handleUpdate={handleUpdate} setSelectedName={setSelectedName} getRelevantUsers={getRelevantUsers} disableButton={disabled} />
       <div className={classes.content}>
         <UsersTable users={newUsersList} handleDeleteUser={updateDeleteUser} />
       </div>

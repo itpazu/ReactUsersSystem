@@ -101,7 +101,7 @@ const UsersToolbar = (props) => {
   const { LogOut } = context
   const [openAdd, setOpenAdd] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
-  const { className, deleteUserValues, onUpdate, users, allUsers, selectedName, setSelectedName, getSingleUser, getRelevantUsers, handleUpdate, ...rest } = props
+  const { className, deleteUserValues, onUpdate, users, allUsers, selectedName, setSelectedName, getSingleUser, getRelevantUsers, handleUpdate, disableButton, ...rest } = props
   const [modalStyle] = useState(getModalStyle)
   const [authenticationInfo, setAuthenticationInfo] = useState('')
   const [AddUserResponse, setAddUserResponse] = useState({
@@ -352,6 +352,7 @@ const UsersToolbar = (props) => {
             color='primary'
             onClick={handleOpenDelete}
             variant='contained'
+            disabled={disableButton}
           >
             Delete user
           </Button>
@@ -361,10 +362,12 @@ const UsersToolbar = (props) => {
             className={classes.searchInput}
             placeholder='Search user'
             users={users}
+            allUsers={allUsers}
             selectedName={selectedName}
             getSingleUser={getSingleUser}
             handleUpdate={handleUpdate}
             setSelectedName={setSelectedName}
+            getRelevantUsers={getRelevantUsers}
           />
         </div>
       </div>

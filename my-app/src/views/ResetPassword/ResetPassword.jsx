@@ -1,52 +1,50 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
-  Link as RouterLink,
   withRouter,
   useLocation,
-  Redirect,
-} from 'react-router-dom';
-import validate from 'validate.js';
-import { makeStyles } from '@material-ui/styles';
+  Redirect
+} from 'react-router-dom'
+import validate from 'validate.js'
+import { makeStyles } from '@material-ui/styles'
 import {
   Grid,
   Button,
   IconButton,
   TextField,
-  Typography,
-} from '@material-ui/core';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Context from '../../context/Context';
-import Alert from '@material-ui/lab/Alert';
-import { checkTokenForPasswordReset, changePassword } from './../../lib/api';
+  Typography
+} from '@material-ui/core'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Alert from '@material-ui/lab/Alert'
+import { checkTokenForPasswordReset, changePassword } from './../../lib/api'
 
 const schema = {
   confirmPassword: {
     presence: { allowEmpty: false, message: 'is required' },
-    equality: 'password',
+    equality: 'password'
   },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       maximum: 22,
-      minimum: 8,
-    },
-  },
-};
+      minimum: 8
+    }
+  }
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    height: '-webkit-fill-available',
+    height: '-webkit-fill-available'
   },
   grid: {
-    height: '100%',
+    height: '100%'
   },
   quoteContainer: {
     [theme.breakpoints.down('md')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   quote: {
     backgroundColor: theme.palette.neutral,
@@ -57,28 +55,28 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: 'url(/images/frame_2.png)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
+    backgroundPosition: 'center'
   },
   quoteInner: {
     textAlign: 'center',
-    flexBasis: '600px',
+    flexBasis: '600px'
   },
   quoteText: {
     color: theme.palette.white,
-    fontWeight: 300,
+    fontWeight: 300
   },
   name: {
     marginTop: theme.spacing(3),
-    color: theme.palette.white,
+    color: theme.palette.white
   },
   bio: {
-    color: theme.palette.white,
+    color: theme.palette.white
   },
   contentContainer: {},
   content: {
     height: '100%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   contentHeader: {
     display: 'flex',
@@ -86,18 +84,18 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
   logoImage: {
-    marginLeft: theme.spacing(4),
+    marginLeft: theme.spacing(4)
   },
   contentBody: {
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'center',
-    },
+      justifyContent: 'center'
+    }
   },
   form: {
     paddingLeft: 100,
@@ -106,58 +104,57 @@ const useStyles = makeStyles((theme) => ({
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
+      paddingRight: theme.spacing(2)
+    }
   },
   title: {
-    marginTop: theme.spacing(16),
+    marginTop: theme.spacing(16)
   },
   socialButtons: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3)
   },
   socialIcon: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   suggestion: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   textField: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   signInButton: {
-    margin: theme.spacing(2, 0),
+    margin: theme.spacing(2, 0)
   },
   alert: {
     height: '100px',
     fontSize: '20px',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   alertBeforeLaunch: {
-    display: 'none',
-  },
-}));
+    display: 'none'
+  }
+}))
 
 const ResetPassword = () => {
-  const params = new URLSearchParams(useLocation().search);
-  const context = useContext(Context);
-  const IdFromToken = params.get('id');
-  const authToken = params.get('token');
-  const classes = useStyles();
-  const [togglePasswordView, setTogglePasswordView] = useState(true);
+  const params = new URLSearchParams(useLocation().search)
+  const IdFromToken = params.get('id')
+  const authToken = params.get('token')
+  const classes = useStyles()
+  const [togglePasswordView, setTogglePasswordView] = useState(true)
   const [response, setResponse] = useState({
     activateAlert: null,
     success: null,
     message: '',
     redirect: null,
-    PassChangeErrorAlert: null,
-  });
+    PassChangeErrorAlert: null
+  })
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
-    errors: {},
-  });
-  const [toggleAlertVisibility, setToggleAlertVisibility] = useState(null);
+    errors: {}
+  })
+  const [toggleAlertVisibility, setToggleAlertVisibility] = useState(null)
 
   useEffect(() => {
     if (IdFromToken && authToken) {
@@ -166,95 +163,95 @@ const ResetPassword = () => {
           setResponse((prevState) => ({
             ...prevState,
 
-            activateAlert: true,
-          }));
+            activateAlert: true
+          }))
         })
         .catch((error) => {
-          setToggleAlertVisibility(true);
+          setToggleAlertVisibility(true)
           setResponse((prevState) => ({
             ...prevState,
             success: false,
             activateAlert: false,
-            message: JSON.stringify(error.response.data),
-          }));
-        });
+            message: JSON.stringify(error.response.data)
+          }))
+        })
     } else {
-      setResponse({ redirect: true });
+      setResponse({ redirect: true })
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, schema)
 
     setFormState((formState) => ({
       ...formState,
       isValid: errors ? false : true,
-      errors: errors || {},
-    }));
-  }, [formState.values]);
+      errors: errors || {}
+    }))
+  }, [formState.values])
 
   const toggleShowPassword = () => {
-    setTogglePasswordView(!togglePasswordView);
-  };
+    setTogglePasswordView(!togglePasswordView)
+  }
 
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
-    event.persist();
+    const { name, value, checked } = event.target
+    event.persist()
 
     setFormState((formState) => ({
       ...formState,
       values: {
         ...formState.values,
-        [name]: event.target.type === 'checkbox' ? checked : value,
+        [name]: event.target.type === 'checkbox' ? checked : value
       },
       touched: {
         ...formState.touched,
-        [name]: true,
-      },
-    }));
-  };
+        [name]: true
+      }
+    }))
+  }
 
   const handleSignIn = async (event) => {
-    event.preventDefault();
-    setResponse((prevState) => ({ ...prevState, PassChangeErrorAlert: false }));
+    event.preventDefault()
+    setResponse((prevState) => ({ ...prevState, PassChangeErrorAlert: false }))
     setFormState({
       isValid: true,
       values: {},
       touched: {},
-      errors: {},
-    });
+      errors: {}
+    })
 
     try {
       const submitPassChange = await changePassword({
         password: formState.values.confirmPassword,
         confirm_password: formState.values.password,
-        _id: IdFromToken,
-      });
-      setToggleAlertVisibility(true);
+        _id: IdFromToken
+      })
+      setToggleAlertVisibility(true)
       setResponse({
         activateAlert: false,
         success: true,
-        message: submitPassChange.data,
-      });
+        message: submitPassChange.data
+      })
       setTimeout(() => {
-        setResponse({ redirect: true });
-      }, 3000);
+        setResponse({ redirect: true })
+      }, 3000)
     } catch (error) {
       setResponse({
         activateAlert: true,
         success: false,
         message: JSON.stringify(error.response.data),
-        PassChangeErrorAlert: true,
-      });
+        PassChangeErrorAlert: true
+      })
     }
-  };
+  }
 
   const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+    formState.touched[field] && formState.errors[field] ? true : false
 
   return (
     <div className={classes.root}>
@@ -300,7 +297,7 @@ const ResetPassword = () => {
                             )}
                           </IconButton>
                         </InputAdornment>
-                      ),
+                      )
                     }}
                   />
                   <TextField
@@ -334,7 +331,7 @@ const ResetPassword = () => {
                             )}
                           </IconButton>
                         </InputAdornment>
-                      ),
+                      )
                     }}
                   />
                   <Button
@@ -372,7 +369,7 @@ const ResetPassword = () => {
         </Grid>
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(ResetPassword);
+export default withRouter(ResetPassword)

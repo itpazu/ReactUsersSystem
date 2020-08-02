@@ -41,7 +41,7 @@ const TopBar = (props) => {
           <IconButton
             className={classes.signOutButton}
             color='inherit'
-            onClick={context.LogOut}
+            onClick={context.handleLogOut}
           >
             <InputIcon />
           </IconButton>

@@ -41,11 +41,11 @@ const SearchInput = props => {
   }
 
   const handleSearchNameClick = () => {
-    if (selectedName !== '' && selectedName !== undefined && selectedName !== null && allUsers.filter(event => event.name.toLowerCase() === selectedName.toLowerCase()).length > 0) {
+    if (selectedName !== '' && selectedName !== undefined && selectedName !== null && allUsers.filter(event => event.name.toLowerCase() === selectedName).length > 0) {
       getSingleUser()
     } else if (selectedName === '') {
       handleUpdate()
-    } else if (selectedName !== '' && selectedName !== undefined && selectedName !== null && allUsers.filter(event => event.name.toLowerCase().includes(selectedName.toLowerCase()).length > 0)) {
+    } else if (selectedName !== '' && selectedName !== undefined && selectedName !== null && allUsers.filter(event => event.name.toLowerCase().includes(selectedName).length > 0)) {
       getRelevantUsers()
     }
   }
