@@ -96,8 +96,8 @@ const UserList = () => {
     const newName = nameKey.toLowerCase()
     const newArr = []
     for (let i = 0; i < myArray.length; i++) {
-      if (myArray[i].name.includes(newName)) {
-        newArr.concat(myArray[i])
+      if (myArray[i].name.toLowerCase().includes(newName)) {
+        newArr.push(myArray[i])
       }
     }
     setNewUsersList(newArr)

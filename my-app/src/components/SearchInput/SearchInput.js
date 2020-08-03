@@ -33,6 +33,7 @@ const SearchInput = props => {
   const classes = useStyles()
 
   const handleSearchNameChange = (event, value) => {
+    event.preventDefault()
     if (typeof value === 'object' && value !== null) {
       setSelectedName(value.name)
     } else {
@@ -59,13 +60,12 @@ const SearchInput = props => {
       <SearchIcon className={classes.icon} />
       <Autocomplete
         freeSolo
+        options={allUsers}
         className={classes.input}
         id='free-solo-2-demo'
-        disableClearable
+        getOptionLabel={(option) => option.name}
         onChange={handleSearchNameChange}
         onInputChange={handleSearchNameChange}
-        onKeyDown={handleSearchNameChange}
-        options={allUsers.map((option) => option.name)}
         renderInput={(params) => (
           <TextField
             {...params}
