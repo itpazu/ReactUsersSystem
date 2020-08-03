@@ -26,9 +26,9 @@ const schema = {
   },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 22,
-      minimum: 8
+    format: {
+      pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{10,255}$/,
+      message: 'must be 10-25 characters long, and must contain at least one uppercase letter, one lowercase letter, and one numerical value'
     }
   }
 }
@@ -155,7 +155,6 @@ const ResetPassword = () => {
     errors: {}
   })
   const [toggleAlertVisibility, setToggleAlertVisibility] = useState(null)
-  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/
 
   useEffect(() => {
     if (IdFromToken && authToken) {
@@ -282,8 +281,6 @@ const ResetPassword = () => {
                     type={togglePasswordView ? 'password' : 'text'}
                     value={formState.values.password || ''}
                     variant='outlined'
-                    validations={{ matchRegexp: passwordRegex }}
-                    validationErrors={{ matchRegexp: 'Password must be 8-15 characters long, and must have at least one upper case letter, one lower case letter, and one numeric digit.' }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
@@ -318,8 +315,6 @@ const ResetPassword = () => {
                     type={togglePasswordView ? 'password' : 'text'}
                     value={formState.values.confirmPassword || ''}
                     variant='outlined'
-                    validations={{ matchRegexp: passwordRegex }}
-                    validationErrors={{ matchRegexp: 'Password must be 8-15 characters long, and must have at least one upper case letter, one lower case letter, and one numeric digit.' }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
