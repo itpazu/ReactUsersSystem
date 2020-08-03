@@ -23,12 +23,13 @@ const UserList = () => {
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
   const [selectedName, setSelectedName] = useState('')
   const [disabled, setDisabled] = useState(true)
+  const [errorFindUsers, setErrorFindUsers] = useState(false)
 
   const context = useContext(Context)
   const { LogOut } = context
   const userId = cookie.get('_id')
   const csrf = cookie.get('csrf_token')
-  const [errorFetchUsers, setErrorFetchUsers] = useState(null)
+  const [errorFetchUsers, setErrorFetchUsers] = useState(false)
   useEffect(() => {
     getAllUsers(userId, csrf)
   }, [])
@@ -62,6 +63,9 @@ const UserList = () => {
         LogOut()
       } else {
         setErrorFetchUsers(true)
+        setTimeout(() => {
+          setErrorFetchUsers(false)
+        }, 5000)
       }
     }
   }
@@ -100,7 +104,14 @@ const UserList = () => {
         newArr.push(myArray[i])
       }
     }
-    setNewUsersList(newArr)
+    if (newArr.length < 1) {
+      setErrorFindUsers(true)
+      setTimeout(() => {
+        setErrorFindUsers(false)
+      }, 3000)
+    } else {
+      setNewUsersList(newArr)
+    }
   }
 
   function getSingleUser () {
@@ -119,7 +130,12 @@ const UserList = () => {
       </div>
       {errorFetchUsers && (
         <div>
-          <Alert type='error'> Failed to load users</Alert>
+          <Alert severity='error'>Failed to load users</Alert>
+        </div>
+      )}
+      {errorFindUsers && (
+        <div>
+          <Alert severity='error'>Failed to find any matching users</Alert>
         </div>
       )}
     </div>
