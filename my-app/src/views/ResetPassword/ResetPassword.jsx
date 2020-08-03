@@ -155,6 +155,7 @@ const ResetPassword = () => {
     errors: {}
   })
   const [toggleAlertVisibility, setToggleAlertVisibility] = useState(null)
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/
 
   useEffect(() => {
     if (IdFromToken && authToken) {
@@ -281,6 +282,8 @@ const ResetPassword = () => {
                     type={togglePasswordView ? 'password' : 'text'}
                     value={formState.values.password || ''}
                     variant='outlined'
+                    validations={{ matchRegexp: passwordRegex }}
+                    validationErrors={{ matchRegexp: 'Password must be 8-15 characters long, and must have at least one upper case letter, one lower case letter, and one numeric digit.' }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
@@ -293,8 +296,8 @@ const ResetPassword = () => {
                             {togglePasswordView ? (
                               <Visibility />
                             ) : (
-                              <VisibilityOff />
-                            )}
+                                <VisibilityOff />
+                              )}
                           </IconButton>
                         </InputAdornment>
                       )
@@ -315,6 +318,8 @@ const ResetPassword = () => {
                     type={togglePasswordView ? 'password' : 'text'}
                     value={formState.values.confirmPassword || ''}
                     variant='outlined'
+                    validations={{ matchRegexp: passwordRegex }}
+                    validationErrors={{ matchRegexp: 'Password must be 8-15 characters long, and must have at least one upper case letter, one lower case letter, and one numeric digit.' }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
@@ -327,8 +332,8 @@ const ResetPassword = () => {
                             {togglePasswordView ? (
                               <Visibility />
                             ) : (
-                              <VisibilityOff />
-                            )}
+                                <VisibilityOff />
+                              )}
                           </IconButton>
                         </InputAdornment>
                       )
@@ -350,19 +355,19 @@ const ResetPassword = () => {
                   )}
                 </>
               ) : (
-                <>
-                  <Alert
-                    className={
-                      toggleAlertVisibility
-                        ? classes.alert
-                        : classes.alertBeforeLaunch
-                    }
-                    severity={response.success ? 'success' : 'error'}
-                  >
-                    {response.message}
-                  </Alert>
-                </>
-              )}
+                  <>
+                    <Alert
+                      className={
+                        toggleAlertVisibility
+                          ? classes.alert
+                          : classes.alertBeforeLaunch
+                      }
+                      severity={response.success ? 'success' : 'error'}
+                    >
+                      {response.message}
+                    </Alert>
+                  </>
+                )}
             </form>
             {response.redirect && <Redirect to='/login' />}
           </div>

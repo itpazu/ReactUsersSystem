@@ -13,7 +13,7 @@ const Routes = () => {
   const [userInput, setUserInput] = useState({ email: '', password: '' })
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  useEffect(() => {}, [])
+  useEffect(() => { }, [])
 
   const handleSubmittedForm = async (mail, pass) => {
     const userInput = { email: mail, password: pass }
@@ -69,7 +69,7 @@ const Routes = () => {
           component={userInput.role === 'admin' ? adminLayout : userLayout}
         />
         <LoginRoute exact path='/login' component={Minimal} />
-        <LoginRoute exact path='/change_pass' component={ResetPassword} />
+        <LoginRoute path='/change_pass' component={ResetPassword} />
       </Switch>
     </Context.Provider>
   )
