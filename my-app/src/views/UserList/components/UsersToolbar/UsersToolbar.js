@@ -14,11 +14,11 @@ import Alert from '@material-ui/lab/Alert'
 import validate from 'validate.js'
 import Context from '../../../../context/Context'
 
-function rand() {
+function rand () {
   return Math.round(Math.random() * 20) - 10
 }
 
-function getModalStyle() {
+function getModalStyle () {
   const top = 50 + rand()
   const left = 50 + rand()
 

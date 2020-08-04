@@ -36,6 +36,8 @@ const SearchInput = props => {
     event.preventDefault()
     if (typeof value === 'object' && value !== null) {
       setSelectedName(value.name)
+    } else if (value === '') {
+      handleUpdate()
     } else {
       setSelectedName(event.target.value)
     }
