@@ -98,13 +98,13 @@ const schema = {
 
 const UsersToolbar = (props) => {
   const context = useContext(Context);
-  const { LogOut } = context;
+  const { handleLogOut } = context;
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const {
     className,
     deleteUserValues,
-    onUpdate,
+    errorFetchUser,
     users,
     allUsers,
     selectedName,
@@ -116,13 +116,17 @@ const UsersToolbar = (props) => {
     ...rest
   } = props;
   const [modalStyle] = useState(getModalStyle);
-  const [authenticationInfo, setAuthenticationInfo] = useState('');
+  const adminId = cookie.get('_id');
+  const adminCsrf = cookie.get('csrf_token');
+  const [authenticationInfo, setAuthenticationInfo] = useState({
+    csrf_token: adminCsrf,
+    _id: adminId,
+  });
   const [AddUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
     message: '',
   });
-  const adminId = cookie.get('_id');
-  const adminCsrf = cookie.get('csrf_token');
+
   const classes = useStyles();
   const [formState, setFormState] = useState({
     isValid: false,
@@ -143,7 +147,6 @@ const UsersToolbar = (props) => {
 
     setFormState((prevState) => ({
       ...prevState,
-
       isValid: errors ? false : true,
       errors: errors || {},
     }));
@@ -154,8 +157,10 @@ const UsersToolbar = (props) => {
   };
 
   const handleCloseAddUser = () => {
+    handleUpdate();
     setOpenAdd(false);
     cleanFormFields();
+
     setAddUserResponse({
       activateAlert: false,
       message: '',
@@ -187,14 +192,25 @@ const UsersToolbar = (props) => {
 
   const handleAddUserSubmit = async (event) => {
     event.preventDefault();
-
     setAddUserResponse({
       activateAlert: false,
       message: '',
       success: false,
     });
+    addUserToDb();
+  };
+
+  const addUserToDb = async () => {
     try {
-      await postNewUser();
+      const newUser = await register(formState.values, authenticationInfo);
+      setAddUserResponse({
+        activateAlert: true,
+        message: newUser.data.message,
+        success: true,
+      });
+      setTimeout(() => {
+        handleCloseAddUser();
+      }, 2500);
     } catch (err) {
       let error = err.response.status;
       if (error == '401') {
@@ -204,16 +220,11 @@ const UsersToolbar = (props) => {
           success: false,
         });
         setTimeout(() => {
-          LogOut();
+          handleLogOut();
         }, 3500);
       } else if (error == '403') {
-        //send refresh token
-        try {
-          await refreshCredentials();
-          await postNewUser();
-        } catch (error) {
-          LogOut();
-        }
+        await refreshCredentials();
+        addUserToDb();
       } else {
         setAddUserResponse({
           activateAlert: true,
@@ -225,36 +236,16 @@ const UsersToolbar = (props) => {
     }
   };
 
-  const postNewUser = async () => {
-    try {
-      const refresh = await register(formState.values, authenticationInfo);
-      setAddUserResponse({
-        activateAlert: true,
-        message: refresh.data.message,
-        success: true,
-      });
-      setTimeout(() => {
-        handleCloseAddUser();
-      }, 2500);
-    } catch (error) {
-      throw error;
-    }
-  };
-
   const refreshCredentials = async () => {
     try {
       const { _id } = authenticationInfo;
-      const refresh = await refreshToken(_id);
-      const csrfToken = refresh.headers.authorization;
-      cookie.set('csrf_token', csrfToken);
-      setAuthenticationInfo((prevState) => ({
-        ...prevState,
-        csrf_token: csrfToken,
-      }));
+      await refreshToken(_id);
+      // addUserToDb();
     } catch (error) {
-      throw error;
+      handleLogOut();
     }
   };
+
   const cleanFormFields = () => {
     setFormState({
       isValid: false,
@@ -265,21 +256,29 @@ const UsersToolbar = (props) => {
   };
   const handleDeleteUserSubmit = (event) => {
     event.preventDefault();
+    handleDeleteUser();
+  };
+
+  const handleDeleteUser = async () => {
     deleteUser(deleteUserValues.id, authenticationInfo)
       .then(() => {
         handleCloseDelete();
-        onUpdate();
+        handleUpdate();
       })
       .catch((err) => {
         const error = err.response.status;
-        if (error == '402') {
+        if (error == '401') {
           setTimeout(() => {
-            LogOut();
+            handleLogOut();
           }, 2500);
+        } else if (error == '403') {
+          refreshCredentials();
+          handleDeleteUser();
+        } else {
+          errorFetchUser();
         }
       });
   };
-  console.log(AddUserResponse);
   const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 

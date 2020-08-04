@@ -20,7 +20,7 @@ const UserList = () => {
   const [allUsersList, setAllUsersList] = useState([]);
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' });
   const context = useContext(Context);
-  const { LogOut } = context;
+  const { handleLogOut } = context;
   const IdFromCookie = cookie.get('_id');
   const csrfFromCookie = cookie.get('csrf_token');
   const [userCredentials, setUserCredentials] = useState({
@@ -34,13 +34,13 @@ const UserList = () => {
   const [errorFindUsers, setErrorFindUsers] = useState(false);
 
   useEffect(() => {
-    const { userId, csrf } = userCredentials;
-    getAllUsers(userId, csrf);
-  }, [userCredentials]);
+    getAllUsers();
+  }, []);
 
-  async function getAllUsers(_id, csrfToken) {
+  async function getAllUsers() {
     try {
-      const response = await allUsers(_id, csrfToken);
+      const { userId, csrf } = userCredentials;
+      const response = await allUsers(userId, csrf);
       setAllUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -73,29 +73,20 @@ const UserList = () => {
       );
     } catch (error) {
       if (error.response.status == '401') {
-        LogOut();
+        handleLogOut();
       } else if (error.response.status == '403') {
-        try {
-          const refresh = await refreshCredentials();
-          const csrfToken = refresh.headers.authorization;
-          cookie.set('csrf_token', csrfToken);
-          setUserCredentials((prevState) => ({
-            ...prevState,
-            csrf: csrfToken,
-          }));
-        } catch (error) {
-          LogOut();
-        }
+        await refreshCredentials();
+      } else {
+        setErrorFetchUsers(true);
       }
     }
   }
-
   const refreshCredentials = async () => {
     try {
-      const { userId } = userCredentials;
-      return await refreshToken(userId);
+      await refreshToken(userCredentials.userId);
+      getAllUsers();
     } catch (error) {
-      throw error;
+      handleLogOut();
     }
   };
 
@@ -163,7 +154,6 @@ const UserList = () => {
       <div className={classes.root}>
         <UsersToolbar
           deleteUserValues={deleteThisUser}
-          onUpdate={() => handleUpdate()}
           users={newUsersList}
           allUsers={allUsersList}
           selectedName={selectedName}
@@ -172,11 +162,13 @@ const UserList = () => {
           setSelectedName={setSelectedName}
           getRelevantUsers={getRelevantUsers}
           disableButton={disabled}
+          errorFetchUser={() => setErrorFetchUsers(true)}
         />
         <div className={classes.content}>
           <UsersTable
             users={newUsersList}
             handleDeleteUser={updateDeleteUser}
+            loggedUser={userCredentials.userId}
           />
         </div>
         {errorFetchUsers && (
