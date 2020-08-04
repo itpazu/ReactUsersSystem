@@ -292,9 +292,7 @@ const ResetPassword = () => {
                           >
                             {togglePasswordView ? (
                               <Visibility />
-                            ) : (
-                                <VisibilityOff />
-                              )}
+                            ) : (<VisibilityOff />)}
                           </IconButton>
                         </InputAdornment>
                       )
@@ -326,9 +324,7 @@ const ResetPassword = () => {
                           >
                             {togglePasswordView ? (
                               <Visibility />
-                            ) : (
-                                <VisibilityOff />
-                              )}
+                            ) : (<VisibilityOff />)}
                           </IconButton>
                         </InputAdornment>
                       )
@@ -352,17 +348,11 @@ const ResetPassword = () => {
               ) : (
                   <>
                     <Alert
-                      className={
-                        toggleAlertVisibility
-                          ? classes.alert
-                          : classes.alertBeforeLaunch
-                      }
-                      severity={response.success ? 'success' : 'error'}
-                    >
+                      className={toggleAlertVisibility ? classes.alert : classes.alertBeforeLaunch}
+                      severity={response.success ? 'success' : 'error'}>
                       {response.message}
                     </Alert>
-                  </>
-                )}
+                  </>)}
             </form>
             {response.redirect && <Redirect to='/login' />}
           </div>

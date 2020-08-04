@@ -1,59 +1,59 @@
-import React, { useState, useEffect, useContext } from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import { register, deleteUser, refreshToken } from '../../../../lib/api';
-import cookie from 'js-cookie';
-import SearchInput from '../../../../components/SearchInput/SearchInput';
-import Alert from '@material-ui/lab/Alert';
-import validate from 'validate.js';
-import Context from '../../../../context/Context';
+import React, { useState, useEffect, useContext } from 'react'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/styles'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
+import TextField from '@material-ui/core/TextField'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import InputLabel from '@material-ui/core/InputLabel'
+import { register, deleteUser, refreshToken } from '../../../../lib/api'
+import cookie from 'js-cookie'
+import SearchInput from '../../../../components/SearchInput/SearchInput'
+import Alert from '@material-ui/lab/Alert'
+import validate from 'validate.js'
+import Context from '../../../../context/Context'
 
 function rand() {
-  return Math.round(Math.random() * 20) - 10;
+  return Math.round(Math.random() * 20) - 10
 }
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50 + rand()
+  const left = 50 + rand()
 
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
+    transform: `translate(-${top}%, -${left}%)`
+  }
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'grid',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   row: {
     height: '42px',
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   spacer: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   TopButtons: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   inputFields: {
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   submitButton: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   searchInput: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   paper: {
     position: 'absolute',
@@ -61,46 +61,46 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 3)
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
-  },
-}));
+    minWidth: 120
+  }
+}))
 
 const schema = {
   first_name: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2,
-    },
+      minimum: 2
+    }
   },
   last_name: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2,
-    },
+      minimum: 2
+    }
   },
   email: {
     presence: { allowEmpty: false, message: 'required field' },
     email: true,
     length: {
-      maximum: 64,
-    },
+      maximum: 64
+    }
   },
   role: {
-    presence: { allowEmpty: false, message: 'required field' },
-  },
-};
+    presence: { allowEmpty: false, message: 'required field' }
+  }
+}
 
 const UsersToolbar = (props) => {
-  const context = useContext(Context);
-  const { LogOut } = context;
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
+  const context = useContext(Context)
+  const { handleLogOut } = context
+  const [openAdd, setOpenAdd] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
   const {
     className,
     deleteUserValues,
@@ -114,174 +114,174 @@ const UsersToolbar = (props) => {
     handleUpdate,
     disableButton,
     ...rest
-  } = props;
-  const [modalStyle] = useState(getModalStyle);
-  const [authenticationInfo, setAuthenticationInfo] = useState('');
+  } = props
+  const [modalStyle] = useState(getModalStyle)
+  const [authenticationInfo, setAuthenticationInfo] = useState('')
   const [AddUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
-    message: '',
-  });
-  const adminId = cookie.get('_id');
-  const adminCsrf = cookie.get('csrf_token');
-  const classes = useStyles();
+    message: ''
+  })
+  const adminId = cookie.get('_id')
+  const adminCsrf = cookie.get('csrf_token')
+  const classes = useStyles()
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
-    errors: {},
-  });
+    errors: {}
+  })
 
   useEffect(() => {
     setAuthenticationInfo({
       csrf_token: adminCsrf,
-      _id: adminId,
-    });
-  }, []);
+      _id: adminId
+    })
+  }, [])
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, schema)
 
     setFormState((prevState) => ({
       ...prevState,
 
       isValid: errors ? false : true,
-      errors: errors || {},
-    }));
-  }, [formState.values]);
+      errors: errors || {}
+    }))
+  }, [formState.values])
 
   const handleOpenAdd = () => {
-    setOpenAdd(true);
-  };
+    setOpenAdd(true)
+  }
 
   const handleCloseAddUser = () => {
-    setOpenAdd(false);
-    cleanFormFields();
+    setOpenAdd(false)
+    cleanFormFields()
     setAddUserResponse({
       activateAlert: false,
       message: '',
-      success: false,
-    });
-  };
+      success: false
+    })
+  }
 
   const handleOpenDelete = () => {
-    setOpenDelete(true);
-  };
+    setOpenDelete(true)
+  }
 
   const handleCloseDelete = () => {
-    setOpenDelete(false);
-  };
+    setOpenDelete(false)
+  }
 
   const handleOnAddUserInputChange = (event) => {
-    event.persist();
-    const { value, name } = event.target;
+    event.persist()
+    const { value, name } = event.target
 
     setFormState((formState) => ({
       ...formState,
       values: { ...formState.values, [name]: value },
       touched: {
         ...formState.touched,
-        [name]: true,
-      },
-    }));
-  };
+        [name]: true
+      }
+    }))
+  }
 
   const handleAddUserSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     setAddUserResponse({
       activateAlert: false,
       message: '',
-      success: false,
-    });
+      success: false
+    })
     try {
-      await postNewUser();
+      await postNewUser()
     } catch (err) {
-      let error = err.response.status;
+      const error = err.response.status
       if (error == '401') {
         setAddUserResponse({
           activateAlert: true,
           message: JSON.stringify(err.response.data),
-          success: false,
-        });
+          success: false
+        })
         setTimeout(() => {
-          LogOut();
-        }, 3500);
+          handleLogOut()
+        }, 3500)
       } else if (error == '403') {
-        //send refresh token
+        // send refresh token
         try {
-          await refreshCredentials();
-          await postNewUser();
+          await refreshCredentials()
+          await postNewUser()
         } catch (error) {
-          LogOut();
+          handleLogOut()
         }
       } else {
         setAddUserResponse({
           activateAlert: true,
           message: JSON.stringify(err.response.data),
-          success: false,
-        });
-        cleanFormFields();
+          success: false
+        })
+        cleanFormFields()
       }
     }
-  };
+  }
 
   const postNewUser = async () => {
     try {
-      const refresh = await register(formState.values, authenticationInfo);
+      const refresh = await register(formState.values, authenticationInfo)
       setAddUserResponse({
         activateAlert: true,
         message: refresh.data.message,
-        success: true,
-      });
+        success: true
+      })
       setTimeout(() => {
-        handleCloseAddUser();
-      }, 2500);
+        handleCloseAddUser()
+      }, 2500)
     } catch (error) {
-      throw error;
+      throw error
     }
-  };
+  }
 
   const refreshCredentials = async () => {
     try {
-      const { _id } = authenticationInfo;
-      const refresh = await refreshToken(_id);
-      const csrfToken = refresh.headers.authorization;
-      cookie.set('csrf_token', csrfToken);
+      const { _id } = authenticationInfo
+      const refresh = await refreshToken(_id)
+      const csrfToken = refresh.headers.authorization
+      cookie.set('csrf_token', csrfToken)
       setAuthenticationInfo((prevState) => ({
         ...prevState,
-        csrf_token: csrfToken,
-      }));
+        csrf_token: csrfToken
+      }))
     } catch (error) {
-      throw error;
+      throw error
     }
-  };
+  }
   const cleanFormFields = () => {
     setFormState({
       isValid: false,
       values: {},
       touched: {},
-      errors: {},
-    });
-  };
+      errors: {}
+    })
+  }
   const handleDeleteUserSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     deleteUser(deleteUserValues.id, authenticationInfo)
       .then(() => {
-        handleCloseDelete();
-        onUpdate();
+        handleCloseDelete()
+        onUpdate()
       })
       .catch((err) => {
-        const error = err.response.status;
+        const error = err.response.status
         if (error == '402') {
           setTimeout(() => {
-            LogOut();
-          }, 2500);
+            handleLogOut()
+          }, 2500)
         }
-      });
-  };
-  console.log(AddUserResponse);
+      })
+  }
+  console.log(AddUserResponse)
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+    formState.touched[field] && formState.errors[field] ? true : false
 
   const addUserBody = (
     <div
@@ -343,7 +343,7 @@ const UsersToolbar = (props) => {
             name='role'
             inputProps={{
               name: 'role',
-              id: 'age-native-simple',
+              id: 'age-native-simple'
             }}
           >
             <option aria-label='None' value='' />
@@ -369,7 +369,7 @@ const UsersToolbar = (props) => {
         </Alert>
       )}
     </div>
-  );
+  )
 
   const deleteBody = (
     <div style={modalStyle} className={classes.paper}>
@@ -380,7 +380,7 @@ const UsersToolbar = (props) => {
         Submit
       </Button>
     </div>
-  );
+  )
 
   return (
     <>
@@ -441,7 +441,7 @@ const UsersToolbar = (props) => {
         </Modal>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default UsersToolbar;
+export default UsersToolbar

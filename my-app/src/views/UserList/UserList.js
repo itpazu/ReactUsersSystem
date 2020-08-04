@@ -1,46 +1,46 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { UsersToolbar, UsersTable } from './components';
-import { allUsers, refreshToken } from '../../lib/api';
-import Context from '../../context/Context';
-import cookie from 'js-cookie';
-import Alert from '@material-ui/lab/Alert';
+import React, { useState, useEffect, useContext } from 'react'
+import { makeStyles } from '@material-ui/styles'
+import { UsersToolbar, UsersTable } from './components'
+import { allUsers, refreshToken } from '../../lib/api'
+import Context from '../../context/Context'
+import cookie from 'js-cookie'
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(3)
   },
   content: {
-    marginTop: theme.spacing(2),
-  },
-}));
+    marginTop: theme.spacing(2)
+  }
+}))
 
 const UserList = () => {
-  const classes = useStyles();
-  const [allUsersList, setAllUsersList] = useState([]);
-  const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' });
-  const context = useContext(Context);
-  const { LogOut } = context;
-  const IdFromCookie = cookie.get('_id');
-  const csrfFromCookie = cookie.get('csrf_token');
+  const classes = useStyles()
+  const [allUsersList, setAllUsersList] = useState([])
+  const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
+  const context = useContext(Context)
+  const { LogOut } = context
+  const IdFromCookie = cookie.get('_id')
+  const csrfFromCookie = cookie.get('csrf_token')
   const [userCredentials, setUserCredentials] = useState({
     userId: IdFromCookie,
-    csrf: csrfFromCookie,
-  });
-  const [errorFetchUsers, setErrorFetchUsers] = useState(null);
-  const [newUsersList, setNewUsersList] = useState([]);
-  const [selectedName, setSelectedName] = useState('');
-  const [disabled, setDisabled] = useState(true);
-  const [errorFindUsers, setErrorFindUsers] = useState(false);
+    csrf: csrfFromCookie
+  })
+  // const [errorFetchUsers, setErrorFetchUsers] = useState(null)
+  const [newUsersList, setNewUsersList] = useState([])
+  const [selectedName, setSelectedName] = useState('')
+  const [disabled, setDisabled] = useState(true)
+  const [errorFindUsers, setErrorFindUsers] = useState(false)
 
   useEffect(() => {
-    const { userId, csrf } = userCredentials;
-    getAllUsers(userId, csrf);
-  }, [userCredentials]);
+    const { userId, csrf } = userCredentials
+    getAllUsers(userId, csrf)
+  }, [userCredentials])
 
-  async function getAllUsers(_id, csrfToken) {
+  async function getAllUsers (_id, csrfToken) {
     try {
-      const response = await allUsers(_id, csrfToken);
+      const response = await allUsers(_id, csrfToken)
       setAllUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -53,9 +53,9 @@ const UserList = () => {
           email: el.email,
           role: el.role,
           createdAt: el.creation_time,
-          count: index,
+          count: index
         }))
-      );
+      )
       setNewUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -68,23 +68,23 @@ const UserList = () => {
           email: el.email,
           role: el.role,
           createdAt: el.creation_time,
-          count: index,
+          count: index
         }))
-      );
+      )
     } catch (error) {
       if (error.response.status == '401') {
-        LogOut();
+        LogOut()
       } else if (error.response.status == '403') {
         try {
-          const refresh = await refreshCredentials();
-          const csrfToken = refresh.headers.authorization;
-          cookie.set('csrf_token', csrfToken);
+          const refresh = await refreshCredentials()
+          const csrfToken = refresh.headers.authorization
+          cookie.set('csrf_token', csrfToken)
           setUserCredentials((prevState) => ({
             ...prevState,
-            csrf: csrfToken,
-          }));
+            csrf: csrfToken
+          }))
         } catch (error) {
-          LogOut();
+          LogOut()
         }
       }
     }
@@ -95,20 +95,20 @@ const UserList = () => {
       const { userId } = userCredentials;
       return await refreshToken(userId);
     } catch (error) {
-      throw error;
+      throw error
     }
-  };
-
-  function handleUpdate() {
-    getAllUsers();
   }
 
-  function updateDeleteUser(deleteUserName, deleteUserId) {
-    setDeleteThisUser({ name: deleteUserName, id: deleteUserId });
-    updateDeleteButton(deleteUserName, deleteUserId);
+  function handleUpdate () {
+    getAllUsers()
   }
 
-  function updateDeleteButton(deleteUserName, deleteUserId) {
+  function updateDeleteUser (deleteUserName, deleteUserId) {
+    setDeleteThisUser({ name: deleteUserName, id: deleteUserId })
+    updateDeleteButton(deleteUserName, deleteUserId)
+  }
+
+  function updateDeleteButton (deleteUserName, deleteUserId) {
     if (
       deleteUserName !== '' &&
       deleteUserName !== undefined &&
@@ -117,45 +117,45 @@ const UserList = () => {
       deleteUserId !== undefined &&
       deleteUserId !== null
     ) {
-      setDisabled(false);
+      setDisabled(false)
     } else {
-      setDisabled(true);
+      setDisabled(true)
     }
   }
 
-  function search(nameKey, myArray) {
-    const newName = nameKey.toLowerCase();
+  function search (nameKey, myArray) {
+    const newName = nameKey.toLowerCase()
     for (let i = 0; i < myArray.length; i++) {
       if (myArray[i].name.toLowerCase() === newName) {
-        setNewUsersList([myArray[i]]);
+        setNewUsersList([myArray[i]])
       }
     }
   }
 
-  function relevantSearches(nameKey, myArray) {
-    const newName = nameKey.toLowerCase();
-    const newArr = [];
+  function relevantSearches (nameKey, myArray) {
+    const newName = nameKey.toLowerCase()
+    const newArr = []
     for (let i = 0; i < myArray.length; i++) {
       if (myArray[i].name.toLowerCase().includes(newName)) {
-        newArr.push(myArray[i]);
+        newArr.push(myArray[i])
       }
     }
     if (newArr.length < 1) {
-      setErrorFindUsers(true);
+      setErrorFindUsers(true)
       setTimeout(() => {
-        setErrorFindUsers(false);
-      }, 3000);
+        setErrorFindUsers(false)
+      }, 3000)
     } else {
-      setNewUsersList(newArr);
+      setNewUsersList(newArr)
     }
   }
 
-  function getSingleUser() {
-    search(selectedName, allUsersList);
+  function getSingleUser () {
+    search(selectedName, allUsersList)
   }
 
-  function getRelevantUsers() {
-    relevantSearches(selectedName, allUsersList);
+  function getRelevantUsers () {
+    relevantSearches(selectedName, allUsersList)
   }
 
   return (
@@ -179,11 +179,11 @@ const UserList = () => {
             handleDeleteUser={updateDeleteUser}
           />
         </div>
-        {errorFetchUsers && (
+        {/* {errorFetchUsers && (
           <div>
             <Alert severity='error'>Failed to load users</Alert>
           </div>
-        )}
+        )} */}
         {errorFindUsers && (
           <div>
             <Alert severity='error'>Failed to find any matching users</Alert>
@@ -191,7 +191,7 @@ const UserList = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default UserList;
+export default UserList
