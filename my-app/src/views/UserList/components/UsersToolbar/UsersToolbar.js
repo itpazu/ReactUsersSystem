@@ -97,12 +97,25 @@ const schema = {
 };
 
 const UsersToolbar = (props) => {
-  const { className, deleteUserValues, onUpdate, ...rest } = props;
   const context = useContext(Context);
   const { LogOut } = context;
-  const [modalStyle] = useState(getModalStyle);
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const {
+    className,
+    deleteUserValues,
+    onUpdate,
+    users,
+    allUsers,
+    selectedName,
+    setSelectedName,
+    getSingleUser,
+    getRelevantUsers,
+    handleUpdate,
+    disableButton,
+    ...rest
+  } = props;
+  const [modalStyle] = useState(getModalStyle);
   const [authenticationInfo, setAuthenticationInfo] = useState('');
   const [AddUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
@@ -258,7 +271,7 @@ const UsersToolbar = (props) => {
         onUpdate();
       })
       .catch((err) => {
-        let error = err.response.status;
+        const error = err.response.status;
         if (error == '402') {
           setTimeout(() => {
             LogOut();
@@ -327,7 +340,7 @@ const UsersToolbar = (props) => {
             value={formState.values.role || ''}
             onChange={handleOnAddUserInputChange}
             error={hasError('role')}
-            name={'role'}
+            name='role'
             inputProps={{
               name: 'role',
               id: 'age-native-simple',
@@ -388,6 +401,7 @@ const UsersToolbar = (props) => {
             color='primary'
             onClick={handleOpenDelete}
             variant='contained'
+            disabled={disableButton}
           >
             Delete user
           </Button>
@@ -396,6 +410,13 @@ const UsersToolbar = (props) => {
           <SearchInput
             className={classes.searchInput}
             placeholder='Search user'
+            users={users}
+            allUsers={allUsers}
+            selectedName={selectedName}
+            getSingleUser={getSingleUser}
+            handleUpdate={handleUpdate}
+            setSelectedName={setSelectedName}
+            getRelevantUsers={getRelevantUsers}
           />
         </div>
       </div>

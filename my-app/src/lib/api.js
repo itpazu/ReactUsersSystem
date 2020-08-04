@@ -52,7 +52,6 @@ export const Logout = () => {
 
 export const register = (newUser, authenticationInfo) => {
   const csrf = authenticationInfo.csrf_token;
-  console.log(csrf);
   const body = newUser;
   body._id = authenticationInfo._id;
   // const JwtToken = authenticationInfo.Jwt_token; //local serverOnly
@@ -69,6 +68,7 @@ export const register = (newUser, authenticationInfo) => {
 
 export const deleteUser = (userId, authenticationInfo) => {
   const body = { user_id: userId, _id: authenticationInfo._id };
+
   const data = {
     headers: {
       credentials: 'cross-site',
