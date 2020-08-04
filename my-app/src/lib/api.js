@@ -21,6 +21,17 @@ export const authenticateUser = (data, csrf) => {
   return axios.post(`${baseURL}/test`, data, headers);
 };
 
+export const refreshToken = (userId) => {
+  const data = { _id: userId };
+  const headers = {
+    headers: {
+      credentials: 'cross-site',
+    },
+    withCredentials: true,
+  };
+  return axios.post(`${baseURL}/refresh_token`, data, headers);
+};
+
 // for local server only:
 // export const authenticateUser = (data, csrf, JwtToken) => {
 //   const headers = {
@@ -41,6 +52,7 @@ export const Logout = () => {
 
 export const register = (newUser, authenticationInfo) => {
   const csrf = authenticationInfo.csrf_token;
+  console.log(csrf);
   const body = newUser;
   body._id = authenticationInfo._id;
   // const JwtToken = authenticationInfo.Jwt_token; //local serverOnly
@@ -57,7 +69,6 @@ export const register = (newUser, authenticationInfo) => {
 
 export const deleteUser = (userId, authenticationInfo) => {
   const body = { user_id: userId, _id: authenticationInfo._id };
-
   const data = {
     headers: {
       credentials: 'cross-site',

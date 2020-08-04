@@ -69,7 +69,7 @@ const Routes = (props) => {
           component={userInput.role === 'admin' ? adminLayout : userLayout}
         />
         <LoginRoute exact path='/login' component={Minimal} />
-        <LoginRoute eaxct path='/change_pass' component={ResetPassword} />
+        <LoginRoute path='/change_pass' component={ResetPassword} />
       </Switch>
     </Context.Provider>
   );

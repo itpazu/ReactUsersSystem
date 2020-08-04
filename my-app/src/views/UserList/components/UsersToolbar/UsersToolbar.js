@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import { register, deleteUser } from '../../../../lib/api';
+import { register, deleteUser, refreshToken } from '../../../../lib/api';
 import cookie from 'js-cookie';
 import SearchInput from '../../../../components/SearchInput/SearchInput';
 import Alert from '@material-ui/lab/Alert';
@@ -172,7 +172,7 @@ const UsersToolbar = (props) => {
     }));
   };
 
-  const handleAddUserSubmit = (event) => {
+  const handleAddUserSubmit = async (event) => {
     event.preventDefault();
 
     setAddUserResponse({
@@ -180,32 +180,67 @@ const UsersToolbar = (props) => {
       message: '',
       success: false,
     });
-    register(formState.values, authenticationInfo)
-      .then((res) => {
+    try {
+      await postNewUser();
+    } catch (err) {
+      let error = err.response.status;
+      if (error == '401') {
         setAddUserResponse({
           activateAlert: true,
-          message: res.data.message,
-          success: true,
+          message: JSON.stringify(err.response.data),
+          success: false,
         });
         setTimeout(() => {
-          handleCloseAddUser();
-        }, 2500);
-      })
-      .catch((err) => {
-        let error = err.response.status;
-        if (error == '402') {
-          setTimeout(() => {
-            LogOut();
-          }, 2500);
-        } else {
-          setAddUserResponse({
-            activateAlert: true,
-            message: JSON.stringify(err.response.data),
-            success: false,
-          });
-          cleanFormFields();
+          LogOut();
+        }, 3500);
+      } else if (error == '403') {
+        //send refresh token
+        try {
+          await refreshCredentials();
+          await postNewUser();
+        } catch (error) {
+          LogOut();
         }
+      } else {
+        setAddUserResponse({
+          activateAlert: true,
+          message: JSON.stringify(err.response.data),
+          success: false,
+        });
+        cleanFormFields();
+      }
+    }
+  };
+
+  const postNewUser = async () => {
+    try {
+      const refresh = await register(formState.values, authenticationInfo);
+      setAddUserResponse({
+        activateAlert: true,
+        message: refresh.data.message,
+        success: true,
       });
+      setTimeout(() => {
+        handleCloseAddUser();
+      }, 2500);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const refreshCredentials = async () => {
+    try {
+      const { _id } = authenticationInfo;
+      const refresh = await refreshToken(_id);
+      const csrfToken = refresh.headers.authorization;
+      cookie.set('csrf_token', csrfToken);
+      setAuthenticationInfo((prevState) => ({
+        ...prevState,
+        csrf_token: csrfToken,
+      }));
+    } catch (error) {
+      throw error;
+    }
   };
   const cleanFormFields = () => {
     setFormState({
@@ -231,6 +266,7 @@ const UsersToolbar = (props) => {
         }
       });
   };
+  console.log(AddUserResponse);
   const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
