@@ -30,7 +30,7 @@ const UserList = () => {
     userId: IdFromCookie,
     csrf: csrfFromCookie,
   });
-  // const [errorFetchUsers, setErrorFetchUsers] = useState(null)
+  const [errorFetchUsers, setErrorFetchUsers] = useState(null);
   const [newUsersList, setNewUsersList] = useState([]);
   const [selectedName, setSelectedName] = useState('');
   const [disabled, setDisabled] = useState(true);
@@ -172,11 +172,11 @@ const UserList = () => {
             loggedUser={userCredentials.userId}
           />
         </div>
-        {/* {errorFetchUsers && (
+        {errorFetchUsers && (
           <div>
             <Alert severity='error'>Failed to load users</Alert>
           </div>
-        )} */}
+        )}
         {errorFindUsers && (
           <div>
             <Collapse in={errorFindUsers}>
