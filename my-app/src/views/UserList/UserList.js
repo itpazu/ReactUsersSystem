@@ -23,7 +23,7 @@ const UserList = () => {
   const [allUsersList, setAllUsersList] = useState([])
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
   const context = useContext(Context)
-  const { LogOut } = context
+  const { handleLogOut } = context
   const IdFromCookie = cookie.get('_id')
   const csrfFromCookie = cookie.get('csrf_token')
   const [userCredentials, setUserCredentials] = useState({
@@ -76,7 +76,7 @@ const UserList = () => {
       )
     } catch (error) {
       if (error.response.status == '401') {
-        LogOut()
+        handleLogOut()
       } else if (error.response.status == '403') {
         try {
           const refresh = await refreshCredentials()
@@ -87,7 +87,7 @@ const UserList = () => {
             csrf: csrfToken
           }))
         } catch (error) {
-          LogOut()
+          handleLogOut()
         }
       }
     }
