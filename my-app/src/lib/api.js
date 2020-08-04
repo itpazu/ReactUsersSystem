@@ -51,8 +51,6 @@ export const Logout = () => {
 };
 
 export const register = (newUser, authenticationInfo) => {
-  console.log(authenticationInfo);
-  console.log(newUser);
   const csrf = authenticationInfo.csrf_token;
   const body = newUser;
   body._id = authenticationInfo._id;

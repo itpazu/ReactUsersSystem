@@ -212,7 +212,7 @@ const UsersToolbar = (props) => {
         handleCloseAddUser();
       }, 2500);
     } catch (err) {
-      let error = err.response.status;
+      const error = err.response.status;
       if (error == '401') {
         setAddUserResponse({
           activateAlert: true,
