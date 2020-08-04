@@ -5,6 +5,9 @@ import { allUsers, refreshToken } from '../../lib/api'
 import Context from '../../context/Context'
 import cookie from 'js-cookie'
 import Alert from '@material-ui/lab/Alert'
+import CloseIcon from '@material-ui/icons/Close'
+import IconButton from '@material-ui/core/IconButton'
+import Collapse from '@material-ui/core/Collapse'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,8 +95,8 @@ const UserList = () => {
 
   const refreshCredentials = async () => {
     try {
-      const { userId } = userCredentials;
-      return await refreshToken(userId);
+      const { userId } = userCredentials
+      return await refreshToken(userId)
     } catch (error) {
       throw error
     }
@@ -142,11 +145,9 @@ const UserList = () => {
     }
     if (newArr.length < 1) {
       setErrorFindUsers(true)
-      setTimeout(() => {
-        setErrorFindUsers(false)
-      }, 3000)
     } else {
       setNewUsersList(newArr)
+      setErrorFindUsers(false)
     }
   }
 
@@ -186,7 +187,25 @@ const UserList = () => {
         )} */}
         {errorFindUsers && (
           <div>
-            <Alert severity='error'>Failed to find any matching users</Alert>
+            <Collapse in={errorFindUsers}>
+              <Alert
+                severity='error'
+                action={
+                  <IconButton
+                    aria-label='close'
+                    color='inherit'
+                    size='small'
+                    onClick={() => {
+                      setErrorFindUsers(false)
+                    }}
+                  >
+                    <CloseIcon fontSize='inherit' />
+                  </IconButton>
+                }
+              >
+                Failed to find any matching users!
+              </Alert>
+            </Collapse>
           </div>
         )}
       </div>
