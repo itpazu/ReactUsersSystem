@@ -9,17 +9,17 @@ export const LogIn = (data) => {
   return axios.post(`${baseURL}/login`, data, { withCredentials: true });
 };
 
-// remote
-export const authenticateUser = (data, csrf) => {
-  const headers = {
-    headers: {
-      credentials: 'cross-site',
-      Authorization: csrf,
-    },
-    withCredentials: true,
-  };
-  return axios.post(`${baseURL}/test`, data, headers);
-};
+// // remote
+// export const authenticateUser = (data, csrf) => {
+//   const headers = {
+//     headers: {
+//       credentials: 'cross-site',
+//       Authorization: csrf,
+//     },
+//     withCredentials: true,
+//   };
+//   return axios.post(`${baseURL}/test`, data, headers);
+// };
 
 export const refreshToken = (userId) => {
   const data = { _id: userId };

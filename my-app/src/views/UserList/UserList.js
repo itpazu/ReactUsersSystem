@@ -103,14 +103,7 @@ const UserList = () => {
   }
 
   function updateDeleteButton(deleteUserName, deleteUserId) {
-    if (
-      deleteUserName !== '' &&
-      deleteUserName !== undefined &&
-      deleteUserName !== null &&
-      deleteUserId !== '' &&
-      deleteUserId !== undefined &&
-      deleteUserId !== null
-    ) {
+    if (deleteUserName && deleteUserId) {
       setDisabled(false);
     } else {
       setDisabled(true);
