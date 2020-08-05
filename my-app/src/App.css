@@ -1,4 +1,4 @@
-#homePageImage {
+.homePageImage {
   background-image: url(/images/google_pixel_3_app_presentation.jpg);
   background-repeat: no-repeat;
   background-size: cover;
@@ -8,7 +8,7 @@
   align-items: center;
 }
 
-#welcomeText {
+.welcomeText {
   text-align: center;
   color: white;
   text-shadow: 2px 2px 6px #000;

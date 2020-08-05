@@ -11,7 +11,7 @@ import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: 56,
-    height: '100%',
+    height: '-webkit-fill-available',
     [theme.breakpoints.up('sm')]: {
       paddingTop: 64
     }
@@ -60,7 +60,7 @@ const Main = (props) => {
           open={shouldOpenSidebar}
           variant={isDesktop ? 'persistent' : 'temporary'}
         />
-        <main>
+        <main className={classes.content}>
           {children}
           <PrivateRoute exact path='/' component={HomePage} />
         </main>
