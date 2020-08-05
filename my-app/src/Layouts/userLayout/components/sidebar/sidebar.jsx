@@ -2,15 +2,15 @@ import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Divider, Drawer } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
-import TextFieldsIcon from '@material-ui/icons/TextFields'
-import ImageIcon from '@material-ui/icons/Image'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SettingsIcon from '@material-ui/icons/Settings'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
 import Profile from './profile/profile'
 import SidebarNav from './sideBarNav/sideBarNav'
 import Context from '../../../../context/Context'
+import WeekendIcon from '@material-ui/icons/Weekend'
+import ListAltIcon from '@material-ui/icons/ListAlt'
+import EqualizerIcon from '@material-ui/icons/Equalizer'
+import CodeIcon from '@material-ui/icons/Code'
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -49,24 +49,24 @@ const Sidebar = (props) => {
       icon: <DashboardIcon />
     },
     {
-      title: 'Products',
-      href: '/products',
-      icon: <ShoppingBasketIcon />
+      title: 'BI System',
+      href: '/system',
+      icon: <CodeIcon />
     },
     {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />
+      title: 'DB User Actions',
+      href: '/actions',
+      icon: <ListAltIcon />
     },
     {
-      title: 'Typography',
-      href: '/typography',
-      icon: <TextFieldsIcon />
+      title: 'The Lounge',
+      href: '/lounge',
+      icon: <WeekendIcon />
     },
     {
-      title: 'Icons',
-      href: '/icons',
-      icon: <ImageIcon />
+      title: 'Server Statistics',
+      href: '/stats',
+      icon: <EqualizerIcon />
     },
     {
       title: 'Account',

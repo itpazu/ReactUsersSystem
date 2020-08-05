@@ -1,49 +1,49 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { UsersToolbar, UsersTable } from './components';
-import { allUsers, refreshToken } from '../../lib/api';
-import Context from '../../context/Context';
-import cookie from 'js-cookie';
-import Alert from '@material-ui/lab/Alert';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
-import Collapse from '@material-ui/core/Collapse';
+import React, { useState, useEffect, useContext } from 'react'
+import { makeStyles } from '@material-ui/styles'
+import { UsersToolbar, UsersTable } from './components'
+import { allUsers, refreshToken } from '../../lib/api'
+import Context from '../../context/Context'
+import cookie from 'js-cookie'
+import Alert from '@material-ui/lab/Alert'
+import CloseIcon from '@material-ui/icons/Close'
+import IconButton from '@material-ui/core/IconButton'
+import Collapse from '@material-ui/core/Collapse'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(3)
   },
   content: {
-    marginTop: theme.spacing(2),
-  },
-}));
+    marginTop: theme.spacing(2)
+  }
+}))
 
 const UserList = () => {
-  const classes = useStyles();
-  const [allUsersList, setAllUsersList] = useState([]);
-  const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' });
-  const context = useContext(Context);
-  const { handleLogOut } = context;
-  const IdFromCookie = cookie.get('_id');
-  const csrfFromCookie = cookie.get('csrf_token');
+  const classes = useStyles()
+  const [allUsersList, setAllUsersList] = useState([])
+  const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' })
+  const context = useContext(Context)
+  const { handleLogOut } = context
+  const IdFromCookie = cookie.get('_id')
+  const csrfFromCookie = cookie.get('csrf_token')
   const [userCredentials, setUserCredentials] = useState({
     userId: IdFromCookie,
-    csrf: csrfFromCookie,
-  });
-  const [errorFetchUsers, setErrorFetchUsers] = useState(null);
-  const [newUsersList, setNewUsersList] = useState([]);
-  const [selectedName, setSelectedName] = useState('');
-  const [disabled, setDisabled] = useState(true);
-  const [errorFindUsers, setErrorFindUsers] = useState(false);
+    csrf: csrfFromCookie
+  })
+  const [errorFetchUsers, setErrorFetchUsers] = useState(null)
+  const [newUsersList, setNewUsersList] = useState([])
+  const [selectedName, setSelectedName] = useState('')
+  const [disabled, setDisabled] = useState(true)
+  const [errorFindUsers, setErrorFindUsers] = useState(false)
 
   useEffect(() => {
-    getAllUsers();
-  }, []);
+    getAllUsers()
+  }, [])
 
-  async function getAllUsers() {
+  const getAllUsers = async () => {
     try {
-      const { userId, csrf } = userCredentials;
-      const response = await allUsers(userId, csrf);
+      const { userId, csrf } = userCredentials
+      const response = await allUsers(userId, csrf)
       setAllUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -56,9 +56,9 @@ const UserList = () => {
           email: el.email,
           role: el.role,
           createdAt: el.creation_time,
-          count: index,
+          count: index
         }))
-      );
+      )
       setNewUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -71,76 +71,76 @@ const UserList = () => {
           email: el.email,
           role: el.role,
           createdAt: el.creation_time,
-          count: index,
+          count: index
         }))
-      );
+      )
     } catch (error) {
       if (error.response.status == '401') {
-        handleLogOut();
+        handleLogOut()
       } else if (error.response.status == '403') {
-        await refreshCredentials();
+        await refreshCredentials()
       } else {
-        setErrorFetchUsers(true);
+        setErrorFetchUsers(true)
       }
     }
   }
   const refreshCredentials = async () => {
     try {
-      await refreshToken(userCredentials.userId);
-      getAllUsers();
+      await refreshToken(userCredentials.userId)
+      getAllUsers()
     } catch (error) {
-      handleLogOut();
+      handleLogOut()
     }
-  };
-
-  function handleUpdate() {
-    getAllUsers();
   }
 
-  function updateDeleteUser(deleteUserName, deleteUserId) {
-    setDeleteThisUser({ name: deleteUserName, id: deleteUserId });
-    updateDeleteButton(deleteUserName, deleteUserId);
+  const handleUpdate = () => {
+    getAllUsers()
   }
 
-  function updateDeleteButton(deleteUserName, deleteUserId) {
+  const updateDeleteUser = (deleteUserName, deleteUserId) => {
+    setDeleteThisUser({ name: deleteUserName, id: deleteUserId })
+    updateDeleteButton(deleteUserName, deleteUserId)
+  }
+
+  const updateDeleteButton = (deleteUserName, deleteUserId) => {
     if (deleteUserName && deleteUserId) {
-      setDisabled(false);
+      setDisabled(false)
     } else {
-      setDisabled(true);
+      setDisabled(true)
     }
   }
 
-  function search(nameKey, myArray) {
-    const newName = nameKey.toLowerCase();
+  const search = (nameKey, myArray) => {
+    const newName = nameKey.toLowerCase()
     for (let i = 0; i < myArray.length; i++) {
       if (myArray[i].name.toLowerCase() === newName) {
-        setNewUsersList([myArray[i]]);
+        setNewUsersList([myArray[i]])
       }
     }
   }
 
-  function relevantSearches(nameKey, myArray) {
-    const newName = nameKey.toLowerCase();
-    const newArr = [];
+  const relevantSearches = (nameKey, myArray) => {
+    const newName = nameKey.toLowerCase()
+    const newArr = []
     for (let i = 0; i < myArray.length; i++) {
       if (myArray[i].name.toLowerCase().includes(newName)) {
-        newArr.push(myArray[i]);
+        newArr.push(myArray[i])
       }
     }
     if (newArr.length < 1) {
-      setErrorFindUsers(true);
+      setErrorFindUsers(true)
     } else {
-      setNewUsersList(newArr);
-      setErrorFindUsers(false);
+      setNewUsersList(newArr)
+      setErrorFindUsers(false)
     }
   }
 
-  function getSingleUser() {
-    search(selectedName, allUsersList);
+  const getSingleUser = () => {
+    search(selectedName, allUsersList)
   }
 
-  function getRelevantUsers() {
-    relevantSearches(selectedName, allUsersList);
+  const getRelevantUsers = () => {
+    relevantSearches(selectedName, allUsersList)
   }
 
   return (
@@ -181,7 +181,7 @@ const UserList = () => {
                     color='inherit'
                     size='small'
                     onClick={() => {
-                      setErrorFindUsers(false);
+                      setErrorFindUsers(false)
                     }}
                   >
                     <CloseIcon fontSize='inherit' />
@@ -195,7 +195,7 @@ const UserList = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default UserList;
+export default UserList

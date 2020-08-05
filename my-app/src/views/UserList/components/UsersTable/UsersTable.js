@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState } from 'react'
+import clsx from 'clsx'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import { makeStyles } from '@material-ui/styles'
 import {
   Card,
   CardActions,
@@ -15,30 +15,30 @@ import {
   TableRow,
   Typography,
   TablePagination,
-  RadioGroup,
-} from '@material-ui/core';
-import 'react-perfect-scrollbar/dist/css/styles.css';
-import { getInitials } from '../../../../helpers';
+  RadioGroup
+} from '@material-ui/core'
+import 'react-perfect-scrollbar/dist/css/styles.css'
+import { getInitials } from '../../../../helpers'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   content: {
-    padding: 0,
+    padding: 0
   },
   inner: {
-    minWidth: 1050,
+    minWidth: 1050
   },
   nameContainer: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   avatar: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2)
   },
   actions: {
-    justifyContent: 'flex-end',
-  },
-}));
+    justifyContent: 'flex-end'
+  }
+}))
 
 const UsersTable = (props) => {
   const {
@@ -48,36 +48,36 @@ const UsersTable = (props) => {
     count,
     loggedUser,
     ...rest
-  } = props;
-  const classes = useStyles();
+  } = props
+  const classes = useStyles()
 
-  const [selectedUserId, setSelectedUserId] = useState('');
-  const [selectedUserName, setSelectedUserName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
+  const [selectedUserId, setSelectedUserId] = useState('')
+  const [selectedUserName, setSelectedUserName] = useState('')
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [page, setPage] = useState(0)
 
   const handleRadioChange = (event) => {
     if (
       event.target.value === selectedUserId &&
       event.target.name === selectedUserName
     ) {
-      setSelectedUserId('');
-      setSelectedUserName('');
-      handleDeleteUser('', '');
+      setSelectedUserId('')
+      setSelectedUserName('')
+      handleDeleteUser('', '')
     } else {
-      setSelectedUserId(event.target.value);
-      setSelectedUserName(event.target.name);
-      handleDeleteUser(event.target.name, event.target.value);
+      setSelectedUserId(event.target.value)
+      setSelectedUserName(event.target.name)
+      handleDeleteUser(event.target.name, event.target.value)
     }
-  };
+  }
 
   const handlePageChange = (event, page) => {
-    setPage(page);
-  };
+    setPage(page)
+  }
 
   const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(event.target.value);
-  };
+    setRowsPerPage(event.target.value)
+  }
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -147,7 +147,7 @@ const UsersTable = (props) => {
         />
       </CardActions>
     </Card>
-  );
-};
+  )
+}
 
-export default UsersTable;
+export default UsersTable
