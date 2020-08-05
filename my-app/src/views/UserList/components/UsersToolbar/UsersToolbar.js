@@ -182,7 +182,7 @@ const UsersToolbar = (props) => {
 
     setFormState((formState) => ({
       ...formState,
-      values: { ...formState.values, [name]: value },
+      values: { ...formState.values, [name]: value.toLowerCase() },
       touched: {
         ...formState.touched,
         [name]: true
