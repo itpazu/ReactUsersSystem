@@ -16,7 +16,7 @@ const Routes = () => {
   useEffect(() => {}, [])
 
   const handleSubmittedForm = async (mail, pass) => {
-    const userInput = { email: mail, password: pass }
+    const userInput = { email: mail.toLowerCase(), password: pass }
     setUserInput(userInput)
     try {
       const response = await LogIn(userInput)
