@@ -12,6 +12,7 @@ import WeekendIcon from '@material-ui/icons/Weekend'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import EqualizerIcon from '@material-ui/icons/Equalizer'
 import CodeIcon from '@material-ui/icons/Code'
+import InputIcon from '@material-ui/icons/Input'
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -83,6 +84,11 @@ const Sidebar = (props) => {
       title: 'Settings',
       href: '/settings',
       icon: <SettingsIcon />
+    },
+    {
+      title: <span onClick={context.handleLogOut}>Log Out</span>,
+      href: '',
+      icon: <InputIcon onClick={context.handleLogOut} />
     }
   ]
 

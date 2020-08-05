@@ -43,7 +43,7 @@ const Routes = () => {
         <PrivateRoute
           exact
           path='/'
-          component={userInput.role === 'admin' ? adminLayout : userLayout}
+          component={userInput.role !== 'user' ? adminLayout : userLayout}
         />
         <LoginRoute exact path='/login' component={Minimal} />
         <LoginRoute path='/change_pass' component={ResetPassword} />
