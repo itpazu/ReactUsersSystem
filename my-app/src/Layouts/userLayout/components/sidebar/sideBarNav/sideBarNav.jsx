@@ -1,7 +1,8 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import { NavLink as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles'
 import { List, ListItem, Button, colors } from '@material-ui/core'
+import Context from '../../../../../context/Context'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium
   },
   icon: {
-    color: colors.blueGrey[800],
+    color: theme.palette.icon,
     width: 24,
     height: 24,
     display: 'flex',
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   },
   active: {
-    color: colors.blueGrey[50],
+    color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
     '& $icon': {
-      color: colors.blueGrey[50]
+      color: theme.palette.primary.main
     }
   }
 }))
@@ -46,21 +47,36 @@ const SidebarNav = (props) => {
   const { pages, ...rest } = props
 
   const classes = useStyles()
+  const context = useContext(Context)
 
   return (
     <List {...rest} className={classes.root}>
       {pages.map((page) => (
-        <ListItem className={classes.item} disableGutters key={page.title}>
-          <Button
-            activeClassName={classes.active}
-            className={classes.button}
-            component={CustomRouterLink}
-            to={page.href}
-          >
-            <div className={classes.icon}>{page.icon}</div>
-            {page.title}
-          </Button>
-        </ListItem>
+        <>
+          {page.title === 'Log Out' ?
+            <ListItem className={classes.item} disableGutters key={page.title} onClick={context.handleLogOut}>
+              <Button
+                activeClassName={classes.active}
+                className={classes.button}
+                component={CustomRouterLink}
+                to={page.href}
+              >
+                <div className={classes.icon}>{page.icon}</div>
+                {page.title}
+              </Button>
+            </ListItem>
+            : <ListItem className={classes.item} disableGutters key={page.title}>
+              <Button
+                activeClassName={classes.active}
+                className={classes.button}
+                component={CustomRouterLink}
+                to={page.href}
+              >
+                <div className={classes.icon}>{page.icon}</div>
+                {page.title}
+              </Button>
+            </ListItem>}
+        </>
       ))}
     </List>
   )

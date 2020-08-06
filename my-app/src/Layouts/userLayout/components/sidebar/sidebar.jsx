@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Sidebar = (props) => {
-  const { open, variant, onClose, className, ...rest } = props
+  const { open, variant, onClose, ...rest } = props
 
   const classes = useStyles()
 
@@ -80,9 +80,9 @@ const Sidebar = (props) => {
       icon: <SettingsIcon />
     },
     {
-      title: <span onClick={context.handleLogOut}>Log Out</span>,
+      title: 'Log Out',
       href: '',
-      icon: <InputIcon onClick={context.handleLogOut} />
+      icon: <InputIcon />
     }
   ]
 

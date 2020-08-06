@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Main = (props) => {
+const Main = () => {
   const classes = useStyles()
   const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
