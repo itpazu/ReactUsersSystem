@@ -47,7 +47,7 @@ const Sidebar = (props) => {
   const pages = [
     {
       title: 'Dashboard',
-      href: '/',
+      href: '/dashboard',
       icon: <DashboardIcon />
     },
     {
@@ -87,7 +87,7 @@ const Sidebar = (props) => {
     },
     {
       title: 'Log Out',
-      href: '',
+      href: '/login',
       icon: <InputIcon />
     }
   ]
