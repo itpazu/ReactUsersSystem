@@ -51,6 +51,8 @@ export default {
     default: '#F4F6F8',
     paper: white
   },
+  topBar: colors.blue[400],
+  button: colors.blueGrey[800],
   icon: colors.blueGrey[600],
   divider: colors.grey[200]
 }
