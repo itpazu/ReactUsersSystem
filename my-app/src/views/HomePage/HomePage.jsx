@@ -7,8 +7,8 @@ const HomePage = () => {
   const lastName = context.userInput.last_name.charAt(0).toUpperCase() + context.userInput.last_name.slice(1)
 
   return (
-    <div class='homePageImage'>
-      <h1 class='welcomeText'>Welcome to KeepersHome {firstName} {lastName}!</h1>
+    <div className='homePageImage'>
+      <h1 className='welcomeText'>Welcome to KeepersHome {firstName} {lastName}!</h1>
     </div>
   )
 }
