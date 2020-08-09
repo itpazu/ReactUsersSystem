@@ -35,7 +35,6 @@ const UserList = () => {
   const [selectedName, setSelectedName] = useState('');
   const [disabled, setDisabled] = useState(true);
   const [errorFindUsers, setErrorFindUsers] = useState(false);
-
   useEffect(() => {
     getAllUsers();
   }, []);
@@ -44,7 +43,6 @@ const UserList = () => {
     try {
       const { userId, csrf } = userCredentials;
       const response = await allUsers(userId, csrf);
-      console.log(response.data.users);
       setAllUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -164,7 +162,7 @@ const UserList = () => {
           <UsersTable
             users={newUsersList}
             handleDeleteUser={updateDeleteUser}
-            loggedUser={userCredentials.userId}
+            loggedUser={userCredentials}
           />
         </div>
         {errorFetchUsers && (
