@@ -152,7 +152,7 @@ const UsersToolbar = (props) => {
     }));
   }, [formState.values]);
 
-  const handleOpenAdd = () => {
+  const handleOpenAdd = (e) => {
     setOpenAdd(true);
   };
 
@@ -259,6 +259,9 @@ const UsersToolbar = (props) => {
     handleDeleteUser();
   };
 
+  // const openUnblockUser = (event) => {
+  //   console.log(event.name);
+  // };
   const handleDeleteUser = async () => {
     deleteUser(deleteUserValues.id, authenticationInfo)
       .then(() => {
@@ -440,6 +443,7 @@ const UsersToolbar = (props) => {
           {deleteBody}
         </Modal>
       </div>
+      <div></div>
     </>
   );
 };

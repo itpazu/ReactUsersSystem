@@ -64,7 +64,6 @@ const UsersTable = (props) => {
   const [selectedUserName, setSelectedUserName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  console.log(users[1]);
   const handleRadioChange = (event) => {
     if (
       event.target.value === selectedUserId &&
