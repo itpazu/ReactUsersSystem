@@ -26,7 +26,7 @@ const Main = () => {
     },
     content: {
       backgroundColor: context.backgroundType,
-      height: '100%'
+      height: '200%'
     }
   }))
   const classes = useStyles()
