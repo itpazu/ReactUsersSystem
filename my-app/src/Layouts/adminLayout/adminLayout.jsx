@@ -56,7 +56,7 @@ const Main = () => {
             [classes.shiftContent]: isDesktop
           })}
         >
-          <TopBar onSidebarOpen={handleSidebarOpen} darkState={context.darkState} onHandleThemeChange={context.handleThemeChange} />
+          <TopBar onSidebarOpen={handleSidebarOpen} />
 
           <Sidebar
             onClose={handleSidebarClose}

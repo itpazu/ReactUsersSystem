@@ -5,12 +5,16 @@ import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import InputIcon from '@material-ui/icons/Input'
 import Context from '../../../../context/Context'
+import Switch from '@material-ui/core/Switch'
+import Brightness4Icon from '@material-ui/icons/Brightness4'
+import Brightness5Icon from '@material-ui/icons/Brightness5'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: 'none',
-    height: '60px',
-    backgroundColor: theme.palette.info.light
+    height: '64px',
+    backgroundColor: theme.palette.topBar,
+    margin: 0
   },
   flexGrow: {
     flexGrow: 1
@@ -36,12 +40,16 @@ const TopBar = (props) => {
             width='50'
           />
         </Link>
-        <div className={classes.flexGrow} />
+        <div style={{ marginLeft: 'auto', marginRight: 'auto', display: 'flex', alignItems: 'center' }}>
+          {context.darkState === true ? <Brightness5Icon style={{ color: 'white' }} /> : <Brightness4Icon style={{ color: 'white' }} />}
+          <Switch checked={context.darkState} onChange={context.handleThemeChange} />
+          <div className={classes.flexGrow} />
+        </div>
         <Hidden mdDown>
           <IconButton
             className={classes.signOutButton}
-            color='inherit'
             onClick={context.handleLogOut}
+            style={{ color: 'white' }}
           >
             <InputIcon />
           </IconButton>

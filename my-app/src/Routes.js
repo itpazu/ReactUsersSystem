@@ -71,7 +71,7 @@ const Routes = () => {
 
   return (
     <Context.Provider
-      value={{ backgroundType, handleSubmittedForm, isAuthenticated, handleLogOut, userInput, darkTheme, handleThemeChange }}
+      value={{ backgroundType, handleSubmittedForm, isAuthenticated, handleLogOut, userInput, darkTheme, handleThemeChange, darkState }}
     >
       <Switch>
         <PrivateRoute
