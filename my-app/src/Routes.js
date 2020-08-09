@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Switch } from 'react-router-dom'
 import adminLayout from './Layouts/adminLayout/adminLayout'
 import userLayout from './Layouts/userLayout/userLayout'
+import developerLayout from './Layouts/developerLayout/developerLayout'
+import productManagerLayout from './Layouts/productManagerLayout/productManagerLayout'
+import marketingLayout from './Layouts/marketingLayout/marketingLayout'
 import cookie from 'js-cookie'
 import { LogIn } from './lib/api'
 import Minimal from './Layouts/minimal/Minimal'
@@ -43,7 +46,7 @@ const Routes = () => {
         <PrivateRoute
           exact
           path='/'
-          component={userInput.role !== 'user' ? adminLayout : userLayout}
+          component={userInput.role === 'admin' ? adminLayout : (userInput.role === 'developer' ? developerLayout : (userInput.role === 'product manager' ? productManagerLayout : (userInput.role === 'marketing' ? marketingLayout : userLayout)))}
         />
         <LoginRoute exact path='/login' component={Minimal} />
         <LoginRoute path='/change_pass' component={ResetPassword} />
