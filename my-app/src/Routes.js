@@ -2,16 +2,32 @@ import React, { useState, useEffect } from 'react'
 import { Switch } from 'react-router-dom'
 import adminLayout from './Layouts/adminLayout/adminLayout'
 import userLayout from './Layouts/userLayout/userLayout'
+import developerLayout from './Layouts/developerLayout/developerLayout'
+import productManagerLayout from './Layouts/productManagerLayout/productManagerLayout'
+import marketingLayout from './Layouts/marketingLayout/marketingLayout'
 import cookie from 'js-cookie'
 import { LogIn } from './lib/api'
 import Minimal from './Layouts/minimal/Minimal'
 import Context from './context/Context'
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute'
 import ResetPassword from './views/ResetPassword/ResetPassword'
+import {
+  orange,
+  lightBlue,
+  deepPurple,
+  deepOrange
+} from '@material-ui/core/colors'
+import theme from './theme/themeProvider'
+import { createMuiTheme } from '@material-ui/core/styles'
 
 const Routes = () => {
   const [userInput, setUserInput] = useState({ email: '', password: '' })
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [darkState, setDarkState] = useState(false)
+  const palletType = darkState ? 'dark' : 'light'
+  const backgroundType = darkState ? theme.palette.black : theme.palette.white
+  const mainPrimaryColor = darkState ? orange[500] : lightBlue[500]
+  const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500]
 
   useEffect(() => {}, [])
 
@@ -35,15 +51,33 @@ const Routes = () => {
     setIsAuthenticated(false)
     cookie.remove('csrf_token')
   }
+
+  const handleThemeChange = () => {
+    setDarkState(!darkState)
+  }
+
+  const darkTheme = createMuiTheme({
+    palette: {
+      type: palletType,
+      primary: {
+        main: mainPrimaryColor
+      },
+      secondary: {
+        main: mainSecondaryColor
+      },
+      topBar: mainPrimaryColor
+    }
+  })
+
   return (
     <Context.Provider
-      value={{ handleSubmittedForm, isAuthenticated, handleLogOut, userInput }}
+      value={{ backgroundType, handleSubmittedForm, isAuthenticated, handleLogOut, userInput, darkTheme, handleThemeChange, darkState }}
     >
       <Switch>
         <PrivateRoute
           exact
           path='/'
-          component={userInput.role !== 'user' ? adminLayout : userLayout}
+          component={userInput.role === 'admin' ? adminLayout : (userInput.role === 'developer' ? developerLayout : (userInput.role === 'product manager' ? productManagerLayout : (userInput.role === 'marketing' ? marketingLayout : userLayout)))}
         />
         <LoginRoute exact path='/login' component={Minimal} />
         <LoginRoute path='/change_pass' component={ResetPassword} />

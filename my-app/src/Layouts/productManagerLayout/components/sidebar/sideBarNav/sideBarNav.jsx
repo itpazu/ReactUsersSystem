@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 0
   },
   button: {
-    color: theme.palette.button,
+    color: colors.blueGrey[800],
     padding: '10px 8px',
     justifyContent: 'flex-start',
     textTransform: 'none',
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium
   },
   icon: {
-    color: theme.palette.button,
+    color: theme.palette.icon,
     width: 24,
     height: 24,
     display: 'flex',
