@@ -7,8 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import { register, deleteUser, refreshToken } from '../../../../lib/api';
-import cookie from 'js-cookie';
+import { register, deleteUser } from '../../../../lib/api';
 import SearchInput from '../../../../components/SearchInput/SearchInput';
 import Alert from '@material-ui/lab/Alert';
 import validate from 'validate.js';
@@ -98,7 +97,7 @@ const schema = {
 
 const UsersToolbar = (props) => {
   const context = useContext(Context);
-  const { handleLogOut } = context;
+  const { handleLogOut, refreshCredentials, currentlyLoggedUser } = context;
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const {
@@ -116,12 +115,6 @@ const UsersToolbar = (props) => {
     ...rest
   } = props;
   const [modalStyle] = useState(getModalStyle);
-  const adminId = cookie.get('_id');
-  const adminCsrf = cookie.get('csrf_token');
-  const [authenticationInfo, setAuthenticationInfo] = useState({
-    csrf_token: adminCsrf,
-    _id: adminId,
-  });
   const [AddUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
     message: '',
@@ -134,13 +127,6 @@ const UsersToolbar = (props) => {
     touched: {},
     errors: {},
   });
-
-  useEffect(() => {
-    setAuthenticationInfo({
-      csrf_token: adminCsrf,
-      _id: adminId,
-    });
-  }, []);
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -202,7 +188,7 @@ const UsersToolbar = (props) => {
 
   const addUserToDb = async () => {
     try {
-      const newUser = await register(formState.values, authenticationInfo);
+      const newUser = await register(formState.values, currentlyLoggedUser);
       setAddUserResponse({
         activateAlert: true,
         message: newUser.data.message,
@@ -223,8 +209,7 @@ const UsersToolbar = (props) => {
           handleLogOut();
         }, 3500);
       } else if (error == '403') {
-        await refreshCredentials();
-        addUserToDb();
+        await refreshCredentials(addUserToDb);
       } else {
         setAddUserResponse({
           activateAlert: true,
@@ -233,16 +218,6 @@ const UsersToolbar = (props) => {
         });
         cleanFormFields();
       }
-    }
-  };
-
-  const refreshCredentials = async () => {
-    try {
-      const { _id } = authenticationInfo;
-      await refreshToken(_id);
-      // addUserToDb();
-    } catch (error) {
-      handleLogOut();
     }
   };
 
@@ -259,11 +234,8 @@ const UsersToolbar = (props) => {
     handleDeleteUser();
   };
 
-  // const openUnblockUser = (event) => {
-  //   console.log(event.name);
-  // };
   const handleDeleteUser = async () => {
-    deleteUser(deleteUserValues.id, authenticationInfo)
+    deleteUser(deleteUserValues.id, currentlyLoggedUser)
       .then(() => {
         handleCloseDelete();
         handleUpdate();
@@ -275,8 +247,7 @@ const UsersToolbar = (props) => {
             handleLogOut();
           }, 2500);
         } else if (error == '403') {
-          refreshCredentials();
-          handleDeleteUser();
+          refreshCredentials(handleDeleteUser);
         } else {
           errorFetchUser();
         }

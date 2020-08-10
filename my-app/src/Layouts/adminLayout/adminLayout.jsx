@@ -1,55 +1,55 @@
-import React, { useState } from 'react'
-import { makeStyles, useTheme } from '@material-ui/styles'
-import { useMediaQuery } from '@material-ui/core'
-import TopBar from './components/TopBar/TopBar'
-import Sidebar from './components/sidebar/sidebar'
-import clsx from 'clsx'
-import UserList from '../../views/UserList/UserList'
-import HomePage from '../../views/HomePage/HomePage'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
+import React, { useState } from 'react';
+import { makeStyles, useTheme } from '@material-ui/styles';
+import { useMediaQuery } from '@material-ui/core';
+import TopBar from './components/TopBar/TopBar';
+import Sidebar from './components/sidebar/sidebar';
+import clsx from 'clsx';
+import UserList from '../../views/UserList/UserList';
+import HomePage from '../../views/HomePage/HomePage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { PrivateRoute } from '../../privateRoutes/PrivateRoute';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: 56,
     height: '-webkit-fill-available',
     [theme.breakpoints.up('sm')]: {
-      paddingTop: 64
-    }
+      paddingTop: 64,
+    },
   },
   shiftContent: {
-    paddingLeft: 240
+    paddingLeft: 240,
   },
   content: {
-    height: '100%'
-  }
-}))
+    height: '100%',
+  },
+}));
 
 const Main = () => {
-  const classes = useStyles()
-  const theme = useTheme()
+  const classes = useStyles();
+  const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
-    defaultMatches: true
-  })
+    defaultMatches: true,
+  });
 
-  const [openSidebar, setOpenSidebar] = useState(false)
+  const [openSidebar, setOpenSidebar] = useState(false);
 
   const handleSidebarOpen = () => {
-    setOpenSidebar(true)
-  }
+    setOpenSidebar(true);
+  };
 
   const handleSidebarClose = () => {
-    setOpenSidebar(false)
-  }
+    setOpenSidebar(false);
+  };
 
-  const shouldOpenSidebar = isDesktop ? true : openSidebar
+  const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   return (
     <Router>
       <div
         className={clsx({
           [classes.root]: true,
-          [classes.shiftContent]: isDesktop
+          [classes.shiftContent]: isDesktop,
         })}
       >
         <TopBar onSidebarOpen={handleSidebarOpen} />
@@ -65,7 +65,7 @@ const Main = () => {
         </main>
       </div>
     </Router>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;

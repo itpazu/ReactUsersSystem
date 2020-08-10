@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
@@ -18,7 +18,7 @@ import {
   RadioGroup,
   Button,
 } from '@material-ui/core';
-
+import Context from '../../../../context/Context';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { getInitials } from '../../../../helpers';
 import DialogUnblock from './dialogUnblock';
@@ -52,16 +52,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UsersTable = (props) => {
-  const {
-    className,
-    users,
-    handleDeleteUser,
-    count,
-    loggedUser,
-    ...rest
-  } = props;
+  const { className, users, handleDeleteUser, handleUpdate, ...rest } = props;
   const classes = useStyles();
-
+  const context = useContext(Context);
+  const { currentlyLoggedUser } = context;
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedUserName, setSelectedUserName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -107,6 +101,9 @@ const UsersTable = (props) => {
     setOpenUnblocked(false);
   };
 
+  const updatAllUsers = () => {
+    handleUpdate();
+  };
   return (
     <>
       <Card {...rest} className={clsx(classes.root, className)}>
@@ -145,7 +142,11 @@ const UsersTable = (props) => {
                             name={user.name}
                             id={`radioButton${user.count}`}
                             onClick={handleRadioChange}
-                            disabled={user.id === loggedUser ? true : false}
+                            disabled={
+                              user.id === currentlyLoggedUser.userId
+                                ? true
+                                : false
+                            }
                           />
                         </TableCell>
                         <TableCell>
@@ -204,7 +205,7 @@ const UsersTable = (props) => {
         OpenDialog={OpenUnblockedUser}
         closeUnblock={handleCloseUnblock}
         userDetails={userToUnblock}
-        loggedUser={loggedUser}
+        getAllUsers={updatAllUsers}
       />
     </>
   );

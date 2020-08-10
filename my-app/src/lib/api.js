@@ -51,9 +51,9 @@ export const Logout = () => {
 };
 
 export const register = (newUser, authenticationInfo) => {
-  const csrf = authenticationInfo.csrf_token;
+  const csrf = authenticationInfo.csrf;
   const body = newUser;
-  body._id = authenticationInfo._id;
+  body._id = authenticationInfo.userId;
   // const JwtToken = authenticationInfo.Jwt_token; //local serverOnly
   const headers = {
     headers: {
@@ -67,12 +67,12 @@ export const register = (newUser, authenticationInfo) => {
 };
 
 export const deleteUser = (userId, authenticationInfo) => {
-  const body = { user_id: userId, _id: authenticationInfo._id };
+  const body = { user_id: userId, _id: authenticationInfo.userId };
 
   const data = {
     headers: {
       credentials: 'cross-site',
-      Authorization: authenticationInfo.csrf_token,
+      Authorization: authenticationInfo.csrf,
     },
     withCredentials: true,
     data: body,
@@ -111,14 +111,13 @@ export const solicitNewPassword = (data) => {
 };
 
 export const unblockSystemUser = (admin, email) => {
-  console.log(admin);
-  const body = { _id: admin.userId, email: email };
-  const headers = {
+  const data = {
     headers: {
-      credentials: 'cross-site',
       Authorization: admin.csrf,
+      credentials: 'cross-site',
     },
     withCredentials: true,
+    data: { _id: admin.userId, email: email },
   };
-  return axios.delete(`${baseURL}/unblock_user`, body, headers);
+  return axios.delete(`${baseURL}/unblock_user`, data);
 };
