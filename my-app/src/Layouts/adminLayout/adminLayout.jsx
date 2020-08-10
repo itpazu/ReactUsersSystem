@@ -18,14 +18,14 @@ const Main = () => {
       height: '-webkit-fill-available',
       [theme.breakpoints.up('sm')]: {
         paddingTop: 64
-      }
+      },
+      backgroundColor: context.backgroundType
     },
     shiftContent: {
       paddingLeft: 240
     },
     content: {
-      backgroundColor: context.backgroundType,
-      height: '200%'
+      backgroundColor: context.backgroundType
     }
   }))
   const classes = useStyles()
@@ -56,7 +56,7 @@ const Main = () => {
           open={shouldOpenSidebar}
           variant={isDesktop ? 'persistent' : 'temporary'}
         />
-        <main className={classes.content}>
+        <main height='100%' className={classes.content}>
           <PrivateRoute exact path='/' component={HomePage} />
           <PrivateRoute exact path='/users' component={UserList} />
         </main>

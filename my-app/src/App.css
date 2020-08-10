@@ -1,8 +1,11 @@
 .homePageImage {
   background-image: url(/images/google_pixel_3_app_presentation.jpg);
+  position: fixed;
   background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  height: 100%;
+  height: 100vh;
+  width: 82.4vw;
   display: flex;
   justify-content: center;
   align-items: center;
