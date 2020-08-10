@@ -9,7 +9,6 @@ import HomePage from '../../views/HomePage/HomePage'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 import Context from '../../context/Context'
-import { ThemeProvider } from '@material-ui/core/styles'
 
 const Main = () => {
   const context = useContext(Context)
@@ -48,28 +47,26 @@ const Main = () => {
   const shouldOpenSidebar = isDesktop ? true : openSidebar
 
   return (
-    <ThemeProvider theme={context.darkTheme}>
-      <Router>
-        <div
-          className={clsx({
-            [classes.root]: true,
-            [classes.shiftContent]: isDesktop
-          })}
-        >
-          <TopBar onSidebarOpen={handleSidebarOpen} />
+    <Router>
+      <div
+        className={clsx({
+          [classes.root]: true,
+          [classes.shiftContent]: isDesktop
+        })}
+      >
+        <TopBar onSidebarOpen={handleSidebarOpen} />
 
-          <Sidebar
-            onClose={handleSidebarClose}
-            open={shouldOpenSidebar}
-            variant={isDesktop ? 'persistent' : 'temporary'}
-          />
-          <main className={classes.content}>
-            <PrivateRoute exact path='/' component={HomePage} />
-            <PrivateRoute exact path='/users' component={UserList} />
-          </main>
-        </div>
-      </Router>
-    </ThemeProvider>
+        <Sidebar
+          onClose={handleSidebarClose}
+          open={shouldOpenSidebar}
+          variant={isDesktop ? 'persistent' : 'temporary'}
+        />
+        <main className={classes.content}>
+          <PrivateRoute exact path='/' component={HomePage} />
+          <PrivateRoute exact path='/users' component={UserList} />
+        </main>
+      </div>
+    </Router>
   )
 }
 

@@ -47,27 +47,25 @@ const Main = () => {
   const shouldOpenSidebar = isDesktop ? true : openSidebar
 
   return (
-    <ThemeProvider theme={context.darkTheme}>
-      <Router>
-        <div
-          className={clsx({
-            [classes.root]: true,
-            [classes.shiftContent]: isDesktop
-          })}
-        >
-          <TopBar onSidebarOpen={handleSidebarOpen} />
+    <Router>
+      <div
+        className={clsx({
+          [classes.root]: true,
+          [classes.shiftContent]: isDesktop
+        })}
+      >
+        <TopBar onSidebarOpen={handleSidebarOpen} />
 
-          <Sidebar
-            onClose={handleSidebarClose}
-            open={shouldOpenSidebar}
-            variant={isDesktop ? 'persistent' : 'temporary'}
-          />
-          <main className={classes.content}>
-            <PrivateRoute exact path='/' component={HomePage} />
-          </main>
-        </div>
-      </Router>
-    </ThemeProvider>
+        <Sidebar
+          onClose={handleSidebarClose}
+          open={shouldOpenSidebar}
+          variant={isDesktop ? 'persistent' : 'temporary'}
+        />
+        <main className={classes.content}>
+          <PrivateRoute exact path='/' component={HomePage} />
+        </main>
+      </div>
+    </Router>
   )
 }
 
