@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { UsersToolbar, UsersTable } from './components';
-import { allUsers, refreshToken } from '../../lib/api';
+import { allUsers } from '../../lib/api';
 import Context from '../../context/Context';
-import cookie from 'js-cookie';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
@@ -23,12 +22,9 @@ const UserList = () => {
   const [allUsersList, setAllUsersList] = useState([]);
   const [deleteThisUser, setDeleteThisUser] = useState({ name: '', id: '' });
   const context = useContext(Context);
-  const { handleLogOut } = context;
-  const IdFromCookie = cookie.get('_id');
-  const csrfFromCookie = cookie.get('csrf_token');
+  const { handleLogOut, refreshCredentials, currentlyLoggedUser } = context;
   const [userCredentials, setUserCredentials] = useState({
-    userId: IdFromCookie,
-    csrf: csrfFromCookie,
+    ...currentlyLoggedUser,
   });
   const [errorFetchUsers, setErrorFetchUsers] = useState(null);
   const [newUsersList, setNewUsersList] = useState([]);
@@ -44,7 +40,6 @@ const UserList = () => {
     try {
       const { userId, csrf } = userCredentials;
       const response = await allUsers(userId, csrf);
-      console.log(response.data.users);
       setAllUsersList(
         response.data.users.map((el, index) => ({
           id: el._id,
@@ -80,18 +75,10 @@ const UserList = () => {
       if (error.response.status == '401') {
         handleLogOut();
       } else if (error.response.status == '403') {
-        await refreshCredentials();
+        await refreshCredentials(getAllUsers);
       } else {
         setErrorFetchUsers(true);
       }
-    }
-  };
-  const refreshCredentials = async () => {
-    try {
-      await refreshToken(userCredentials.userId);
-      getAllUsers();
-    } catch (error) {
-      handleLogOut();
     }
   };
 
@@ -164,7 +151,7 @@ const UserList = () => {
           <UsersTable
             users={newUsersList}
             handleDeleteUser={updateDeleteUser}
-            loggedUser={userCredentials.userId}
+            handleUpdate={handleUpdate}
           />
         </div>
         {errorFetchUsers && (

@@ -198,7 +198,7 @@ const SignIn = () => {
       setResponse({
         activateAlert: true,
         success: false,
-        message: JSON.stringify(error.response.data),
+        message: JSON.stringify(error.response.data) || null,
       });
     }
   };
@@ -289,7 +289,7 @@ const SignIn = () => {
                   className={classes.signInButton}
                   severity={response.success ? 'success' : 'error'}
                 >
-                  {response.message}
+                  {response.message && response.message}
                 </Alert>
               )}
             </form>
