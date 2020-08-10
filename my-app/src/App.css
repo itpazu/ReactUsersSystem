@@ -1,18 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  min-height: 100%;
+  padding: 0;
+}
+
 .homePageImage {
   background-image: url(/images/google_pixel_3_app_presentation.jpg);
-  position: fixed;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center center;
   background-size: cover;
-  height: 100vh;
-  width: 82.4vw;
+  height: calc(100vh - 64px);
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .welcomeText {
-  text-align: center;
   color: white;
   text-shadow: 2px 2px 6px #000;
   font-size: 60px;
