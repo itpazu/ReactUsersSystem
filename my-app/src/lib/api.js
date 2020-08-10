@@ -120,5 +120,5 @@ export const unblockSystemUser = (admin, email) => {
     },
     withCredentials: true,
   };
-  return axios.post(`${baseURL}/unblock_user`, body, headers);
+  return axios.delete(`${baseURL}/unblock_user`, body, headers);
 };
