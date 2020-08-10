@@ -265,7 +265,7 @@ const ResetPassword = () => {
             <form className={classes.form} onSubmit={handleSignIn}>
               {response.activateAlert ? (
                 <>
-                  <Typography className={classes.title} variant='h2'>
+                  <Typography className={classes.title}>
                     Set a new password
                   </Typography>
                   <TextField

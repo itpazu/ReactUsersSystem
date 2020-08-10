@@ -106,6 +106,18 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginTop: theme.spacing(16),
+    color: theme.palette.text.primary,
+    fontWeight: 500,
+    fontSize: '29px',
+    letterSpacing: '-0.24px',
+    lineHeight: '32px'
+  },
+  reset: {
+    color: theme.palette.text.primary,
+    fontWeight: 500,
+    fontSize: '14px',
+    letterSpacing: '-0.05px',
+    lineHeight: '20px'
   },
   socialButtons: {
     marginTop: theme.spacing(3),
@@ -122,6 +134,12 @@ const useStyles = makeStyles((theme) => ({
   signInButton: {
     margin: theme.spacing(2, 0),
   },
+  bodyText: {
+    color: theme.palette.text.primary,
+    fontSize: '14px',
+    letterSpacing: '-0.05px',
+    lineHeight: '21px'
+  }
 }));
 
 const SignIn = () => {
@@ -219,7 +237,7 @@ const SignIn = () => {
         <Grid className={classes.content} item lg={7} xs={12}>
           <div className={classes.contentBody}>
             <form className={classes.form} onSubmit={handleSignIn}>
-              <Typography className={classes.title} variant='h2'>
+              <Typography className={classes.title}>
                 Sign in
               </Typography>
               <TextField
@@ -278,9 +296,9 @@ const SignIn = () => {
               >
                 Sign in now
               </Button>
-              <Typography color='textSecondary' variant='body1'>
+              <Typography color='textSecondary' className={classes.bodyText}>
                 Forgot your password? {'   '}{' '}
-                <RouterLink to='/reset_pass' variant='h6'>
+                <RouterLink to='/reset_pass' className={classes.reset}>
                   Reset password
                 </RouterLink>
               </Typography>
