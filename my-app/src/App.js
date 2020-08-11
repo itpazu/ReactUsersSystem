@@ -6,7 +6,8 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import Routes from './Routes'
 import {
   orange,
-  deepOrange
+  deepOrange,
+  blueGrey
 } from '@material-ui/core/colors'
 
 const App = () => {
@@ -22,7 +23,37 @@ const App = () => {
       secondary: {
         main: deepOrange[900]
       },
+      text: {
+        primary: blueGrey[50],
+        secondary: blueGrey[50]
+      },
       topBar: orange[500]
+    },
+    typography: {
+      h2: {
+        color: theme.palette.white,
+        fontWeight: 500,
+        fontSize: '29px',
+        letterSpacing: '-0.24px',
+        lineHeight: '32px'
+      },
+      h4: {
+        fontWeight: 500,
+        fontSize: '20px',
+        letterSpacing: '-0.06px',
+        lineHeight: '24px'
+      },
+      h6: {
+        fontWeight: 500,
+        fontSize: '14px',
+        letterSpacing: '-0.05px',
+        lineHeight: '20px'
+      },
+      body1: {
+        fontSize: '14px',
+        letterSpacing: '-0.05px',
+        lineHeight: '21px'
+      }
     }
   })
   const chosenTheme = darkState ? darkTheme : theme

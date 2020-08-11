@@ -53,8 +53,8 @@ const SidebarNav = (props) => {
     <List {...rest} className={classes.root}>
       {pages.map((page) => (
         <>
-          {page.title === 'Log Out' ?
-            <ListItem className={classes.item} disableGutters key={page.title} onClick={context.handleLogOut}>
+          {page.title === 'Log Out'
+            ? <ListItem className={classes.item} disableGutters key={page.title} onClick={context.handleLogOut}>
               <Button
                 activeClassName={classes.active}
                 className={classes.button}

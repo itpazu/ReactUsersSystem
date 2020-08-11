@@ -8,7 +8,6 @@ import HomePage from '../../views/HomePage/HomePage'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 import Context from '../../context/Context'
-import { ThemeProvider } from '@material-ui/core/styles'
 
 const Main = () => {
   const context = useContext(Context)

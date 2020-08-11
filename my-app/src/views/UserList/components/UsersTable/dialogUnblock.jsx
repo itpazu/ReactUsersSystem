@@ -1,47 +1,48 @@
-import React, { useState, useContext } from 'react';
-import { Button, Dialog } from '@material-ui/core';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { unblockSystemUser } from '../../../../lib/api';
-import Context from '../../../../context/Context';
-import Alert from '@material-ui/lab/Alert';
+import React, { useState, useContext } from 'react'
+import { Button, Dialog } from '@material-ui/core'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { unblockSystemUser } from '../../../../lib/api'
+import Context from '../../../../context/Context'
+import Alert from '@material-ui/lab/Alert'
 
 const DialogUnblock = (props) => {
-  const { closeUnblock, OpenDialog, userDetails, getAllUsers, ...rest } = props;
-  const { blockedUserId, userName, emailAddress } = userDetails;
+  const { closeUnblock, OpenDialog, userDetails, getAllUsers, ...rest } = props
+  const { blockedUserId, userName, emailAddress } = userDetails
   const handleClose = () => {
-    closeUnblock();
-  };
-  const context = useContext(Context);
-  const { handleLogOut, currentlyLoggedUser, refreshCredentials } = context;
+    closeUnblock()
+  }
+  const context = useContext(Context)
+  const { handleLogOut, currentlyLoggedUser, refreshCredentials } = context
   const [activateAlert, setActivateAlert] = useState({
     activate: false,
-    message: null,
-  });
+    message: null
+  })
 
   const handleUnblock = async () => {
     try {
-      const response = await unblockSystemUser(
+      await unblockSystemUser(
         currentlyLoggedUser,
         emailAddress
-      );
-      getAllUsers();
-      closeUnblock();
+      )
+      getAllUsers()
+      closeUnblock()
     } catch (error) {
       if (error.response.status == '401') {
-        handleLogOut();
+        handleLogOut()
       } else if (error.response.status == '403') {
-        await refreshCredentials(handleUnblock);
+        await refreshCredentials(handleUnblock)
       } else {
         setActivateAlert({
           activate: true,
-          message: JSON.stringify(error.response.data),
-        });
+          message: JSON.stringify(error.response.data)
+        })
       }
     }
-  };
+  }
+
   return (
     <div>
       <Dialog
@@ -57,7 +58,7 @@ const DialogUnblock = (props) => {
           </span>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id='alert-dialog-description'></DialogContentText>
+          <DialogContentText id='alert-dialog-description' />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>
@@ -77,6 +78,7 @@ const DialogUnblock = (props) => {
         )}
       </Dialog>
     </div>
-  );
-};
-export default DialogUnblock;
+  )
+}
+
+export default DialogUnblock

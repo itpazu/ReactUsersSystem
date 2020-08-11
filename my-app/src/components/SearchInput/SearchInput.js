@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import { Paper, TextField, Button } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React from 'react'
+import PropTypes from 'prop-types'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/styles'
+import { Paper, TextField, Button } from '@material-ui/core'
+import SearchIcon from '@material-ui/icons/Search'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,20 +12,20 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     display: 'flex',
-    flexBasis: 420,
+    flexBasis: 420
   },
   icon: {
     marginRight: theme.spacing(1),
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   },
   input: {
     flexGrow: 1,
     width: '100%',
     fontSize: '14px',
     lineHeight: '16px',
-    letterSpacing: '-0.05px',
-  },
-}));
+    letterSpacing: '-0.05px'
+  }
+}))
 
 const SearchInput = (props) => {
   const {
@@ -40,20 +40,20 @@ const SearchInput = (props) => {
     handleUpdate,
     getRelevantUsers,
     ...rest
-  } = props;
+  } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   const handleSearchNameChange = (event, value) => {
-    event.preventDefault();
+    event.preventDefault()
     if (typeof value === 'object' && value !== null) {
-      setSelectedName(value.name);
+      setSelectedName(value.name)
     } else if (value === '') {
-      handleUpdate();
+      handleUpdate()
     } else {
-      setSelectedName(event.target.value);
+      setSelectedName(event.target.value)
     }
-  };
+  }
 
   const handleSearchNameClick = () => {
     if (
@@ -63,9 +63,9 @@ const SearchInput = (props) => {
       allUsers.filter((event) => event.name.toLowerCase() === selectedName)
         .length > 0
     ) {
-      getSingleUser();
+      getSingleUser()
     } else if (selectedName === '') {
-      handleUpdate();
+      handleUpdate()
     } else if (
       selectedName !== '' &&
       selectedName !== undefined &&
@@ -74,9 +74,9 @@ const SearchInput = (props) => {
         (event) => event.name.toLowerCase().includes(selectedName).length > 0
       )
     ) {
-      getRelevantUsers();
+      getRelevantUsers()
     }
-  };
+  }
 
   return (
     <Paper {...rest} className={clsx(classes.root, className)} style={style}>
@@ -97,13 +97,13 @@ const SearchInput = (props) => {
         Search
       </Button>
     </Paper>
-  );
-};
+  )
+}
 
 SearchInput.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
-  style: PropTypes.object,
-};
+  style: PropTypes.object
+}
 
-export default SearchInput;
+export default SearchInput

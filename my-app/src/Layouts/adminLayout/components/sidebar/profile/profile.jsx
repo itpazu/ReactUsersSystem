@@ -15,12 +15,7 @@ const useStyles = makeStyles((theme) => ({
     height: 60
   },
   name: {
-    marginTop: theme.spacing(1),
-    color: theme.palette.text.primary,
-    fontWeight: 500,
-    fontSize: '20px',
-    letterSpacing: '-0.06px',
-    lineHeight: '24px'
+    marginTop: theme.spacing(1)
   }
 }))
 
@@ -44,7 +39,7 @@ const Profile = (props) => {
         src={user.avatar}
         to='/settings'
       />
-      <Typography className={classes.name}>
+      <Typography className={classes.name} variant='h4'>
         {user.name}
       </Typography>
       <Typography variant='body2'>{user.bio}</Typography>
