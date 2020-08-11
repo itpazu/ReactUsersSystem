@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
 import { NavLink as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles'
-import { List, ListItem, Button, colors } from '@material-ui/core'
+import { List, ListItem, Button } from '@material-ui/core'
 import Context from '../../../../../context/Context'
 
 const useStyles = makeStyles((theme) => ({
