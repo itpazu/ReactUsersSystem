@@ -5,6 +5,7 @@ import TopBar from './components/TopBar/TopBar'
 import Sidebar from './components/sidebar/sidebar'
 import clsx from 'clsx'
 import HomePage from '../../views/HomePage/HomePage'
+import AccountPage from '../../views/AccountPage/Account'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 import Context from '../../context/Context'
@@ -62,6 +63,7 @@ const Main = () => {
         />
         <main className={classes.content}>
           <PrivateRoute exact path='/' component={HomePage} />
+          <PrivateRoute exact path='/account' component={AccountPage} />
         </main>
       </div>
     </Router>
