@@ -69,7 +69,7 @@ const Routes = (props) => {
         userInput,
         handleThemeChange,
         darkState,
-        refreshCredentials,
+        refreshCredentials
       }}
     >
       <Switch>

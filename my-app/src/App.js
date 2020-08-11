@@ -37,6 +37,12 @@ const App = () => {
         letterSpacing: '-0.24px',
         lineHeight: '32px'
       },
+      h3: {
+        fontWeight: 500,
+        fontSize: '24px',
+        letterSpacing: '-0.06px',
+        lineHeight: '28px'
+      },
       h4: {
         fontWeight: 500,
         fontSize: '20px',

@@ -6,6 +6,7 @@ const baseURL =
 // const baseURL = 'http://127.0.0.1:5000'
 
 export const LogIn = (data) => {
+  console.log(data)
   return axios.post(`${baseURL}/login`, data, { withCredentials: true })
 }
 
