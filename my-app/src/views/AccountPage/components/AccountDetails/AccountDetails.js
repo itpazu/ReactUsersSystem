@@ -77,7 +77,7 @@ const AccountDetails = props => {
         errors: errors || {}
       }))
     }
-    return function cleanup() {
+    return function cleanup () {
       mounted = false
     }
   }, [formState.values])
