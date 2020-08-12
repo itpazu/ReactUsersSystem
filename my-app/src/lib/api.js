@@ -128,3 +128,7 @@ export const unblockSystemUser = (admin, email) => {
 
   return axios.delete(`${baseURL}/unblock_user`, data)
 }
+
+export const submitUserEditDetails = (data) => {
+  return axios.post(`${baseURL}/edit_account_details`, data)
+}

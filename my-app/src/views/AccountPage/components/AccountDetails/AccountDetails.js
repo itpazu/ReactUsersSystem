@@ -12,6 +12,8 @@ import {
   Button,
   TextField
 } from '@material-ui/core'
+import { submitUserEditDetails } from '../../../../lib/api'
+import Alert from '@material-ui/lab/Alert'
 
 const schema = {
   firstName: {
@@ -45,14 +47,23 @@ const schema = {
   }
 }
 
-const useStyles = makeStyles(() => ({
-  root: {}
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  alertMessage: {
+    marginTop: theme.spacing(2)
+  }
 }))
 
 const AccountDetails = props => {
   const { className, ...rest } = props
 
   const classes = useStyles()
+
+  const [response, setResponse] = useState({
+    activateAlert: null,
+    success: null,
+    message: ''
+  })
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -92,13 +103,44 @@ const AccountDetails = props => {
         [event.target.name]:
           event.target.type === 'checkbox'
             ? event.target.checked
-            : event.target.value
+            : event.target.value.toLowerCase()
       },
       touched: {
         ...formState.touched,
         [event.target.name]: true
       }
     }))
+  }
+
+  const handleEditedDetailsSubmit = async (event) => {
+    event.preventDefault()
+    setResponse((prevState) => ({ ...prevState }))
+    setFormState({
+      isValid: true,
+      values: {},
+      touched: {},
+      errors: {}
+    })
+
+    try {
+      const submitDetailsChange = await submitUserEditDetails({
+        first_name: formState.values.firstName,
+        last_name: formState.values.lastName,
+        email: formState.values.email,
+        _id: props.profile._id
+      })
+      setResponse({
+        activateAlert: true,
+        success: true,
+        message: submitDetailsChange.data
+      })
+    } catch (error) {
+      setResponse({
+        activateAlert: true,
+        success: false,
+        message: JSON.stringify(error.response.data)
+      })
+    }
   }
 
   const hasError = (field) =>
@@ -189,9 +231,18 @@ const AccountDetails = props => {
         <CardActions>
           <Button
             variant='contained'
+            onSubmit={handleEditedDetailsSubmit}
           >
             Save details
           </Button>
+          {response.activateAlert && (
+            <Alert
+              className={classes.alertMessage}
+              severity={response.success ? 'success' : 'error'}
+            >
+              {response.message}
+            </Alert>
+          )}
         </CardActions>
       </form>
     </Card>
