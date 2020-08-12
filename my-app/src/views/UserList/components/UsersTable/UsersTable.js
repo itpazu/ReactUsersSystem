@@ -118,7 +118,7 @@ const UsersTable = (props) => {
                       <TableCell>Email</TableCell>
                       <TableCell>Role</TableCell>
                       <TableCell>Registration date</TableCell>
-                      <TableCell>actions</TableCell>
+                      <TableCell>Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
