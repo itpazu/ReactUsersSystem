@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import clsx from 'clsx'
 import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core'
 import { submitUserEditDetails } from '../../../../lib/api'
 import Alert from '@material-ui/lab/Alert'
+import Context from '../../../../context/Context'
 
 const schema = {
   firstName: {
@@ -58,6 +59,8 @@ const AccountDetails = props => {
   const { className, ...rest } = props
 
   const classes = useStyles()
+
+  const context = useContext(Context)
 
   const [response, setResponse] = useState({
     activateAlert: null,
@@ -117,16 +120,20 @@ const AccountDetails = props => {
     setResponse((prevState) => ({ ...prevState }))
     setFormState({
       isValid: true,
-      values: {},
+      values: {
+        firstName: formState.values.firstName.charAt(0).toUpperCase() + formState.values.firstName.slice(1),
+        lastName: formState.values.lastName.charAt(0).toUpperCase() + formState.values.lastName.slice(1),
+        email: formState.values.email
+      },
       touched: {},
       errors: {}
     })
 
     try {
       const submitDetailsChange = await submitUserEditDetails({
-        first_name: formState.values.firstName,
-        last_name: formState.values.lastName,
-        email: formState.values.email,
+        first_name: formState.values.firstName.toLowerCase(),
+        last_name: formState.values.lastName.toLowerCase(),
+        email: formState.values.email.toLowerCase(),
         _id: props.profile._id
       })
       setResponse({
@@ -134,6 +141,7 @@ const AccountDetails = props => {
         success: true,
         message: submitDetailsChange.data
       })
+      context.updateProfileInfo({ _id: props.profile._id })
     } catch (error) {
       setResponse({
         activateAlert: true,
@@ -231,7 +239,7 @@ const AccountDetails = props => {
         <CardActions>
           <Button
             variant='contained'
-            onSubmit={handleEditedDetailsSubmit}
+            onClick={handleEditedDetailsSubmit}
           >
             Save details
           </Button>

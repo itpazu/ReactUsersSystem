@@ -131,3 +131,7 @@ export const unblockSystemUser = (admin, email) => {
 export const submitUserEditDetails = (data) => {
   return axios.post(`${baseURL}/edit_account_details`, data)
 }
+
+export const getUserInfoRefresh = (data) => {
+  return axios.post(`${baseURL}/get_user_info`, data)
+}
