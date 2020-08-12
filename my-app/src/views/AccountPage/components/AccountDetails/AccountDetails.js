@@ -91,7 +91,7 @@ const AccountDetails = props => {
         errors: errors || {}
       }))
     }
-    return function cleanup () {
+    return function cleanup() {
       mounted = false
     }
   }, [formState.values])
@@ -238,6 +238,7 @@ const AccountDetails = props => {
         <Divider />
         <CardActions>
           <Button
+            color='primary'
             variant='contained'
             onClick={handleEditedDetailsSubmit}
           >
