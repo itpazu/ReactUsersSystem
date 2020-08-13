@@ -75,7 +75,7 @@ const AccountProfile = props => {
   const [openDelete, setOpenDelete] = useState(false)
   const [imageState, setImageState] = useState({
     isValid: false,
-    value: null
+    value: ''
   })
 
   const handleOpenAdd = (e) => {
@@ -86,14 +86,14 @@ const AccountProfile = props => {
     setOpenAdd(false)
     setImageState({
       isValid: false,
-      value: null
+      value: ''
     })
   }
 
   const handleOnAddImageChange = (event) => {
     setImageState({
       isValid: true,
-      value: event.target.files[0]
+      value: event.target.files[0].name
     })
   }
 
