@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react'
-import clsx from 'clsx'
-import validate from 'validate.js'
-import { makeStyles } from '@material-ui/styles'
+import React, { useState, useEffect, useContext } from 'react';
+import clsx from 'clsx';
+import validate from 'validate.js';
+import { makeStyles } from '@material-ui/styles';
 import {
   Card,
   CardHeader,
@@ -10,94 +10,98 @@ import {
   Divider,
   Grid,
   Button,
-  TextField
-} from '@material-ui/core'
-import { submitUserEditDetails } from '../../../../lib/api'
-import Alert from '@material-ui/lab/Alert'
-import Context from '../../../../context/Context'
+  TextField,
+} from '@material-ui/core';
+import { submitUserEditDetails } from '../../../../lib/api';
+import Alert from '@material-ui/lab/Alert';
+import Context from '../../../../context/Context';
 
 const schema = {
   firstName: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2
+      minimum: 2,
     },
     format: {
       pattern: /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
-      message: 'must not contain any numerical digits or special characters'
-    }
+      message: 'must not contain any numerical digits or special characters',
+    },
   },
   lastName: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2
+      minimum: 2,
     },
     format: {
       pattern: /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
-      message: 'must not contain any numerical digits or special characters'
-    }
+      message: 'must not contain any numerical digits or special characters',
+    },
   },
   email: {
     presence: { allowEmpty: false, message: 'required field' },
     email: true,
     length: {
-      maximum: 64
-    }
-  }
-}
+      maximum: 64,
+    },
+  },
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   alertMessage: {
-    marginTop: theme.spacing(2)
-  }
-}))
+    marginTop: theme.spacing(2),
+  },
+}));
 
-const AccountDetails = props => {
-  const { className, ...rest } = props
+const AccountDetails = (props) => {
+  const { className, ...rest } = props;
 
-  const classes = useStyles()
+  const classes = useStyles();
 
-  const context = useContext(Context)
+  const context = useContext(Context);
 
   const [response, setResponse] = useState({
     activateAlert: null,
     success: null,
-    message: ''
-  })
+    message: '',
+  });
 
   const [formState, setFormState] = useState({
     isValid: false,
     values: {
-      firstName: props.profile.first_name.charAt(0).toUpperCase() + props.profile.first_name.slice(1),
-      lastName: props.profile.last_name.charAt(0).toUpperCase() + props.profile.last_name.slice(1),
-      email: props.profile.email
+      firstName:
+        props.profile.first_name.charAt(0).toUpperCase() +
+        props.profile.first_name.slice(1),
+      lastName:
+        props.profile.last_name.charAt(0).toUpperCase() +
+        props.profile.last_name.slice(1),
+      email: props.profile.email,
     },
     touched: {},
-    errors: {}
-  })
+    errors: {},
+  });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema)
+    const errors = validate(formState.values, schema);
 
-    let mounted = true
+    let mounted = true;
 
     if (mounted) {
       setFormState((formState) => ({
         ...formState,
         isValid: errors ? false : true,
-        errors: errors || {}
-      }))
+        errors: errors || {},
+      }));
     }
     return function cleanup() {
-      mounted = false
-    }
-  }, [formState.values])
+      mounted = false;
+    };
+  }, [formState.values]);
 
-  const handleChange = event => {
-    event.persist()
+  const handleChange = (event) => {
+    event.persist();
 
     setFormState((formState) => ({
       ...formState,
@@ -106,78 +110,69 @@ const AccountDetails = props => {
         [event.target.name]:
           event.target.type === 'checkbox'
             ? event.target.checked
-            : event.target.value.toLowerCase()
+            : event.target.value.toLowerCase(),
       },
       touched: {
         ...formState.touched,
-        [event.target.name]: true
-      }
-    }))
-  }
+        [event.target.name]: true,
+      },
+    }));
+  };
 
   const handleEditedDetailsSubmit = async (event) => {
-    event.preventDefault()
-    setResponse((prevState) => ({ ...prevState }))
+    event.preventDefault();
+    setResponse((prevState) => ({ ...prevState }));
     setFormState({
       isValid: true,
       values: {
-        firstName: formState.values.firstName.charAt(0).toUpperCase() + formState.values.firstName.slice(1),
-        lastName: formState.values.lastName.charAt(0).toUpperCase() + formState.values.lastName.slice(1),
-        email: formState.values.email
+        firstName:
+          formState.values.firstName.charAt(0).toUpperCase() +
+          formState.values.firstName.slice(1),
+        lastName:
+          formState.values.lastName.charAt(0).toUpperCase() +
+          formState.values.lastName.slice(1),
+        email: formState.values.email,
       },
       touched: {},
-      errors: {}
-    })
+      errors: {},
+    });
 
     try {
       const submitDetailsChange = await submitUserEditDetails({
         first_name: formState.values.firstName.toLowerCase(),
         last_name: formState.values.lastName.toLowerCase(),
         email: formState.values.email.toLowerCase(),
-        _id: props.profile._id
-      })
+        _id: props.profile._id,
+      });
       setResponse({
         activateAlert: true,
         success: true,
-        message: submitDetailsChange.data
-      })
-      context.updateProfileInfo({ _id: props.profile._id })
+        message: submitDetailsChange.data,
+      });
+      context.updateProfileInfo({ _id: props.profile._id });
     } catch (error) {
       setResponse({
         activateAlert: true,
         success: false,
-        message: JSON.stringify(error.response.data)
-      })
+        message:
+          error.response !== undefined
+            ? JSON.stringify(error.response.data)
+            : 'server failed',
+      });
     }
-  }
+  };
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false
+    formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <form
-        autoComplete='off'
-        noValidate
-      >
-        <CardHeader
-          title='Profile'
-          titleTypographyProps={{ variant: 'h2' }}
-        />
+    <Card {...rest} className={clsx(classes.root, className)}>
+      <form autoComplete='off' noValidate>
+        <CardHeader title='Profile' titleTypographyProps={{ variant: 'h2' }} />
         <Divider />
         <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+          <Grid container spacing={3}>
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 error={hasError('firstName')}
@@ -193,11 +188,7 @@ const AccountDetails = props => {
                 variant='outlined'
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 error={hasError('lastName')}
@@ -213,11 +204,7 @@ const AccountDetails = props => {
                 variant='outlined'
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 error={hasError('email')}
@@ -255,7 +242,7 @@ const AccountDetails = props => {
         </CardActions>
       </form>
     </Card>
-  )
-}
+  );
+};
 
-export default AccountDetails
+export default AccountDetails;
