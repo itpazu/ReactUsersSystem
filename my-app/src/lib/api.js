@@ -127,3 +127,19 @@ export const unblockSystemUser = (admin, email) => {
 
   return axios.delete(`${baseURL}/unblock_user`, data)
 }
+
+export const submitUserEditDetails = (data) => {
+  return axios.post(`${baseURL}/edit_account_details`, data)
+}
+
+export const getUserInfoRefresh = (data) => {
+  return axios.post(`${baseURL}/get_user_info`, data)
+}
+
+export const addProfileImage = (data) => {
+  return axios.post(`${baseURL}/add_photo`, data)
+}
+
+export const deleteProfileImage = (data) => {
+  return axios.delete(`${baseURL}/delete_photo`, data)
+}

@@ -70,14 +70,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const schema = {
-  first_name: {
+  firstName: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
       minimum: 2
     }
   },
-  last_name: {
+  lastName: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
@@ -116,7 +116,7 @@ const UsersToolbar = (props) => {
     ...rest
   } = props
   const [modalStyle] = useState(getModalStyle)
-  const [AddUserResponse, setAddUserResponse] = useState({
+  const [addUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
     message: ''
   })
@@ -271,13 +271,13 @@ const UsersToolbar = (props) => {
           id='standard-basic'
           type='text'
           label='Last Name'
-          value={formState.values.last_name || ''}
+          value={formState.values.lastName || ''}
           onChange={handleOnAddUserInputChange}
-          name='last_name'
+          name='lastName'
           className={classes.inputFields}
-          error={hasError('last_name')}
+          error={hasError('lastName')}
           helperText={
-            hasError('last_name') ? formState.errors.last_name[0] : null
+            hasError('lastName') ? formState.errors.lastName[0] : null
           }
         />
         <TextField
@@ -285,13 +285,13 @@ const UsersToolbar = (props) => {
           id='standard-basic'
           type='text'
           label='First Name'
-          value={formState.values.first_name || ''}
+          value={formState.values.firstName || ''}
           onChange={handleOnAddUserInputChange}
-          name='first_name'
+          name='firstName'
           className={classes.inputFields}
-          error={hasError('first_name')}
+          error={hasError('firstName')}
           helperText={
-            hasError('first_name') ? formState.errors.first_name[0] : null
+            hasError('firstName') ? formState.errors.firstName[0] : null
           }
         />
         <TextField
@@ -337,12 +337,12 @@ const UsersToolbar = (props) => {
         </Button>
       </form>
 
-      {AddUserResponse.activateAlert && (
+      {addUserResponse.activateAlert && (
         <Alert
           className={classes.submitButton}
-          severity={AddUserResponse.success ? 'success' : 'error'}
+          severity={addUserResponse.success ? 'success' : 'error'}
         >
-          {AddUserResponse.message}
+          {addUserResponse.message}
         </Alert>
       )}
     </div>

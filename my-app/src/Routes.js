@@ -6,7 +6,7 @@ import developerLayout from './Layouts/developerLayout/developerLayout'
 import productManagerLayout from './Layouts/productManagerLayout/productManagerLayout'
 import marketingLayout from './Layouts/marketingLayout/marketingLayout'
 import cookie from 'js-cookie'
-import { LogIn, refreshToken } from './lib/api'
+import { LogIn, refreshToken, getUserInfoRefresh } from './lib/api'
 import Minimal from './Layouts/minimal/Minimal'
 import Context from './context/Context'
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute'
@@ -49,6 +49,11 @@ const Routes = (props) => {
     cookie.remove('csrf_token')
   }
 
+  const updateProfileInfo = async (data) => {
+    const response = await getUserInfoRefresh(data)
+    setUserInput(response.data)
+  }
+
   const refreshCredentials = async (callback) => {
     try {
       await refreshToken(currentlyLoggedUser.userId)
@@ -70,6 +75,7 @@ const Routes = (props) => {
         handleThemeChange,
         darkState,
         refreshCredentials,
+        updateProfileInfo
       }}
     >
       <Switch>

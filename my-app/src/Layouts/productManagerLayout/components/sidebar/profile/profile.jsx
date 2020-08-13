@@ -27,7 +27,7 @@ const Profile = (props) => {
 
   const user = {
     name: userName,
-    avatar: '/images/empty-avatar.png'
+    avatar: props.profile.photo === '' ? '/images/empty-avatar.png' : props.profile.photo
   }
 
   return (

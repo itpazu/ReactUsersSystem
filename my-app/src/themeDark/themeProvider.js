@@ -3,7 +3,7 @@ import palette from './palette'
 import typography from './typography'
 import overrides from './overrides'
 
-export const theme = createMuiTheme({
+export const darkTheme = createMuiTheme({
   palette,
   typography,
   overrides,
@@ -13,4 +13,4 @@ export const theme = createMuiTheme({
   }
 })
 
-export default theme
+export default darkTheme

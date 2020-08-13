@@ -6,6 +6,7 @@ import Sidebar from './components/sidebar/sidebar'
 import clsx from 'clsx'
 import UserList from '../../views/UserList/UserList'
 import HomePage from '../../views/HomePage/HomePage'
+import AccountPage from '../../views/AccountPage/Account'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 import Context from '../../context/Context'
@@ -59,6 +60,7 @@ const Main = () => {
         <main height='100%' className={classes.content}>
           <PrivateRoute exact path='/' component={HomePage} />
           <PrivateRoute exact path='/users' component={UserList} />
+          <PrivateRoute exact path='/account' component={AccountPage} />
         </main>
       </div>
     </Router>
