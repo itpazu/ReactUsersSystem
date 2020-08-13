@@ -116,7 +116,7 @@ const UsersToolbar = (props) => {
     ...rest
   } = props
   const [modalStyle] = useState(getModalStyle)
-  const [AddUserResponse, setAddUserResponse] = useState({
+  const [addUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
     message: ''
   })
@@ -337,12 +337,12 @@ const UsersToolbar = (props) => {
         </Button>
       </form>
 
-      {AddUserResponse.activateAlert && (
+      {addUserResponse.activateAlert && (
         <Alert
           className={classes.submitButton}
-          severity={AddUserResponse.success ? 'success' : 'error'}
+          severity={addUserResponse.success ? 'success' : 'error'}
         >
-          {AddUserResponse.message}
+          {addUserResponse.message}
         </Alert>
       )}
     </div>
