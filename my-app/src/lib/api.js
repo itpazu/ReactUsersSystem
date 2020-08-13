@@ -129,15 +129,28 @@ export const unblockSystemUser = (admin, email) => {
 }
 
 export const submitUserEditDetails = (data) => {
-  return axios.post(`${baseURL}/edit_account_details`, data)
+  const headers = {
+    headers: {
+      credentials: 'cross-site'
+    }
+  }
+  return axios.post(`${baseURL}/edit_account_details`, data, headers)
 }
 
 export const getUserInfoRefresh = (data) => {
-  return axios.post(`${baseURL}/get_user_info`, data)
+  const headers = {
+    headers: {
+      credentials: 'cross-site'
+    }
+  }
+  return axios.post(`${baseURL}/get_user_info`, data, headers)
 }
 
 export const addProfileImage = (data) => {
-  return axios.post(`${baseURL}/add_photo`, data)
+  const config = {
+    headers: { 'content-type': 'multipart/form-data' }
+  }
+  return axios.post(`${baseURL}/add_photo`, data, config)
 }
 
 export const deleteProfileImage = (data) => {
