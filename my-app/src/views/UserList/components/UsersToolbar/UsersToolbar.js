@@ -1,59 +1,59 @@
-import React, { useState, useEffect, useContext } from 'react'
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/styles'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import Modal from '@material-ui/core/Modal'
-import TextField from '@material-ui/core/TextField'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import InputLabel from '@material-ui/core/InputLabel'
-import { register, deleteUser } from '../../../../lib/api'
-import SearchInput from '../../../../components/SearchInput/SearchInput'
-import Alert from '@material-ui/lab/Alert'
-import validate from 'validate.js'
-import Context from '../../../../context/Context'
+import React, { useState, useEffect, useContext } from 'react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/styles';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import { register, deleteUser } from '../../../../lib/api';
+import SearchInput from '../../../../components/SearchInput/SearchInput';
+import Alert from '@material-ui/lab/Alert';
+import validate from 'validate.js';
+import Context from '../../../../context/Context';
 
 const rand = () => {
-  return Math.round(Math.random() * 20) - 10
-}
+  return Math.round(Math.random() * 20) - 10;
+};
 
 const getModalStyle = () => {
-  const top = 50 + rand()
-  const left = 50 + rand()
+  const top = 50 + rand();
+  const left = 50 + rand();
 
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
-  }
-}
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'grid',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   row: {
     height: '42px',
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   spacer: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   TopButtons: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   inputFields: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   submitButton: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   searchInput: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   paper: {
     position: 'absolute',
@@ -61,46 +61,46 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
+    padding: theme.spacing(2, 4, 3),
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120
-  }
-}))
+    minWidth: 120,
+  },
+}));
 
 const schema = {
-  firstName: {
+  first_name: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2
-    }
+      minimum: 2,
+    },
   },
-  lastName: {
+  last_name: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2
-    }
+      minimum: 2,
+    },
   },
   email: {
     presence: { allowEmpty: false, message: 'required field' },
     email: true,
     length: {
-      maximum: 64
-    }
+      maximum: 64,
+    },
   },
   role: {
-    presence: { allowEmpty: false, message: 'required field' }
-  }
-}
+    presence: { allowEmpty: false, message: 'required field' },
+  },
+};
 
 const UsersToolbar = (props) => {
-  const context = useContext(Context)
-  const { handleLogOut, refreshCredentials, currentlyLoggedUser } = context
-  const [openAdd, setOpenAdd] = useState(false)
-  const [openDelete, setOpenDelete] = useState(false)
+  const context = useContext(Context);
+  const { handleLogOut, refreshCredentials, currentlyLoggedUser } = context;
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const {
     className,
     deleteUserValues,
@@ -114,149 +114,149 @@ const UsersToolbar = (props) => {
     handleUpdate,
     disableButton,
     ...rest
-  } = props
-  const [modalStyle] = useState(getModalStyle)
+  } = props;
+  const [modalStyle] = useState(getModalStyle);
   const [addUserResponse, setAddUserResponse] = useState({
     activateAlert: false,
-    message: ''
-  })
+    message: '',
+  });
 
-  const classes = useStyles()
+  const classes = useStyles();
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
-    errors: {}
-  })
+    errors: {},
+  });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema)
+    const errors = validate(formState.values, schema);
 
     setFormState((prevState) => ({
       ...prevState,
       isValid: errors ? false : true,
-      errors: errors || {}
-    }))
-  }, [formState.values])
+      errors: errors || {},
+    }));
+  }, [formState.values]);
 
   const handleOpenAdd = (e) => {
-    setOpenAdd(true)
-  }
+    setOpenAdd(true);
+  };
 
   const handleCloseAddUser = () => {
-    handleUpdate()
-    setOpenAdd(false)
-    cleanFormFields()
+    handleUpdate();
+    setOpenAdd(false);
+    cleanFormFields();
 
     setAddUserResponse({
       activateAlert: false,
       message: '',
-      success: false
-    })
-  }
+      success: false,
+    });
+  };
 
   const handleOpenDelete = () => {
-    setOpenDelete(true)
-  }
+    setOpenDelete(true);
+  };
 
   const handleCloseDelete = () => {
-    setOpenDelete(false)
-  }
+    setOpenDelete(false);
+  };
 
   const handleOnAddUserInputChange = (event) => {
-    event.persist()
-    const { value, name } = event.target
+    event.persist();
+    const { value, name } = event.target;
 
     setFormState((formState) => ({
       ...formState,
       values: { ...formState.values, [name]: value.toLowerCase() },
       touched: {
         ...formState.touched,
-        [name]: true
-      }
-    }))
-  }
+        [name]: true,
+      },
+    }));
+  };
 
   const handleAddUserSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     setAddUserResponse({
       activateAlert: false,
       message: '',
-      success: false
-    })
-    addUserToDb()
-  }
+      success: false,
+    });
+    addUserToDb();
+  };
 
   const addUserToDb = async () => {
     try {
-      const newUser = await register(formState.values, currentlyLoggedUser)
+      const newUser = await register(formState.values, currentlyLoggedUser);
       setAddUserResponse({
         activateAlert: true,
         message: newUser.data.message,
-        success: true
-      })
+        success: true,
+      });
       setTimeout(() => {
-        handleCloseAddUser()
-      }, 2500)
+        handleCloseAddUser();
+      }, 2500);
     } catch (err) {
-      const error = err.response.status
+      const error = err.response.status;
       if (error == '401') {
         setAddUserResponse({
           activateAlert: true,
           message: JSON.stringify(err.response.data),
-          success: false
-        })
+          success: false,
+        });
         setTimeout(() => {
-          handleLogOut()
-        }, 3500)
+          handleLogOut();
+        }, 3500);
       } else if (error == '403') {
-        await refreshCredentials(addUserToDb)
+        await refreshCredentials(addUserToDb);
       } else {
         setAddUserResponse({
           activateAlert: true,
           message: JSON.stringify(err.response.data),
-          success: false
-        })
-        cleanFormFields()
+          success: false,
+        });
+        cleanFormFields();
       }
     }
-  }
+  };
 
   const cleanFormFields = () => {
     setFormState({
       isValid: false,
       values: {},
       touched: {},
-      errors: {}
-    })
-  }
+      errors: {},
+    });
+  };
   const handleDeleteUserSubmit = (event) => {
-    event.preventDefault()
-    handleDeleteUser()
-  }
+    event.preventDefault();
+    handleDeleteUser();
+  };
 
   const handleDeleteUser = async () => {
     deleteUser(deleteUserValues.id, currentlyLoggedUser)
       .then(() => {
-        handleCloseDelete()
-        handleUpdate()
+        handleCloseDelete();
+        handleUpdate();
       })
       .catch((err) => {
-        const error = err.response.status
+        const error = err.response.status;
         if (error == '401') {
           setTimeout(() => {
-            handleLogOut()
-          }, 2500)
+            handleLogOut();
+          }, 2500);
         } else if (error == '403') {
-          refreshCredentials(handleDeleteUser)
+          refreshCredentials(handleDeleteUser);
         } else {
-          errorFetchUser()
+          errorFetchUser();
         }
-      })
-  }
+      });
+  };
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false
+    formState.touched[field] && formState.errors[field] ? true : false;
 
   const addUserBody = (
     <div
@@ -271,13 +271,13 @@ const UsersToolbar = (props) => {
           id='standard-basic'
           type='text'
           label='Last Name'
-          value={formState.values.lastName || ''}
+          value={formState.values.last_name || ''}
           onChange={handleOnAddUserInputChange}
-          name='lastName'
+          name='last_name'
           className={classes.inputFields}
-          error={hasError('lastName')}
+          error={hasError('last_name')}
           helperText={
-            hasError('lastName') ? formState.errors.lastName[0] : null
+            hasError('last_name') ? formState.errors.last_name[0] : null
           }
         />
         <TextField
@@ -285,13 +285,13 @@ const UsersToolbar = (props) => {
           id='standard-basic'
           type='text'
           label='First Name'
-          value={formState.values.firstName || ''}
+          value={formState.values.first_name || ''}
           onChange={handleOnAddUserInputChange}
-          name='firstName'
+          name='first_name'
           className={classes.inputFields}
-          error={hasError('firstName')}
+          error={hasError('first_name')}
           helperText={
-            hasError('firstName') ? formState.errors.firstName[0] : null
+            hasError('first_name') ? formState.errors.first_name[0] : null
           }
         />
         <TextField
@@ -318,7 +318,7 @@ const UsersToolbar = (props) => {
             name='role'
             inputProps={{
               name: 'role',
-              id: 'age-native-simple'
+              id: 'age-native-simple',
             }}
           >
             <option aria-label='None' value='' />
@@ -346,7 +346,7 @@ const UsersToolbar = (props) => {
         </Alert>
       )}
     </div>
-  )
+  );
 
   const deleteBody = (
     <div style={modalStyle} className={classes.paper}>
@@ -357,7 +357,7 @@ const UsersToolbar = (props) => {
         Submit
       </Button>
     </div>
-  )
+  );
 
   return (
     <>
@@ -416,7 +416,7 @@ const UsersToolbar = (props) => {
         </Modal>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default UsersToolbar
+export default UsersToolbar;
