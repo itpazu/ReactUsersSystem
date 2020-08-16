@@ -113,6 +113,7 @@ const UsersToolbar = (props) => {
     getRelevantUsers,
     handleUpdate,
     disableButton,
+    setDisabled,
     ...rest
   } = props;
   const [modalStyle] = useState(getModalStyle);
@@ -200,7 +201,7 @@ const UsersToolbar = (props) => {
       }, 2500);
     } catch (err) {
       const error = err.response.status;
-      if (error == '401') {
+      if (error === '401') {
         setAddUserResponse({
           activateAlert: true,
           message: JSON.stringify(err.response.data),
@@ -209,7 +210,7 @@ const UsersToolbar = (props) => {
         setTimeout(() => {
           handleLogOut();
         }, 3500);
-      } else if (error == '403') {
+      } else if (error === '403') {
         await refreshCredentials(addUserToDb);
       } else {
         setAddUserResponse({
@@ -239,15 +240,16 @@ const UsersToolbar = (props) => {
     deleteUser(deleteUserValues.id, currentlyLoggedUser)
       .then(() => {
         handleCloseDelete();
+        setDisabled(true);
         handleUpdate();
       })
       .catch((err) => {
         const error = err.response.status;
-        if (error == '401') {
+        if (error === '401') {
           setTimeout(() => {
             handleLogOut();
           }, 2500);
-        } else if (error == '403') {
+        } else if (error === '403') {
           refreshCredentials(handleDeleteUser);
         } else {
           errorFetchUser();
