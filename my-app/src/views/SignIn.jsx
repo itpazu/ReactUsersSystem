@@ -1,47 +1,48 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
-import validate from 'validate.js';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState, useEffect, useContext } from 'react'
+import { Link as RouterLink, withRouter } from 'react-router-dom'
+import validate from 'validate.js'
+import { makeStyles } from '@material-ui/styles'
 import {
   Grid,
   Button,
   IconButton,
   TextField,
-  Typography,
-} from '@material-ui/core';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Context from '../context/Context';
-import Alert from '@material-ui/lab/Alert';
+  Typography
+} from '@material-ui/core'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Context from '../context/Context'
+import Alert from '@material-ui/lab/Alert'
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
     email: true,
     length: {
-      maximum: 64,
-    },
+      maximum: 64
+    }
   },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 128,
-    },
-  },
-};
+      maximum: 128
+    }
+  }
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    height: '100%',
+    height: '100%'
   },
   grid: {
-    height: '100%',
+    height: '100%'
   },
   quoteContainer: {
     [theme.breakpoints.down('md')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   quote: {
     backgroundColor: theme.palette.neutral,
@@ -52,28 +53,28 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: 'url(/images/frame_2.png)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
+    backgroundPosition: 'center'
   },
   quoteInner: {
     textAlign: 'center',
-    flexBasis: '600px',
+    flexBasis: '600px'
   },
   quoteText: {
     color: theme.palette.white,
-    fontWeight: 300,
+    fontWeight: 300
   },
   name: {
     marginTop: theme.spacing(3),
-    color: theme.palette.white,
+    color: theme.palette.white
   },
   bio: {
-    color: theme.palette.white,
+    color: theme.palette.white
   },
   contentContainer: {},
   content: {
     height: '100%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   contentHeader: {
     display: 'flex',
@@ -81,18 +82,18 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
   logoImage: {
-    marginLeft: theme.spacing(4),
+    marginLeft: theme.spacing(4)
   },
   contentBody: {
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'center',
-    },
+      justifyContent: 'center'
+    }
   },
   form: {
     paddingLeft: 100,
@@ -101,68 +102,68 @@ const useStyles = makeStyles((theme) => ({
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
+      paddingRight: theme.spacing(2)
+    }
   },
   title: {
     marginTop: theme.spacing(16),
   },
   socialButtons: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3)
   },
   socialIcon: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   suggestion: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   textField: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   signInButton: {
-    margin: theme.spacing(2, 0),
-  },
-}));
+    margin: theme.spacing(2, 0)
+  }
+}))
 
 const SignIn = () => {
-  const context = useContext(Context);
-  const classes = useStyles();
+  const context = useContext(Context)
+  const classes = useStyles()
   const [response, setResponse] = useState({
     activateAlert: null,
     success: null,
-    message: null,
-  });
+    message: null
+  })
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
-    errors: {},
-  });
+    errors: {}
+  })
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, schema)
 
-    let mounted = true;
+    let mounted = true
 
     if (mounted) {
       setFormState((formState) => ({
         ...formState,
         isValid: errors ? false : true,
-        errors: errors || {},
-      }));
+        errors: errors || {}
+      }))
     }
-    return function cleanup() {
-      mounted = false;
-    };
-  }, [formState.values]);
-  const [togglePasswordView, setTogglePasswordView] = useState(true);
+    return function cleanup () {
+      mounted = false
+    }
+  }, [formState.values])
+  const [togglePasswordView, setTogglePasswordView] = useState(true)
 
   const toggleShowPassword = () => {
-    setTogglePasswordView(!togglePasswordView);
-  };
+    setTogglePasswordView(!togglePasswordView)
+  }
 
   const handleChange = (event) => {
-    event.persist();
+    event.persist()
 
     setFormState((formState) => ({
       ...formState,
@@ -171,29 +172,29 @@ const SignIn = () => {
         [event.target.name]:
           event.target.type === 'checkbox'
             ? event.target.checked
-            : event.target.value,
+            : event.target.value
       },
       touched: {
         ...formState.touched,
-        [event.target.name]: true,
-      },
-    }));
-  };
+        [event.target.name]: true
+      }
+    }))
+  }
 
   const handleSignIn = async (event) => {
-    event.preventDefault();
-    setResponse({ activateAlert: false });
+    event.preventDefault()
+    setResponse({ activateAlert: false })
     setFormState({
       isValid: true,
       values: {},
       touched: {},
-      errors: {},
-    });
+      errors: {}
+    })
     try {
       await context.handleSubmittedForm(
         formState.values.email,
         formState.values.password
-      );
+      )
     } catch (error) {
       setResponse({
         activateAlert: true,
@@ -201,17 +202,17 @@ const SignIn = () => {
         message:
           error.response !== undefined
             ? JSON.stringify(error.response.data)
-            : 'server failure',
-      });
+            : 'server failure'
+      })
     }
-  };
+  }
 
   const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+    formState.touched[field] && formState.errors[field] ? true : false
 
   return (
     <div className={classes.root}>
@@ -268,7 +269,7 @@ const SignIn = () => {
                         )}
                       </IconButton>
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
               <Button
@@ -300,7 +301,7 @@ const SignIn = () => {
         </Grid>
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(SignIn);
+export default withRouter(SignIn)

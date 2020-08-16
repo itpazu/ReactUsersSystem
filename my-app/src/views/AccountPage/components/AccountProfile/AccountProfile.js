@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState, useContext } from 'react'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/styles'
 import {
   Box,
   Card,
@@ -11,34 +11,34 @@ import {
   Divider,
   Button,
   TextField,
-  Modal,
-} from '@material-ui/core';
-import { addProfileImage, deleteProfileImage } from '../../../../lib/api';
-import Context from '../../../../context/Context';
+  Modal
+} from '@material-ui/core'
+import { addProfileImage, deleteProfileImage } from '../../../../lib/api'
+import Context from '../../../../context/Context'
 
 const rand = () => {
-  return Math.round(Math.random() * 20) - 10;
-};
+  return Math.round(Math.random() * 20) - 10
+}
 
 const getModalStyle = () => {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50 + rand()
+  const left = 50 + rand()
 
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-};
+    transform: `translate(-${top}%, -${left}%)`
+  }
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
     height: 100,
-    width: 100,
+    width: 100
   },
   uploadButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2)
   },
   paper: {
     position: 'absolute',
@@ -46,75 +46,72 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 3)
   },
   inputFields: {
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   submitButton: {
-    marginTop: theme.spacing(2),
-  },
-}));
+    marginTop: theme.spacing(2)
+  }
+}))
 
 const AccountProfile = (props) => {
-  const { className, ...rest } = props;
+  const { className, ...rest } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const context = useContext(Context);
-  const { updateProfileInfo, handleLogOut, refreshCredentials } = context;
+  const context = useContext(Context)
+  const { updateProfileInfo, handleLogOut, refreshCredentials } = context
 
   const userName =
     props.profile.first_name.charAt(0).toUpperCase() +
     props.profile.first_name.slice(1) +
     ' ' +
     props.profile.last_name.charAt(0).toUpperCase() +
-    props.profile.last_name.slice(1);
+    props.profile.last_name.slice(1)
 
   const user = {
     name: userName,
     avatar:
       props.profile.photo === ''
         ? '/images/empty-avatar.png'
-        : props.profile.photo,
-  };
+        : props.profile.photo
+  }
 
-  const [modalStyle] = useState(getModalStyle);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
+  const [modalStyle] = useState(getModalStyle)
+  const [openAdd, setOpenAdd] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
   const [imageState, setImageState] = useState({
     isValid: false,
-    value: '',
-  });
+    value: ''
+  })
 
   const handleOpenAdd = (e) => {
-    setOpenAdd(true);
-  };
+    setOpenAdd(true)
+  }
 
   const handleCloseAddUser = () => {
-    setOpenAdd(false);
+    setOpenAdd(false)
     setImageState({
       isValid: false,
-      value: '',
-    });
-  };
+      value: ''
+    })
+  }
 
   const handleOnAddImageChange = (event) => {
     setImageState({
       isValid: true,
-      value: event.target.files[0],
-    });
-  };
+      value: event.target.files[0]
+    })
+  }
 
   const handleAddImage = (event) => {
-    event.preventDefault();
-    const file = imageState.value;
-    const formData = new FormData();
-    formData.append('file', file, file.name);
-    console.log(formData);
-    addProfileImage({ _id: props.profile._id, photo: formData });
-    updateProfileInfo({ _id: props.profile._id });
-  };
+    event.preventDefault()
+    const file = imageState.value
+    addProfileImage({ _id: props.profile._id }, file)
+    context.updateProfileInfo({ _id: props.profile._id })
+  }
 
   const addImage = (
     <div style={modalStyle} className={classes.paper} onSubmit={handleAddImage}>
@@ -138,20 +135,20 @@ const AccountProfile = (props) => {
         </Button>
       </form>
     </div>
-  );
+  )
 
   const handleOpenDelete = () => {
-    setOpenDelete(true);
-  };
+    setOpenDelete(true)
+  }
 
   const handleCloseDelete = () => {
-    setOpenDelete(false);
-  };
+    setOpenDelete(false)
+  }
 
   const handleDeleteImage = async () => {
-    deleteProfileImage({ _id: props.profile._id });
-    updateProfileInfo({ _id: props.profile._id });
-  };
+    deleteProfileImage({ _id: props.profile._id })
+    updateProfileInfo({ _id: props.profile._id })
+  }
 
   const deleteImage = (
     <div style={modalStyle} className={classes.paper}>
@@ -163,7 +160,7 @@ const AccountProfile = (props) => {
       </Button>
       <Button onClick={handleCloseDelete}>No</Button>
     </div>
-  );
+  )
 
   return (
     <>
@@ -207,7 +204,7 @@ const AccountProfile = (props) => {
         {deleteImage}
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default AccountProfile;
+export default AccountProfile
