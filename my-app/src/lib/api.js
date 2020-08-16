@@ -146,15 +146,20 @@ export const getUserInfoRefresh = (data) => {
   return axios.post(`${baseURL}/get_user_info`, data, headers)
 }
 
-export const addProfileImage = (data) => {
+export const addProfileImage = (data, file) => {
   const config = {
     headers: {
       'content-type': 'multipart/form-data'
     }
   }
-  return axios.post(`${baseURL}/add_photo`, data, config)
+  return axios.post(`${baseURL}/upload_file`, data, file, config)
 }
 
 export const deleteProfileImage = (data) => {
-  return axios.delete(`${baseURL}/delete_photo`, data)
+  const headers = {
+    headers: {
+      credentials: 'cross-site'
+    }
+  }
+  return axios.delete(`${baseURL}/delete_photo`, data, headers)
 }

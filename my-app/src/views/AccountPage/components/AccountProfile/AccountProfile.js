@@ -100,10 +100,7 @@ const AccountProfile = props => {
   const handleAddImage = (event) => {
     event.preventDefault()
     const file = imageState.value
-    const formData = new FormData()
-    formData.append('file', file, file.name)
-    console.log(formData)
-    addProfileImage({ _id: props.profile._id, photo: formData })
+    addProfileImage({ _id: props.profile._id }, file)
     context.updateProfileInfo({ _id: props.profile._id })
   }
 
