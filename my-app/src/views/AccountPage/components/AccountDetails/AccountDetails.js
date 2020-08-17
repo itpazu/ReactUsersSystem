@@ -145,7 +145,6 @@ const AccountDetails = (props) => {
 
     callEditProfile();
   };
-  console.log(currentlyLoggedUser);
   const callEditProfile = async () => {
     try {
       const submitDetailsChange = await submitUserEditDetails(
@@ -164,10 +163,10 @@ const AccountDetails = (props) => {
       });
       updateProfileInfo({ _id: props.profile._id });
     } catch (err) {
-      const error = err.response ? err.response.status : '405';
-      if (error === '401') {
+      const error = err.response ? err.response.status : 405;
+      if (error === 401) {
         handleLogOut();
-      } else if (error === '403') {
+      } else if (error === 403) {
         await refreshCredentials(callEditProfile);
       } else {
         setResponse({
