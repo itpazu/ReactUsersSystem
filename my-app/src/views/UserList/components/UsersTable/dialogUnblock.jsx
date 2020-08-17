@@ -27,9 +27,9 @@ const DialogUnblock = (props) => {
       getAllUsers();
       closeUnblock();
     } catch (error) {
-      if (error.response.status === '401') {
+      if (error.response.status === 401) {
         handleLogOut();
-      } else if (error.response.status === '403') {
+      } else if (error.response.status === 403) {
         await refreshCredentials(handleUnblock);
       } else {
         setActivateAlert({
