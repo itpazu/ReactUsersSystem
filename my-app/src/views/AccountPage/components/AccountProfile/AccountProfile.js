@@ -87,7 +87,7 @@ const AccountProfile = (props) => {
     value: ''
   })
 
-  const handleOpenAdd = (e) => {
+  const handleOpenAdd = () => {
     setOpenAdd(true)
   }
 

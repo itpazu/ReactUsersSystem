@@ -11,6 +11,7 @@ import Minimal from './Layouts/minimal/Minimal'
 import Context from './context/Context'
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute'
 import ResetPassword from './views/ResetPassword/ResetPassword'
+import Dashboard, { ChangeStatus } from './views/Dashboard/Dashboard'
 
 const Routes = (props) => {
   const [userInput, setUserInput] = useState({ email: '', password: '' })
@@ -79,6 +80,7 @@ const Routes = (props) => {
       }}
     >
       <Switch>
+        {/* <Route exact path='/dave' component={Dashboard} />  dev only*/}
         <PrivateRoute
           exact
           path='/'

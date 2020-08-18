@@ -243,11 +243,7 @@ const AccountDetails = (props) => {
         </CardContent>
         <Divider />
         <CardActions>
-          <Button
-            color='primary'
-            variant='contained'
-            onClick={handleEditedDetailsSubmit}
-          >
+          <Button variant='contained' onClick={handleEditedDetailsSubmit}>
             Save details
           </Button>
           {response.activateAlert && (
