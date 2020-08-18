@@ -10,7 +10,7 @@ import { LogIn, refreshToken, getUserInfoRefresh } from './lib/api'
 import Minimal from './Layouts/minimal/Minimal'
 import Context from './context/Context'
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute'
-import ResetPassword from './views/ResetPassword/ResetPassword'
+import ResetPassword from './views/LogInViews/ResetPassword'
 import Dashboard, { ChangeStatus } from './views/Dashboard/Dashboard'
 
 const Routes = (props) => {
