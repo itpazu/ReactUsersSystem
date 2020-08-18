@@ -160,10 +160,11 @@ export const addProfileImage = (data) => {
 }
 
 export const deleteProfileImage = (data) => {
-  const headers = {
+  const newData = {
     headers: {
       credentials: 'cross-site'
-    }
+    },
+    data: { _id: data._id }
   }
-  return axios.delete(`${baseURL}/delete_photo`, data, headers)
+  return axios.delete(`${baseURL}/delete_photo`, newData)
 }

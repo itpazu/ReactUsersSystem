@@ -111,8 +111,15 @@ const AccountProfile = (props) => {
     const file = imageState.value
     const formData = new FormData()
     formData.append('file', file)
-    addProfileImage(formData)
-    context.updateProfileInfo({ _id: props.profile._id })
+    formData.append('_id', props.profile._id)
+    addProfileImage(formData).then(res => {
+      updateInfo()
+    })
+    handleCloseAddUser()
+  }
+
+  const updateInfo = () => {
+    updateProfileInfo({ _id: props.profile._id })
   }
 
   const addImage = (
@@ -148,8 +155,10 @@ const AccountProfile = (props) => {
   }
 
   const handleDeleteImage = async () => {
-    deleteProfileImage({ _id: props.profile._id })
-    updateProfileInfo({ _id: props.profile._id })
+    deleteProfileImage({ _id: props.profile._id }).then(res => {
+      updateInfo()
+    })
+    handleCloseDelete()
   }
 
   const deleteImage = (

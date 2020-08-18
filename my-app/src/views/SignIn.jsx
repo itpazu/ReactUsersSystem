@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   title: {
-    marginTop: theme.spacing(16),
+    marginTop: theme.spacing(16)
   },
   socialButtons: {
     marginTop: theme.spacing(3)
