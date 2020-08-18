@@ -150,13 +150,13 @@ export const getUserInfoRefresh = (data, admin) => {
   return axios.post(`${baseURL}/get_user_info`, data, headers)
 }
 
-export const addProfileImage = (data, file) => {
+export const addProfileImage = (data) => {
   const config = {
     headers: {
       'content-type': 'multipart/form-data'
     }
   }
-  return axios.post(`${baseURL}/upload_file`, data, file, config)
+  return axios.post(`${baseURL}/upload_file`, data, config)
 }
 
 export const deleteProfileImage = (data) => {
