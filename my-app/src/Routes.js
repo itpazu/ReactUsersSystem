@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import adminLayout from './Layouts/adminLayout/adminLayout';
 import userLayout from './Layouts/userLayout/userLayout';
 import developerLayout from './Layouts/developerLayout/developerLayout';
@@ -10,7 +10,8 @@ import { LogIn, refreshToken, getUserInfoRefresh } from './lib/api';
 import Minimal from './Layouts/minimal/Minimal';
 import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
-import ResetPassword from './views/ResetPassword/ResetPassword';
+import ResetPassword from './views/LogInViews/ResetPassword';
+import Dashboard, { ChangeStatus } from './views/Dashboard/Dashboard';
 
 const Routes = (props) => {
   const [userInput, setUserInput] = useState({ email: '', password: '' });
@@ -79,6 +80,7 @@ const Routes = (props) => {
       }}
     >
       <Switch>
+        {/* <Route exact path='/dave' component={Dashboard} />  dev only*/}
         <PrivateRoute
           exact
           path='/'

@@ -1,23 +1,23 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/styles'
-import TopBar from './components/TopBar/TopBar'
-import SignIn from '../../views/SignIn'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { LoginRoute } from '../../privateRoutes/PrivateRoute'
-import ResetRequest from '../../views/ResetPassword/ResetRequest'
+import React from 'react';
+import { makeStyles } from '@material-ui/styles';
+import TopBar from './components/TopBar/TopBar';
+import SignIn from '../../views/LogInViews/SignIn';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { LoginRoute } from '../../privateRoutes/PrivateRoute';
+import ResetRequest from '../../views/LogInViews/ResetRequest';
 
 const useStyles = makeStyles(() => ({
   root: {
     paddingTop: 64,
-    height: '-webkit-fill-available'
+    height: '-webkit-fill-available',
   },
   content: {
-    height: 'inherit'
-  }
-}))
+    height: 'inherit',
+  },
+}));
 
 const Minimal = () => {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Router>
@@ -31,7 +31,7 @@ const Minimal = () => {
         </main>
       </div>
     </Router>
-  )
-}
+  );
+};
 
-export default Minimal
+export default Minimal;
