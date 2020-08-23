@@ -15,34 +15,20 @@ const DialogUnblock = (props) => {
     closeUnblock();
   };
   const context = useContext(Context);
-  const {
-    handleLogOut,
-    currentlyLoggedUser,
-    refreshCredentials,
-    makeApiRequest,
-  } = context;
+  const { makeApiRequest } = context;
   const [activateAlert, setActivateAlert] = useState({
     activate: false,
     message: null,
   });
 
   const handleUnblock = async () => {
-    try {
-      await unblockSystemUser(currentlyLoggedUser, emailAddress);
-      getAllUsers();
-      closeUnblock();
-    } catch (error) {
-      if (error.response.status === 401) {
-        handleLogOut();
-      } else if (error.response.status === 403) {
-        await refreshCredentials(handleUnblock);
-      } else {
-        setActivateAlert({
-          activate: true,
-          message: JSON.stringify(error.response.data),
-        });
-      }
-    }
+    await makeApiRequest(
+      unblockSystemUser,
+      emailAddress,
+      getAllUsers,
+      handleUnblock,
+      setActivateAlert
+    );
   };
 
   return (
@@ -71,10 +57,7 @@ const DialogUnblock = (props) => {
           </Button>
         </DialogActions>
         {activateAlert.activate && (
-          <Alert
-            // className={classes.submitButton}
-            severity='error'
-          >
+          <Alert severity='error'>
             {activateAlert.message && activateAlert.message}
           </Alert>
         )}

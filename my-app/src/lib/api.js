@@ -83,14 +83,14 @@ export const solicitNewPassword = (data) => {
   return axios.post(`${baseURL}/newpass_solicit`, data);
 };
 
-export const unblockSystemUser = (admin, email) => {
+export const unblockSystemUser = (email, userCredentials) => {
   const data = {
     headers: {
-      Authorization: admin.csrf,
+      Authorization: userCredentials.csrf,
       credentials: 'cross-site',
     },
     withCredentials: true,
-    data: { _id: admin.userId, email: email },
+    data: { _id: userCredentials.userId, email: email },
   };
 
   return axios.delete(`${baseURL}/unblock_user`, data);
