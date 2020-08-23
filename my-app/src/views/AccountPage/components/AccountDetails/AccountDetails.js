@@ -161,7 +161,7 @@ const AccountDetails = (props) => {
       success: true,
       message: results,
     });
-    updateProfileInfo({ _id: userInput._id });
+    updateProfileInfo();
   };
 
   const hasError = (field) =>

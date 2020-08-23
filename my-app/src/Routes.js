@@ -20,7 +20,7 @@ const Routes = (props) => {
     userId: '',
     csrf: '',
   });
-
+  const [errorUpdateProfile, setErrorUpdateProfile] = useState(null);
   const { backgroundType, handleThemeChange, darkState } = props;
 
   useEffect(() => {
@@ -51,21 +51,15 @@ const Routes = (props) => {
   };
 
   const updateProfileInfo = async () => {
-    try {
-      const response = await getUserInfoRefresh(currentlyLoggedUser);
-      setUserInput(response.data);
-    } catch (err) {
-      const error = err.response ? err.response.status : 405;
-      if (error === 401) {
-        handleLogOut();
-      } else if (error === 403) {
-        await refreshCredentials(() =>
-          updateProfileInfo(currentlyLoggedUser.userId)
-        );
-      } else {
-      }
-    }
+    await makeApiRequest(
+      getUserInfoRefresh,
+      null,
+      setUserInput,
+      updateProfileInfo,
+      setErrorUpdateProfile
+    );
   };
+
   const refreshCredentials = async (callback) => {
     try {
       await refreshToken(currentlyLoggedUser.userId);
@@ -121,6 +115,7 @@ const Routes = (props) => {
         refreshCredentials,
         updateProfileInfo,
         makeApiRequest,
+        errorUpdateProfile,
       }}
     >
       <Switch>
