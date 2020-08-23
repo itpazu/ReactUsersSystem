@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import Context from '../../context/Context';
-
+import { getCostumerStatus } from '../../lib/api';
 import { ChangeStatus } from './components';
 
 const useStyles = makeStyles((theme) => ({
@@ -15,25 +15,22 @@ const Dashboard = () => {
   const classes = useStyles();
   const context = useContext(Context);
   const [costumerResult, setCostumerResult] = useState(null);
-  const costumers = [
-    {
-      email: 'email@example.com',
-      _id: '123456',
-      currentStatus: 'VIP',
-    },
-    {
-      email: 'email@examples.com',
-      _id: '88888',
-      currentStatus: 'regular',
-    },
-  ];
+  const [errosFetch, setErrosFetch] = useState({
+    activateAlert: false,
+    message: '',
+  });
+  const { makeApiRequest } = context;
 
-  const searchUser = (mail) => {
-    const costumer = costumers.find(({ email }) => email === mail.email);
-    console.log(costumer);
-
-    setCostumerResult(costumer);
+  const searchUser = async (mail) => {
+    await makeApiRequest(
+      getCostumerStatus,
+      mail,
+      setCostumerResult,
+      searchUser,
+      setErrosFetch
+    );
   };
+
   return (
     <div className={classes.root}>
       <Grid container spacing={4}>
@@ -41,6 +38,8 @@ const Dashboard = () => {
           <ChangeStatus
             userSearch={searchUser}
             resultsCostumer={costumerResult}
+            fetchErros={errosFetch}
+            setCostumerResult={setCostumerResult}
           />
         </Grid>
       </Grid>

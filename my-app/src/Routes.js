@@ -74,6 +74,38 @@ const Routes = (props) => {
       handleLogOut();
     }
   };
+  const makeApiRequest = async (
+    requestFunc,
+    argsRequest,
+    nextStep,
+    callBackFunc,
+    setErrorResponse
+  ) => {
+    try {
+      const results = argsRequest
+        ? await requestFunc(argsRequest, currentlyLoggedUser)
+        : await requestFunc(currentlyLoggedUser);
+      nextStep(results.data);
+    } catch (err) {
+      console.log(err);
+      const error = err.response ? err.response.status : 405;
+      if (error === 401) {
+        handleLogOut();
+      } else if (error === 403) {
+        await refreshCredentials(() => {
+          callBackFunc(argsRequest);
+        });
+      } else {
+        setErrorResponse({
+          activateAlert: true,
+          message:
+            err.response !== undefined
+              ? JSON.stringify(err.response.data)
+              : 'server failed',
+        });
+      }
+    }
+  };
 
   return (
     <Context.Provider
@@ -88,6 +120,7 @@ const Routes = (props) => {
         darkState,
         refreshCredentials,
         updateProfileInfo,
+        makeApiRequest,
       }}
     >
       <Switch>

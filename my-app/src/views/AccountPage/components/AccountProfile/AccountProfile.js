@@ -63,13 +63,7 @@ const AccountProfile = (props) => {
   const classes = useStyles();
 
   const context = useContext(Context);
-  const {
-    updateProfileInfo,
-    handleLogOut,
-    refreshCredentials,
-    currentlyLoggedUser,
-    userInput,
-  } = context;
+  const { updateProfileInfo, userInput, makeApiRequest } = context;
 
   const userName =
     userInput.first_name.charAt(0).toUpperCase() +
@@ -126,42 +120,11 @@ const AccountProfile = (props) => {
     await makeApiRequest(
       addProfileImage,
       formData,
-      handleCloseAddUser,
+      updateInfo,
       uploadImage,
-      updateInfo
+      setResponse
     );
-  };
-
-  const makeApiRequest = async (
-    requestFunc,
-    argsRequest,
-    modalCloseFunc,
-    callBackFunc
-  ) => {
-    try {
-      argsRequest
-        ? await requestFunc(argsRequest, currentlyLoggedUser)
-        : await requestFunc(currentlyLoggedUser);
-      modalCloseFunc();
-      updateInfo();
-    } catch (err) {
-      const error = err.response ? err.response.status : 405;
-      if (error === 401) {
-        handleLogOut();
-      } else if (error === 403) {
-        await refreshCredentials(() => {
-          callBackFunc(argsRequest);
-        });
-      } else {
-        setResponse({
-          activateAlert: true,
-          message:
-            error.response !== undefined
-              ? JSON.stringify(error.response.data)
-              : 'server failed',
-        });
-      }
-    }
+    handleCloseAddUser();
   };
 
   const updateInfo = () => {
@@ -201,16 +164,14 @@ const AccountProfile = (props) => {
   };
 
   const handleDeleteImage = async () => {
-    makeApiRequest(
+    await makeApiRequest(
       deleteProfileImage,
       null,
-      handleCloseDelete,
-      handleDeleteImage
+      updateInfo,
+      handleDeleteImage,
+      setResponse
     );
-    // deleteProfileImage(currentlyLoggedUser).then((res) => {
-    //   updateInfo();
-    // });
-    // handleCloseDelete();
+    handleCloseDelete();
   };
 
   const deleteImage = (

@@ -61,13 +61,7 @@ const AccountDetails = (props) => {
   const classes = useStyles();
 
   const context = useContext(Context);
-  const {
-    updateProfileInfo,
-    handleLogOut,
-    refreshCredentials,
-    currentlyLoggedUser,
-    userInput,
-  } = context;
+  const { updateProfileInfo, userInput, makeApiRequest } = context;
 
   const [response, setResponse] = useState({
     activateAlert: null,
@@ -146,40 +140,28 @@ const AccountDetails = (props) => {
 
     callEditProfile();
   };
+
   const callEditProfile = async () => {
-    try {
-      const submitDetailsChange = await submitUserEditDetails(
-        {
-          first_name: formState.values.firstName.toLowerCase(),
-          last_name: formState.values.lastName.toLowerCase(),
-          email: formState.values.email.toLowerCase(),
-          _id: userInput._id,
-        },
-        currentlyLoggedUser
-      );
-      setResponse({
-        activateAlert: true,
-        success: true,
-        message: submitDetailsChange.data,
-      });
-      updateProfileInfo({ _id: userInput._id });
-    } catch (err) {
-      const error = err.response ? err.response.status : 405;
-      if (error === 401) {
-        handleLogOut();
-      } else if (error === 403) {
-        await refreshCredentials(callEditProfile);
-      } else {
-        setResponse({
-          activateAlert: true,
-          success: false,
-          message:
-            error.response !== undefined
-              ? JSON.stringify(error.response.data)
-              : 'server failed',
-        });
-      }
-    }
+    await makeApiRequest(
+      submitUserEditDetails,
+      {
+        first_name: formState.values.firstName.toLowerCase(),
+        last_name: formState.values.lastName.toLowerCase(),
+        email: formState.values.email.toLowerCase(),
+        _id: userInput._id,
+      },
+      updatedInfo,
+      callEditProfile
+    );
+  };
+
+  const updatedInfo = (results) => {
+    setResponse({
+      activateAlert: true,
+      success: true,
+      message: results,
+    });
+    updateProfileInfo({ _id: userInput._id });
   };
 
   const hasError = (field) =>

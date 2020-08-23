@@ -20,14 +20,10 @@ export const refreshToken = (userId) => {
   return axios.post(`${baseURL}/refresh_token`, data, headers);
 };
 
-export const Logout = () => {
-  return axios.get(`${baseURL}/logout`);
-};
-
-export const register = (newUser, authenticationInfo) => {
-  const csrf = authenticationInfo.csrf;
+export const register = (newUser, userCredentials) => {
+  const csrf = userCredentials.csrf;
   const body = newUser;
-  body._id = authenticationInfo.userId;
+  body._id = userCredentials.userId;
   const headers = {
     headers: {
       credentials: 'cross-site',
@@ -38,13 +34,13 @@ export const register = (newUser, authenticationInfo) => {
   return axios.post(`${baseURL}/add_user`, body, headers);
 };
 
-export const deleteUser = (userId, authenticationInfo) => {
-  const body = { user_id: userId, _id: authenticationInfo.userId };
+export const deleteUser = (userId, userCredentials) => {
+  const body = { user_id: userId, _id: userCredentials.userId };
 
   const data = {
     headers: {
       credentials: 'cross-site',
-      Authorization: authenticationInfo.csrf,
+      Authorization: userCredentials.csrf,
     },
     withCredentials: true,
     data: body,
@@ -53,13 +49,13 @@ export const deleteUser = (userId, authenticationInfo) => {
   return axios.delete(`${baseURL}/delete_user`, data);
 };
 
-export const allUsers = (userId, csrf) => {
-  const body = { _id: userId };
+export const allUsers = (userCredentials) => {
+  const body = { _id: userCredentials.userId };
 
   const headers = {
     headers: {
       credentials: 'cross-site',
-      Authorization: csrf,
+      Authorization: userCredentials.csrf,
     },
     withCredentials: true,
   };
@@ -135,15 +131,31 @@ export const addProfileImage = (data, userCredentials) => {
   return axios.post(`${baseURL}/upload_file`, data, headers);
 };
 
-export const deleteProfileImage = (data) => {
+export const deleteProfileImage = (userCredentials) => {
   const newData = {
     headers: {
-      Authorization: data.csrf,
+      Authorization: userCredentials.csrf,
       credentials: 'cross-site',
     },
     withCredentials: true,
-    data: { _id: data.userId },
+    data: { _id: userCredentials.userId },
   };
 
   return axios.delete(`${baseURL}/delete_photo`, newData);
+};
+
+export const getCostumerStatus = (email, userCredentials) => {
+  const url = `${baseURL}/get_customer/${email.email}`;
+  const payload = {
+    headers: {
+      Authorization: userCredentials.csrf,
+      credentials: 'cross-site',
+    },
+    withCredentials: true,
+    body: {
+      _id: userCredentials.userId,
+    },
+  };
+
+  return axios.get(url, payload);
 };

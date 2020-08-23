@@ -48,7 +48,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ChangeStatus = (props) => {
   const classes = useStyles();
-  const { userSearch, resultsCostumer, ...rest } = props;
+  const {
+    userSearch,
+    resultsCostumer,
+    fetchErros,
+    setCostumerResult,
+    ...rest
+  } = props;
 
   const [formState, setFormState] = useState({
     values: {},
@@ -80,6 +86,7 @@ const ChangeStatus = (props) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    setCostumerResult(null);
     userSearch(formState.values);
   };
 
@@ -125,7 +132,7 @@ const ChangeStatus = (props) => {
             <Divider />
           </form>
           <CardActions>
-            {resultsCostumer && resultsCostumer !== undefined ? (
+            {resultsCostumer ? (
               <TableContainer component={Paper}>
                 <Table
                   className={classes.table}
@@ -134,7 +141,7 @@ const ChangeStatus = (props) => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align='left'>Costumer Name</TableCell>
+                      <TableCell align='left'>Costumer Email</TableCell>
                       <TableCell align='left'>Current Status</TableCell>
                       <TableCell align='left'>Change Status</TableCell>
                       <TableCell align='left'>Result</TableCell>
@@ -143,32 +150,32 @@ const ChangeStatus = (props) => {
                   <TableBody>
                     <TableRow>
                       <TableCell component='th' scope='row'>
-                        {resultsCostumer._id}
+                        {resultsCostumer.userId}
                       </TableCell>
                       <TableCell align='left'>
                         {resultsCostumer.currentStatus}
                       </TableCell>
                       <TableCell align='left'>
-                        {resultsCostumer.currentStatus === 'VIP' ? (
+                        {resultsCostumer.currentStatus === 'keepers_vip' ? (
                           <Button variant='contained'>Demote VIP</Button>
                         ) : (
                           <Button variant='contained'>Grant VIP</Button>
                         )}
                       </TableCell>
-                      <TableCell align='left'>
+                      {/* <TableCell align='left'>
                         <Alert
                           className={classes.alertMessage}
                           severity={resultsCostumer ? 'success' : 'error'}
                         ></Alert>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
-            ) : resultsCostumer === undefined ? (
+            ) : fetchErros.activateAlert ? (
               <Alert className={classes.alertNotFound} severity='error'>
                 {' '}
-                not found
+                {fetchErros.message}
               </Alert>
             ) : (
               <></>
