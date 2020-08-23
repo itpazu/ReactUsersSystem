@@ -131,6 +131,10 @@ const AccountProfile = (props) => {
     updateProfileInfo();
   };
 
+  const inputProps = {
+    accept: 'image/*'
+  }
+
   const addImage = (
     <div style={modalStyle} className={classes.paper} onSubmit={handleAddImage}>
       <Typography variant='h2'>Upload a new profile picture:</Typography>
@@ -143,6 +147,7 @@ const AccountProfile = (props) => {
           onChange={handleOnAddImageChange}
           name='image'
           className={classes.inputFields}
+          inputProps={inputProps}
         />
         <Button
           type='submit'
