@@ -47,7 +47,7 @@ const Password = props => {
 
   const [togglePasswordView, setTogglePasswordView] = useState(true)
   const [response, setResponse] = useState({
-    activateAlert: null,
+    activateAlert: true,
     success: null,
     message: '',
     PassChangeErrorAlert: null
@@ -114,7 +114,7 @@ const Password = props => {
         message: submitPassChange.data
       })
       setTimeout(() => {
-        setResponse({ redirect: true })
+        setResponse({ activateAlert: true })
       }, 3000)
     } catch (error) {
       setResponse({

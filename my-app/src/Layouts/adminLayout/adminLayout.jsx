@@ -11,6 +11,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 import Context from '../../context/Context'
 import Dashboard from '../../views/Dashboard/Dashboard'
+import Settings from '../../views/Settings/Settings'
 
 const Main = () => {
   const context = useContext(Context)
@@ -66,7 +67,8 @@ const Main = () => {
           <PrivateRoute exact path='/' component={HomePage} />
           <PrivateRoute exact path='/users' component={UserList} />
           <PrivateRoute exact path='/account' component={AccountPage} />
-          <PrivateRoute exact path='/Dashboard' component={Dashboard} />
+          <PrivateRoute exact path='/dashboard' component={Dashboard} />
+          <PrivateRoute exact path='/settings' component={Settings} />
         </main>
       </div>
     </Router>
