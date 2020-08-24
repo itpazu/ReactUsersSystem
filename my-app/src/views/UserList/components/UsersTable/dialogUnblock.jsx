@@ -1,25 +1,27 @@
-import React, { useState, useContext } from 'react';
-import { Button, Dialog } from '@material-ui/core';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { unblockSystemUser } from '../../../../lib/api';
-import Context from '../../../../context/Context';
-import Alert from '@material-ui/lab/Alert';
+import React, { useState, useContext } from 'react'
+import { Button, Dialog } from '@material-ui/core'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { unblockSystemUser } from '../../../../lib/api'
+import Context from '../../../../context/Context'
+import Alert from '@material-ui/lab/Alert'
 
 const DialogUnblock = (props) => {
-  const { closeUnblock, OpenDialog, userDetails, getAllUsers } = props;
-  const { blockedUserId, userName, emailAddress } = userDetails;
+  const { closeUnblock, OpenDialog, userDetails, getAllUsers } = props
+  const { blockedUserId, userName, emailAddress } = userDetails
+
   const handleClose = () => {
-    closeUnblock();
-  };
-  const context = useContext(Context);
-  const { makeApiRequest } = context;
+    closeUnblock()
+  }
+
+  const context = useContext(Context)
+  const { makeApiRequest } = context
   const [activateAlert, setActivateAlert] = useState({
     activate: false,
-    message: null,
-  });
+    message: null
+  })
 
   const handleUnblock = async () => {
     await makeApiRequest(
@@ -28,8 +30,8 @@ const DialogUnblock = (props) => {
       getAllUsers,
       handleUnblock,
       setActivateAlert
-    );
-  };
+    )
+  }
 
   return (
     <div>
@@ -63,7 +65,7 @@ const DialogUnblock = (props) => {
         )}
       </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default DialogUnblock;
+export default DialogUnblock

@@ -55,7 +55,7 @@ const ChangeStatus = (props) => {
   const {
     userSearch,
     resultsCostumer,
-    fetchErros,
+    fetchErrors,
     setCostumerResult,
     handleStatusChange,
     ...rest
@@ -260,7 +260,7 @@ const ChangeStatus = (props) => {
             {!resultsCostumer && fetchErros.activateAlert ? (
               <Alert className={classes.alertNotFound} severity='error'>
                 {' '}
-                {fetchErros.message}
+                {fetchErrors.message}
               </Alert>
             ) : (
               <Typography>{''}</Typography>

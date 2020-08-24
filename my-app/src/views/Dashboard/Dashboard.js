@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const classes = useStyles();
   const context = useContext(Context);
-  const [costumerResult, setCostumerResult] = useState(null);
-  const [errosFetch, setErrosFetch] = useState({
+  const [customerResult, setCustomerResult] = useState(null);
+  const [errorsFetch, setErrorsFetch] = useState({
     activateAlert: false,
     message: '',
   });
@@ -25,11 +25,11 @@ const Dashboard = () => {
     console.log(mail);
     setErrosFetch({ activateAlert: false, message: '' });
     await makeApiRequest(
-      getCostumerStatus,
+      getCustomerStatus,
       mail,
-      setCostumerResult,
+      setCustomerResult,
       searchUser,
-      setErrosFetch
+      setErrorsFetch
     );
   };
 

@@ -1,1 +1,1 @@
-export { default as ChangeStatus } from './EditStatus';
+export { default as ChangeStatus } from './EditStatus'

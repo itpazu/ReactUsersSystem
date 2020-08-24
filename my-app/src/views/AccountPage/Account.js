@@ -1,25 +1,25 @@
-import React, { useContext, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Grid } from '@material-ui/core';
-import Context from '../../context/Context';
-import Alert from '@material-ui/lab/Alert';
-import { AccountProfile, AccountDetails } from './components';
-import { getUserInfoRefresh } from '../../lib/api';
+import React, { useContext, useEffect } from 'react'
+import { makeStyles } from '@material-ui/styles'
+import { Grid } from '@material-ui/core'
+import Context from '../../context/Context'
+import Alert from '@material-ui/lab/Alert'
+import { AccountProfile, AccountDetails } from './components'
+// import { getUserInfoRefresh } from '../../lib/api'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(4),
-  },
-}));
+    padding: theme.spacing(4)
+  }
+}))
 
 const Account = () => {
-  const classes = useStyles();
-  const context = useContext(Context);
-  const { updateProfileInfo, errorUpdateProfile } = context;
+  const classes = useStyles()
+  const context = useContext(Context)
+  const { updateProfileInfo, errorUpdateProfile } = context
 
   useEffect(() => {
-    updateProfileInfo();
-  }, []);
+    updateProfileInfo()
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -40,7 +40,7 @@ const Account = () => {
         )}
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default Account;
+export default Account

@@ -9,6 +9,7 @@ import AccountPage from '../../views/AccountPage/Account'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from '../../privateRoutes/PrivateRoute'
 import Context from '../../context/Context'
+import Settings from '../../views/Settings/Settings'
 
 const Main = () => {
   const context = useContext(Context)
@@ -64,6 +65,7 @@ const Main = () => {
         <main className={classes.content}>
           <PrivateRoute exact path='/' component={HomePage} />
           <PrivateRoute exact path='/account' component={AccountPage} />
+          <PrivateRoute exact path='/settings' component={Settings} />
         </main>
       </div>
     </Router>
