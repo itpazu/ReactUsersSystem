@@ -257,7 +257,7 @@ const ChangeStatus = (props) => {
                 </Table>
               </TableContainer>
             )}
-            {!resultsCostumer && fetchErros.activateAlert ? (
+            {!resultsCostumer && fetchErrors.activateAlert ? (
               <Alert className={classes.alertNotFound} severity='error'>
                 {' '}
                 {fetchErrors.message}

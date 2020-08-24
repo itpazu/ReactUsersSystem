@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const classes = useStyles();
   const context = useContext(Context);
-  const [customerResult, setCustomerResult] = useState(null);
+  const [costumerResult, setCostumerResult] = useState(null);
   const [errorsFetch, setErrorsFetch] = useState({
     activateAlert: false,
     message: '',
@@ -23,11 +23,11 @@ const Dashboard = () => {
 
   const searchUser = async (mail) => {
     console.log(mail);
-    setErrosFetch({ activateAlert: false, message: '' });
+    setErrorsFetch({ activateAlert: false, message: '' });
     await makeApiRequest(
-      getCustomerStatus,
+      getCostumerStatus,
       mail,
-      setCustomerResult,
+      setCostumerResult,
       searchUser,
       setErrorsFetch
     );
@@ -41,7 +41,7 @@ const Dashboard = () => {
       formData,
       () => searchUser(formData),
       handleStatusChange,
-      setErrosFetch
+      setErrorsFetch
     );
   };
   return (
@@ -51,7 +51,7 @@ const Dashboard = () => {
           <ChangeStatus
             userSearch={searchUser}
             resultsCostumer={costumerResult}
-            fetchErros={errosFetch}
+            fetchErrors={errorsFetch}
             setCostumerResult={setCostumerResult}
             handleStatusChange={handleStatusChange}
           />
