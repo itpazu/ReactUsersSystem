@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import Context from '../../context/Context';
-import { getCostumerStatus } from '../../lib/api';
+import { getCostumerStatus, changeVipSts } from '../../lib/api';
 import { ChangeStatus } from './components';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +22,8 @@ const Dashboard = () => {
   const { makeApiRequest } = context;
 
   const searchUser = async (mail) => {
+    console.log(mail);
+    setErrosFetch({ activateAlert: false, message: '' });
     await makeApiRequest(
       getCostumerStatus,
       mail,
@@ -31,6 +33,17 @@ const Dashboard = () => {
     );
   };
 
+  const handleStatusChange = async (formData) => {
+    formData.costumer_id = costumerResult.userId;
+    console.log(formData);
+    await makeApiRequest(
+      changeVipSts,
+      formData,
+      () => searchUser(formData),
+      handleStatusChange,
+      setErrosFetch
+    );
+  };
   return (
     <div className={classes.root}>
       <Grid container spacing={4}>
@@ -40,6 +53,7 @@ const Dashboard = () => {
             resultsCostumer={costumerResult}
             fetchErros={errosFetch}
             setCostumerResult={setCostumerResult}
+            handleStatusChange={handleStatusChange}
           />
         </Grid>
       </Grid>

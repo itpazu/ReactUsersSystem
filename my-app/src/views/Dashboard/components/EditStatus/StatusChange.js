@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Box,
+  Switch,
   Card,
   CardHeader,
   CardActions,
@@ -10,6 +10,7 @@ import {
   Divider,
   Button,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -44,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
   alertNotFound: {
     width: '100%',
   },
+  expirationCell: {
+    display: 'flex',
+  },
 }));
 
 const ChangeStatus = (props) => {
@@ -53,6 +57,7 @@ const ChangeStatus = (props) => {
     resultsCostumer,
     fetchErros,
     setCostumerResult,
+    handleStatusChange,
     ...rest
   } = props;
 
@@ -62,6 +67,8 @@ const ChangeStatus = (props) => {
     errors: {},
     touched: {},
   });
+  const [switchstate, setSwitchState] = useState(false);
+  const [statusExpirationDate, setStatusExpirationTime] = useState('');
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -73,6 +80,18 @@ const ChangeStatus = (props) => {
     }));
   }, [formState.values]);
 
+  useEffect(() => {
+    !resultsCostumer &&
+      setFormState((prevState) => ({
+        ...prevState,
+        values: { ...prevState.values, expirationDate: null },
+      }));
+  }, [resultsCostumer]);
+
+  useEffect(() => {
+    const timeInAYear = getYearTime();
+    setStatusExpirationTime(timeInAYear);
+  });
   const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
@@ -80,7 +99,7 @@ const ChangeStatus = (props) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      values: { [name]: value },
+      values: { ...prevState.values, [name]: value },
       touched: { [name]: true },
     }));
   };
@@ -90,6 +109,31 @@ const ChangeStatus = (props) => {
     userSearch(formState.values);
   };
 
+  const currentDate = new Date().toISOString().split('T');
+
+  const getYearTime = () => {
+    // console.log(currentDate);
+    const year = currentDate[0].split('-');
+    const yearPlusOne = parseInt(year[0]) + 1;
+    year.splice(0, 1, `${yearPlusOne}`);
+    year.reverse();
+    const yearTime = year.join('-');
+    return yearTime;
+  };
+
+  const grantVipStatus = () => {
+    handleStatusChange(formState.values);
+  };
+
+  const handleSwitch = (e) => {
+    const { checked } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      values: { ...prevState.values, expirationDate: null },
+    }));
+    setSwitchState(checked);
+  };
+  // console.log(formState);
   return (
     <>
       <Grid item md={6} xs={12}>
@@ -132,7 +176,7 @@ const ChangeStatus = (props) => {
             <Divider />
           </form>
           <CardActions>
-            {resultsCostumer ? (
+            {resultsCostumer && (
               <TableContainer component={Paper}>
                 <Table
                   className={classes.table}
@@ -141,44 +185,85 @@ const ChangeStatus = (props) => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align='left'>Costumer Email</TableCell>
-                      <TableCell align='left'>Current Status</TableCell>
-                      <TableCell align='left'>Change Status</TableCell>
-                      <TableCell align='left'>Result</TableCell>
+                      <TableCell align='center'>Costumer Email</TableCell>
+                      <TableCell align='center'>Current Status</TableCell>
+                      <TableCell align='center'>
+                        {resultsCostumer.currentStatus === 'keepers_vip' ? (
+                          <Typography>Expires</Typography>
+                        ) : (
+                          <>
+                            <label>Expires</label>
+                            <Switch
+                              checked={switchstate}
+                              onChange={handleSwitch}
+                              color='primary'
+                              inputProps={{ 'aria-label': 'primary checkbox' }}
+                            />
+                          </>
+                        )}
+                      </TableCell>
+                      <TableCell align='center'>VIP since</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell component='th' scope='row'>
-                        {resultsCostumer.userId}
+                      <TableCell component='th' scope='row' align='center'>
+                        {resultsCostumer.email}
                       </TableCell>
-                      <TableCell align='left'>
+                      <TableCell align='center'>
                         {resultsCostumer.currentStatus}
                       </TableCell>
-                      <TableCell align='left'>
+                      <TableCell align='center'>
                         {resultsCostumer.currentStatus === 'keepers_vip' ? (
-                          <Button variant='contained'>Demote VIP</Button>
+                          <TextField
+                            id='date'
+                            type='date'
+                            defaultValue={currentDate[0]}
+                            className={classes.textField}
+                            disabled
+                          />
+                        ) : switchstate ? (
+                          <TextField
+                            id='date'
+                            type='date'
+                            defaultValue={currentDate[0]}
+                            className={classes.textField}
+                            name='expirationDate'
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            inputProps={{
+                              min: currentDate[0],
+                            }}
+                            onChange={handleChange}
+                          />
                         ) : (
-                          <Button variant='contained'>Grant VIP</Button>
+                          <Typography>{statusExpirationDate}</Typography>
                         )}
                       </TableCell>
-                      {/* <TableCell align='left'>
-                        <Alert
-                          className={classes.alertMessage}
-                          severity={resultsCostumer ? 'success' : 'error'}
-                        ></Alert>
-                      </TableCell> */}
+                      <TableCell align='center'>
+                        {resultsCostumer.currentStatus === 'keepers_vip' ? (
+                          <Typography variant='body1' type='text'>
+                            VIP since
+                          </Typography>
+                        ) : (
+                          <Button variant='contained' onClick={grantVipStatus}>
+                            Grant VIP
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
-            ) : fetchErros.activateAlert ? (
+            )}
+            {!resultsCostumer && fetchErros.activateAlert ? (
               <Alert className={classes.alertNotFound} severity='error'>
                 {' '}
                 {fetchErros.message}
               </Alert>
             ) : (
-              <></>
+              <Typography>{''}</Typography>
             )}
           </CardActions>
         </Card>

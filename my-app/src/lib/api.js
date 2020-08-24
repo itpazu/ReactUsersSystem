@@ -145,17 +145,35 @@ export const deleteProfileImage = (userCredentials) => {
 };
 
 export const getCostumerStatus = (email, userCredentials) => {
+  console.log(userCredentials);
   const url = `${baseURL}/get_customer/${email.email}`;
   const payload = {
     headers: {
       Authorization: userCredentials.csrf,
       credentials: 'cross-site',
     },
+    params: { _id: userCredentials.userId },
     withCredentials: true,
-    body: {
-      _id: userCredentials.userId,
-    },
   };
 
   return axios.get(url, payload);
+};
+
+export const changeVipSts = (costumerDetails, userCredentials) => {
+  const url = `${baseURL}/change_vip_status`;
+
+  const data = {
+    _id: userCredentials.userId,
+    costumer_id: costumerDetails.costumer_id,
+    end: costumerDetails.end,
+  };
+  const headers = {
+    headers: {
+      credentials: 'cross-site',
+      Authorization: userCredentials.csrf,
+    },
+    withCredentials: true,
+  };
+
+  return axios.post(url, data, headers);
 };
