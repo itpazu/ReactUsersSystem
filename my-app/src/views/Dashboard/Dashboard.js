@@ -1,35 +1,35 @@
-import React, { useContext, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Grid } from '@material-ui/core';
-import Context from '../../context/Context';
-import { getCostumerStatus } from '../../lib/api';
-import { ChangeStatus } from './components';
+import React, { useContext, useState } from 'react'
+import { makeStyles } from '@material-ui/styles'
+import { Grid } from '@material-ui/core'
+import Context from '../../context/Context'
+import { getCustomerStatus } from '../../lib/api'
+import { ChangeStatus } from './components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(4),
-  },
-}));
+    padding: theme.spacing(4)
+  }
+}))
 
 const Dashboard = () => {
-  const classes = useStyles();
-  const context = useContext(Context);
-  const [costumerResult, setCostumerResult] = useState(null);
-  const [errosFetch, setErrosFetch] = useState({
+  const classes = useStyles()
+  const context = useContext(Context)
+  const [customerResult, setCustomerResult] = useState(null)
+  const [errorsFetch, setErrorsFetch] = useState({
     activateAlert: false,
-    message: '',
-  });
-  const { makeApiRequest } = context;
+    message: ''
+  })
+  const { makeApiRequest } = context
 
   const searchUser = async (mail) => {
     await makeApiRequest(
-      getCostumerStatus,
+      getCustomerStatus,
       mail,
-      setCostumerResult,
+      setCustomerResult,
       searchUser,
-      setErrosFetch
-    );
-  };
+      setErrorsFetch
+    )
+  }
 
   return (
     <div className={classes.root}>
@@ -37,14 +37,14 @@ const Dashboard = () => {
         <Grid item xs={12}>
           <ChangeStatus
             userSearch={searchUser}
-            resultsCostumer={costumerResult}
-            fetchErros={errosFetch}
-            setCostumerResult={setCostumerResult}
+            resultsCostumer={customerResult}
+            fetchErrors={errorsFetch}
+            setCostumerResult={setCustomerResult}
           />
         </Grid>
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

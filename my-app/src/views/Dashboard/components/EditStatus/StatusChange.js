@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState, useContext, useEffect } from 'react'
+import { makeStyles } from '@material-ui/styles'
 import {
-  Box,
   Card,
   CardHeader,
   CardActions,
@@ -9,86 +8,87 @@ import {
   Grid,
   Divider,
   Button,
-  TextField,
-} from '@material-ui/core';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+  TextField
+} from '@material-ui/core'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
 // import Context from '../../../../context/Context';
-import validate from 'validate.js';
-import Alert from '@material-ui/lab/Alert';
+import validate from 'validate.js'
+import Alert from '@material-ui/lab/Alert'
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'required field' },
     email: true,
     length: {
-      maximum: 64,
-    },
-  },
-};
+      maximum: 64
+    }
+  }
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   alertMessage: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   btnGrid: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   alertNotFound: {
-    width: '100%',
-  },
-}));
+    width: '100%'
+  }
+}))
 
 const ChangeStatus = (props) => {
-  const classes = useStyles();
+  const classes = useStyles()
   const {
     userSearch,
     resultsCostumer,
-    fetchErros,
+    fetchErrors,
     setCostumerResult,
     ...rest
-  } = props;
+  } = props
 
   const [formState, setFormState] = useState({
     values: {},
     isValid: false,
     errors: {},
-    touched: {},
-  });
+    touched: {}
+  })
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, schema)
 
     setFormState((formState) => ({
       ...formState,
       isValid: errors ? false : true,
-      errors: errors || {},
-    }));
-  }, [formState.values]);
+      errors: errors || {}
+    }))
+  }, [formState.values])
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+    formState.touched[field] && formState.errors[field] ? true : false
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormState((prevState) => ({
       ...prevState,
       values: { [name]: value },
-      touched: { [name]: true },
-    }));
-  };
+      touched: { [name]: true }
+    }))
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setCostumerResult(null);
-    userSearch(formState.values);
-  };
+    e.preventDefault()
+    setCostumerResult(null)
+    userSearch(formState.values)
+  }
 
   return (
     <>
@@ -172,10 +172,10 @@ const ChangeStatus = (props) => {
                   </TableBody>
                 </Table>
               </TableContainer>
-            ) : fetchErros.activateAlert ? (
+            ) : fetchErrors.activateAlert ? (
               <Alert className={classes.alertNotFound} severity='error'>
                 {' '}
-                {fetchErros.message}
+                {fetchErrors.message}
               </Alert>
             ) : (
               <></>
@@ -184,7 +184,7 @@ const ChangeStatus = (props) => {
         </Card>
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default ChangeStatus;
+export default ChangeStatus

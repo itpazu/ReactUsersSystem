@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import clsx from 'clsx';
-import validate from 'validate.js';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState, useEffect, useContext } from 'react'
+import clsx from 'clsx'
+import validate from 'validate.js'
+import { makeStyles } from '@material-ui/styles'
 import {
   Card,
   CardHeader,
@@ -10,64 +10,64 @@ import {
   Divider,
   Grid,
   Button,
-  TextField,
-} from '@material-ui/core';
-import { submitUserEditDetails } from '../../../../lib/api';
-import Alert from '@material-ui/lab/Alert';
-import Context from '../../../../context/Context';
+  TextField
+} from '@material-ui/core'
+import { submitUserEditDetails } from '../../../../lib/api'
+import Alert from '@material-ui/lab/Alert'
+import Context from '../../../../context/Context'
 
 const schema = {
   firstName: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2,
+      minimum: 2
     },
     format: {
       pattern: /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
-      message: 'must not contain any numerical digits or special characters',
-    },
+      message: 'must not contain any numerical digits or special characters'
+    }
   },
   lastName: {
     presence: { allowEmpty: false, message: 'required field' },
     length: {
       maximum: 16,
-      minimum: 2,
+      minimum: 2
     },
     format: {
       pattern: /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
-      message: 'must not contain any numerical digits or special characters',
-    },
+      message: 'must not contain any numerical digits or special characters'
+    }
   },
   email: {
     presence: { allowEmpty: false, message: 'required field' },
     email: true,
     length: {
-      maximum: 64,
-    },
-  },
-};
+      maximum: 64
+    }
+  }
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   alertMessage: {
-    marginTop: theme.spacing(2),
-  },
-}));
+    marginTop: theme.spacing(2)
+  }
+}))
 
 const AccountDetails = (props) => {
-  const { className, ...rest } = props;
+  const { className, ...rest } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const context = useContext(Context);
-  const { updateProfileInfo, userInput, makeApiRequest } = context;
+  const context = useContext(Context)
+  const { updateProfileInfo, userInput, makeApiRequest } = context
 
   const [response, setResponse] = useState({
     activateAlert: null,
     success: null,
-    message: '',
-  });
+    message: ''
+  })
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -78,31 +78,31 @@ const AccountDetails = (props) => {
       lastName:
         userInput.last_name.charAt(0).toUpperCase() +
         userInput.last_name.slice(1),
-      email: userInput.email,
+      email: userInput.email
     },
     touched: {},
-    errors: {},
-  });
+    errors: {}
+  })
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    const errors = validate(formState.values, schema)
 
-    let mounted = true;
+    let mounted = true
 
     if (mounted) {
       setFormState((formState) => ({
         ...formState,
         isValid: errors ? false : true,
-        errors: errors || {},
-      }));
+        errors: errors || {}
+      }))
     }
-    return function cleanup() {
-      mounted = false;
-    };
-  }, [formState.values]);
+    return function cleanup () {
+      mounted = false
+    }
+  }, [formState.values])
 
   const handleChange = (event) => {
-    event.persist();
+    event.persist()
 
     setFormState((formState) => ({
       ...formState,
@@ -111,18 +111,18 @@ const AccountDetails = (props) => {
         [event.target.name]:
           event.target.type === 'checkbox'
             ? event.target.checked
-            : event.target.value.toLowerCase(),
+            : event.target.value.toLowerCase()
       },
       touched: {
         ...formState.touched,
-        [event.target.name]: true,
-      },
-    }));
-  };
+        [event.target.name]: true
+      }
+    }))
+  }
 
   const handleEditedDetailsSubmit = (event) => {
-    event.preventDefault();
-    setResponse((prevState) => ({ ...prevState }));
+    event.preventDefault()
+    setResponse((prevState) => ({ ...prevState }))
     setFormState({
       isValid: true,
       values: {
@@ -132,14 +132,14 @@ const AccountDetails = (props) => {
         lastName:
           formState.values.lastName.charAt(0).toUpperCase() +
           formState.values.lastName.slice(1),
-        email: formState.values.email,
+        email: formState.values.email
       },
       touched: {},
-      errors: {},
-    });
+      errors: {}
+    })
 
-    callEditProfile();
-  };
+    callEditProfile()
+  }
 
   const callEditProfile = async () => {
     await makeApiRequest(
@@ -148,24 +148,24 @@ const AccountDetails = (props) => {
         first_name: formState.values.firstName.toLowerCase(),
         last_name: formState.values.lastName.toLowerCase(),
         email: formState.values.email.toLowerCase(),
-        _id: userInput._id,
+        _id: userInput._id
       },
       updatedInfo,
       callEditProfile
-    );
-  };
+    )
+  }
 
   const updatedInfo = (results) => {
     setResponse({
       activateAlert: true,
       success: true,
-      message: results,
-    });
-    updateProfileInfo();
-  };
+      message: results
+    })
+    updateProfileInfo()
+  }
 
   const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+    formState.touched[field] && formState.errors[field] ? true : false
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -240,7 +240,7 @@ const AccountDetails = (props) => {
         </CardActions>
       </form>
     </Card>
-  );
-};
+  )
+}
 
-export default AccountDetails;
+export default AccountDetails
