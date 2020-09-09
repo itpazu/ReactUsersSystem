@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const baseURL =
-  'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
+// const baseURL =
+// 'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
 
-// const baseURL = 'http://127.0.0.1:5000'
+const baseURL = 'http://127.0.0.1:5000';
 
 export const LogIn = (data) => {
   return axios.post(`${baseURL}/login`, data, { withCredentials: true });
@@ -145,7 +145,6 @@ export const deleteProfileImage = (userCredentials) => {
 };
 
 export const getCostumerStatus = (email, userCredentials) => {
-  console.log(userCredentials);
   const url = `${baseURL}/get_customer/${email.email}`;
   const payload = {
     headers: {
@@ -175,5 +174,24 @@ export const changeVipSts = (costumerDetails, userCredentials) => {
     withCredentials: true,
   };
 
+  return axios.post(url, data, headers);
+};
+
+export const addStudentToDb = (newStudent, userCredentials) => {
+  const url = `${baseURL}/add_student`;
+  console.log(newStudent);
+  const data = {
+    _id: userCredentials.userId,
+    ...newStudent,
+  };
+  console.log(data);
+  const headers = {
+    headers: {
+      credentials: 'cross-site',
+      Authorization: userCredentials.csrf,
+    },
+    // withCredentials: true,
+  };
+  console.log(headers);
   return axios.post(url, data, headers);
 };
