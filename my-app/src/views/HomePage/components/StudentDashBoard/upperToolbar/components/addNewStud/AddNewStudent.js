@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AddNewStudentForm from './AddNewStudentForm';
-import { addStudentToDb } from './../../lib/api';
-import Context from '../../context/Context';
+import { addStudentToDb } from '../../../../../../../lib/api';
+import Context from '../../../../../../../context/Context';
 
 const Studentskills = [
   'Potions',
@@ -41,7 +41,6 @@ const AddNewStudent = () => {
     activateAlert: null,
     message: '',
   });
-  useEffect(() => {}, []);
 
   const HandleOnExistingSkillChange = (e) => {
     const { value } = e.target;
@@ -126,7 +125,6 @@ const AddNewStudent = () => {
     }
   };
   const showSuccessMessage = (response) => {
-    console.log(response);
     setSuccessMessage(response);
   };
   const handleOnTextFieldChange = (name, value) => {
@@ -153,7 +151,6 @@ const AddNewStudent = () => {
   // console.log(formInput);
   // console.log(chosenSkills);
   // console.log(skillList);
-  console.log(errorFetchUsers);
 
   return (
     <div>

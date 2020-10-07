@@ -11,8 +11,7 @@ import Minimal from './Layouts/minimal/Minimal';
 import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
 import ResetPassword from './views/LogInViews/ResetPassword';
-// import Dashboard, { ChangeStatus } from './views/Dashboard/Dashboard'
-import AddNewStudent from './views/HomePage/AddNewStudent.jsx';
+import { StudentToolbar } from './views/HomePage/components';
 
 const Routes = (props) => {
   const [userInput, setUserInput] = useState({ email: '', password: '' });
@@ -22,12 +21,16 @@ const Routes = (props) => {
     csrf: '',
   });
   const [errorUpdateProfile, setErrorUpdateProfile] = useState(null);
-  const { backgroundType, handleThemeChange, darkState } = props;
+  const { handleThemeChange, darkState } = props;
 
   useEffect(() => {
     const userId = cookie.get('_id');
     const csrfToken = cookie.get('csrf_token');
-    setCurrentlyLoggedUser({ userId: userId, csrf: csrfToken });
+
+    setCurrentlyLoggedUser({
+      userId: userId,
+      csrf: csrfToken,
+    });
   }, [userInput]);
 
   const handleSubmittedForm = async (mail, pass) => {
@@ -38,8 +41,10 @@ const Routes = (props) => {
       setUserInput(response.data);
       const userId = response.data._id;
       const csrfToken = response.headers.authorization;
+
       cookie.set('_id', userId);
       cookie.set('csrf_token', csrfToken);
+
       setIsAuthenticated(true);
     } catch (error) {
       throw error;
@@ -63,7 +68,8 @@ const Routes = (props) => {
 
   const refreshCredentials = async (callback) => {
     try {
-      await refreshToken(currentlyLoggedUser.userId);
+      await refreshToken(currentlyLoggedUser);
+
       return callback();
     } catch (error) {
       handleLogOut();
@@ -75,7 +81,7 @@ const Routes = (props) => {
     argsRequest,
     nextStep,
     callBackFunc,
-    setErrorResponse
+    setErrorResponse = null
   ) => {
     try {
       const results = argsRequest
@@ -83,7 +89,6 @@ const Routes = (props) => {
         : await requestFunc(currentlyLoggedUser);
       nextStep(results.data);
     } catch (err) {
-      console.log(err);
       const error = err.response ? err.response.status : 405;
       if (error === 401) {
         handleLogOut();
@@ -92,21 +97,24 @@ const Routes = (props) => {
           callBackFunc(argsRequest);
         });
       } else {
-        setErrorResponse({
-          activateAlert: true,
-          message:
-            err.response !== undefined
-              ? JSON.stringify(err.response.data.message)
-              : 'server failed',
-        });
+        if (!setErrorResponse) {
+          console.log('no args');
+        } else {
+          setErrorResponse({
+            activateAlert: true,
+            message:
+              err.response !== undefined
+                ? JSON.stringify(err.response.data.message)
+                : 'server failed',
+          });
+        }
       }
     }
   };
-
   return (
     <Context.Provider
       value={{
-        backgroundType,
+        // backgroundType,
         handleSubmittedForm,
         currentlyLoggedUser,
         isAuthenticated,
@@ -121,7 +129,7 @@ const Routes = (props) => {
       }}
     >
       <Switch>
-        <Route exact path='/test' component={AddNewStudent} />
+        <Route exact path='/test' component={StudentToolbar} />
         <PrivateRoute
           exact
           path='/'

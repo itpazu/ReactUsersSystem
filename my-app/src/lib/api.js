@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-// const baseURL =
-// 'https://keepershomestaging-env.eba-b9pnmwmp.eu-central-1.elasticbeanstalk.com';
+const baseURL = 'https://hogwarts-itpazu.herokuapp.com';
 
-const baseURL = 'http://127.0.0.1:5000';
+// const baseURL = 'http://127.0.0.1:5000';
 
 export const LogIn = (data) => {
   return axios.post(`${baseURL}/login`, data, { withCredentials: true });
 };
 
-export const refreshToken = (userId) => {
-  const data = { _id: userId };
+export const refreshToken = (credentials) => {
+  const data = { _id: credentials.userId };
+  console.log(credentials);
   const headers = {
     headers: {
       credentials: 'cross-site',
@@ -45,7 +45,6 @@ export const deleteUser = (userId, userCredentials) => {
     withCredentials: true,
     data: body,
   };
-
   return axios.delete(`${baseURL}/delete_user`, data);
 };
 
@@ -179,19 +178,80 @@ export const changeVipSts = (costumerDetails, userCredentials) => {
 
 export const addStudentToDb = (newStudent, userCredentials) => {
   const url = `${baseURL}/add_student`;
-  console.log(newStudent);
   const data = {
     _id: userCredentials.userId,
     ...newStudent,
   };
-  console.log(data);
   const headers = {
     headers: {
       credentials: 'cross-site',
       Authorization: userCredentials.csrf,
     },
-    // withCredentials: true,
+    withCredentials: true,
   };
-  console.log(headers);
   return axios.post(url, data, headers);
+};
+
+export const getAllStudent = (userCredentials) => {
+  const body = { _id: userCredentials.userId };
+
+  const headers = {
+    headers: {
+      credentials: 'cross-site',
+      Authorization: userCredentials.csrf,
+    },
+    withCredentials: true,
+  };
+  return axios.get(`${baseURL}/students`, body, headers);
+};
+
+export const changeSkillLevel = (newSkill, userCredentials) => {
+  const body = { _id: userCredentials.userId };
+  const headers = {
+    params: {
+      ...newSkill,
+    },
+    headers: {
+      credentials: 'cross-site',
+      Authorization: userCredentials.csrf,
+    },
+    withCredentials: true,
+  };
+
+  return axios.put(`${baseURL}/capability_edit`, body, headers);
+};
+
+export const deleteStudentCapability = (args, userCredentials) => {
+  const body = {
+    user_id: args.userId,
+    _id: userCredentials.userId,
+    skill: args.skill,
+  };
+
+  const data = {
+    headers: {
+      credentials: 'cross-site',
+      Authorization: userCredentials.csrf,
+    },
+    withCredentials: true,
+    data: body,
+  };
+
+  return axios.delete(`${baseURL}/delete_skill`, data);
+};
+
+export const addNewSkillToStudent = (newSkill, userCredentials) => {
+  const body = { _id: userCredentials.userId };
+  const headers = {
+    params: {
+      ...newSkill,
+    },
+    headers: {
+      credentials: 'cross-site',
+      Authorization: userCredentials.csrf,
+    },
+    withCredentials: true,
+  };
+
+  return axios.post(`${baseURL}/capability_add`, body, headers);
 };

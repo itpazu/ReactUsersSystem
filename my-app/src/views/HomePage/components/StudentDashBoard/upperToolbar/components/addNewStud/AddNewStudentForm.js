@@ -66,10 +66,8 @@ const useStyles = makeStyles((theme) => ({
   },
   headlines: {
     textAlign: 'center',
-
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.secondary.main,
     color: 'white',
-    borderRadius: '20%',
     marginBottom: theme.spacing(2),
   },
   chosenSkill: {
@@ -117,7 +115,8 @@ const useStyles = makeStyles((theme) => ({
   confirmBtn: {
     justifyContent: 'center',
     display: 'flex',
-    margin: '25px 25px',
+    marginBottom: '25px',
+    marginTop: '25px',
   },
   confBtn: {
     width: '100%',
@@ -164,7 +163,6 @@ function AddNewStudentForm(props) {
   });
 
   useEffect(() => {
-    // console.log(formState);
     const errors = validate(formState.values, schema);
     let mounted = true;
 
@@ -201,7 +199,6 @@ function AddNewStudentForm(props) {
 
   const handleLevelChange = (e) => {
     const { name, value, key } = e.target;
-    console.log(name, key);
     setSkillLevelValue({
       ...SkillLevelValue,
       [name]: value,
@@ -232,7 +229,6 @@ function AddNewStudentForm(props) {
 
     sendForm(e);
   };
-  console.log(errorFetchUsers);
 
   return (
     <Container className={classes.root} component='main' maxWidth='sm'>
@@ -253,7 +249,7 @@ function AddNewStudentForm(props) {
                       ? formState.errors.first_name[0]
                       : null
                   }
-                  value={formState.values.first_name}
+                  value={formState.values.first_name || ''}
                   type='text'
                   label='FirstName'
                   variant='outlined'
@@ -269,7 +265,7 @@ function AddNewStudentForm(props) {
                   helperText={
                     hasError('last_name') ? formState.errors.last_name[0] : null
                   }
-                  value={formState.values.last_name}
+                  value={formState.values.last_name || ''}
                   type='text'
                   label='Last Name'
                   variant='outlined'
@@ -286,7 +282,7 @@ function AddNewStudentForm(props) {
                   helperText={
                     hasError('email') ? formState.errors.email[0] : null
                   }
-                  value={formState.values.email}
+                  value={formState.values.email || ''}
                   label='Email Adress'
                   variant='outlined'
                   name='email'
@@ -318,7 +314,6 @@ function AddNewStudentForm(props) {
                           {item}
                         </FormLabel>
                         <RadioGroup
-                          error={hasError('radio')}
                           className={classes.radioGroupOverride}
                           aria-label='skillLevel'
                           key={item}
@@ -382,7 +377,6 @@ function AddNewStudentForm(props) {
             <Button
               onClick={handleAddSkill}
               disabled={disableConfirmExSkillBtn}
-              // className='mb-2'
               variant='contained'
             >
               confirm
@@ -421,7 +415,6 @@ function AddNewStudentForm(props) {
             <Grid item xs={6} className={classes.confirmBtn}>
               <Button
                 variant='contained'
-                color='primary'
                 className={classes.confBtn}
                 type='submit'
                 disabled={!formState.isValid}
@@ -432,12 +425,7 @@ function AddNewStudentForm(props) {
           </Grid>
         </form>
       ) : (
-        <Alert
-          // className={classes.signInButton}
-          severity={'success'}
-        >
-          {uponSuccess && uponSuccess}
-        </Alert>
+        <Alert severity={'success'}>{uponSuccess && uponSuccess}</Alert>
       )}
     </Container>
   );

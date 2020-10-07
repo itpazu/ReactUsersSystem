@@ -33,7 +33,6 @@ const schema = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.default,
     height: '100%',
   },
   grid: {
@@ -201,7 +200,7 @@ const SignIn = () => {
         success: false,
         message:
           error.response !== undefined
-            ? JSON.stringify(error.response.data)
+            ? JSON.stringify(error.response.data.message)
             : 'server failure',
       });
     }

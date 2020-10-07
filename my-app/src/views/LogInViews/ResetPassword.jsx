@@ -137,6 +137,7 @@ const ResetPassword = () => {
   const IdFromToken = params.get('id');
   const authToken = params.get('token');
   const classes = useStyles();
+
   const [togglePasswordView, setTogglePasswordView] = useState(true);
   const [response, setResponse] = useState({
     activateAlert: null,
@@ -154,6 +155,8 @@ const ResetPassword = () => {
   const [toggleAlertVisibility, setToggleAlertVisibility] = useState(null);
 
   useEffect(() => {
+    console.log(classes);
+
     if (IdFromToken && authToken) {
       checkTokenForPasswordReset(IdFromToken, authToken)
         .then(() => {
@@ -339,7 +342,7 @@ const ResetPassword = () => {
                     disabled={!formState.isValid}
                     fullWidth
                     size='large'
-                    type='submit'
+                    type='contained'
                   >
                     Change password
                   </Button>
