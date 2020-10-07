@@ -1,10 +1,27 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/styles'
-import { Paper, TextField, Button } from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import React from 'react';
+// import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/styles';
+import { Paper, TextField, Button } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { withStyles } from '@material-ui/core/styles';
+
+const NoPaddingAutocomplete = withStyles({
+  inputRoot: {
+    marginTop: '7px',
+    '&&[class*="MuiOutlinedInput-root"] $input': {
+      padding: 1,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'black',
+    },
+  },
+  input: {
+    marginRight: '5px',
+    height: 'inherit',
+  },
+})(Autocomplete);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,26 +29,34 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     display: 'flex',
-    flexBasis: 420
+    flexBasis: 420,
+    height: '50px',
+    marginTop: theme.spacing(1),
   },
   icon: {
     marginRight: theme.spacing(1),
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   input: {
     flexGrow: 1,
     width: '100%',
     fontSize: '14px',
     lineHeight: '16px',
-    letterSpacing: '-0.05px'
-  }
-}))
+    letterSpacing: '-0.05px',
+    height: 'inherit',
+    margin: 0,
+    marginRight: '10px',
+  },
+  textField: {
+    marginRight: '5px',
+    height: 'inherit',
+  },
+}));
 
 const SearchInput = (props) => {
   const {
     className,
     onChange,
-    style,
     users,
     allUsers,
     selectedName,
@@ -39,71 +64,75 @@ const SearchInput = (props) => {
     getSingleUser,
     handleUpdate,
     getRelevantUsers,
-    ...rest
-  } = props
 
-  const classes = useStyles()
+    ...rest
+  } = props;
+
+  const classes = useStyles();
 
   const handleSearchNameChange = (event, value) => {
-    event.preventDefault()
+    event.preventDefault();
+    console.log('inside first condition');
+    console.log('event', event);
+    console.log('value', value);
+
     if (typeof value === 'object' && value !== null) {
-      setSelectedName(value.name)
+      //input is an object
+      setSelectedName(value.name);
+      console.log('inside second condition');
+      console.log('event', event.target.value);
+      console.log('value', value);
     } else if (value === '') {
-      handleUpdate()
+      //input is empty string
+      handleUpdate();
     } else {
-      setSelectedName(event.target.value)
+      // input is string
+      setSelectedName(event.target.value);
     }
-  }
+  };
 
   const handleSearchNameClick = () => {
     if (
-      selectedName !== '' &&
-      selectedName !== undefined &&
-      selectedName !== null &&
+      selectedName &&
       allUsers.filter((event) => event.name.toLowerCase() === selectedName)
         .length > 0
     ) {
-      getSingleUser()
+      getSingleUser();
     } else if (selectedName === '') {
-      handleUpdate()
+      handleUpdate();
     } else if (
-      selectedName !== '' &&
-      selectedName !== undefined &&
-      selectedName !== null &&
+      selectedName &&
       allUsers.filter(
         (event) => event.name.toLowerCase().includes(selectedName).length > 0
       )
     ) {
-      getRelevantUsers()
+      getRelevantUsers();
     }
-  }
+  };
 
   return (
-    <Paper {...rest} className={clsx(classes.root, className)} style={style}>
+    <Paper className={classes.root}>
       <SearchIcon className={classes.icon} />
-      <Autocomplete
+      <NoPaddingAutocomplete
         freeSolo
-        options={allUsers}
         className={classes.input}
-        id='free-solo-2-demo'
+        options={allUsers}
         getOptionLabel={(option) => option.name}
         onChange={handleSearchNameChange}
         onInputChange={handleSearchNameChange}
-        renderInput={(params) => (
-          <TextField {...params} margin='normal' variant='outlined' />
-        )}
+        renderInput={(params) => <TextField {...params} variant='outlined' />}
       />
       <Button onClick={handleSearchNameClick} variant='contained'>
         Search
       </Button>
     </Paper>
-  )
-}
+  );
+};
 
-SearchInput.propTypes = {
-  className: PropTypes.string,
-  onChange: PropTypes.func,
-  style: PropTypes.object
-}
+// SearchInput.propTypes = {
+//   className: PropTypes.string,
+//   onChange: PropTypes.func,
+//   style: PropTypes.object,
+// };
 
-export default SearchInput
+export default SearchInput;
