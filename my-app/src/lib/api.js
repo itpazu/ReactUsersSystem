@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-const baseURL = 'https://hogwarts-itpazu.herokuapp.com';
+// const baseURL = 'https://hogwarts-itpazu.herokuapp.com';
 
-// const baseURL = 'http://127.0.0.1:5000';
+const baseURL = 'http://127.0.0.1:5000';
 
 export const LogIn = (data) => {
-  return axios.post(`${baseURL}/login`, data, { withCredentials: true });
+  return axios.post(`${baseURL}/login`, data, {
+    headers: { credentials: 'cross-site' },
+    withCredentials: true,
+  });
 };
 
 export const refreshToken = (credentials) => {
@@ -59,7 +62,7 @@ export const allUsers = (userCredentials) => {
     withCredentials: true,
   };
 
-  return axios.post(`${baseURL}/all_users`, body, headers);
+  return axios.get(`${baseURL}/all_users`, body, headers);
 };
 
 export const checkTokenForPasswordReset = (userId, token) => {

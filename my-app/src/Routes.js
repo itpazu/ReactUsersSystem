@@ -98,7 +98,6 @@ const Routes = (props) => {
         });
       } else {
         if (!setErrorResponse) {
-          console.log('no args');
         } else {
           setErrorResponse({
             activateAlert: true,

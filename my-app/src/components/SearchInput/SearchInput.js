@@ -1,6 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, TextField, Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -54,60 +52,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SearchInput = (props) => {
-  const {
-    className,
-    onChange,
-    users,
-    allUsers,
-    selectedName,
-    setSelectedName,
-    getSingleUser,
-    handleUpdate,
-    getRelevantUsers,
-
-    ...rest
-  } = props;
+  const { allUsers, setSelectedName, handleUpdate, getRelevantUsers } = props;
 
   const classes = useStyles();
 
-  const handleSearchNameChange = (event, value) => {
-    event.preventDefault();
-    console.log('inside first condition');
-    console.log('event', event);
-    console.log('value', value);
+  const handleSearchNameChange = (event, option) => {
+    const { value } = event.target;
+    setSelectedName(option || value || null);
 
-    if (typeof value === 'object' && value !== null) {
-      //input is an object
-      setSelectedName(value.name);
-      console.log('inside second condition');
-      console.log('event', event.target.value);
-      console.log('value', value);
-    } else if (value === '') {
-      //input is empty string
+    if (!value && !value) {
       handleUpdate();
-    } else {
-      // input is string
-      setSelectedName(event.target.value);
     }
   };
 
   const handleSearchNameClick = () => {
-    if (
-      selectedName &&
-      allUsers.filter((event) => event.name.toLowerCase() === selectedName)
-        .length > 0
-    ) {
-      getSingleUser();
-    } else if (selectedName === '') {
-      handleUpdate();
-    } else if (
-      selectedName &&
-      allUsers.filter(
-        (event) => event.name.toLowerCase().includes(selectedName).length > 0
-      )
-    ) {
-      getRelevantUsers();
-    }
+    getRelevantUsers();
   };
 
   return (
@@ -117,9 +76,11 @@ const SearchInput = (props) => {
         freeSolo
         className={classes.input}
         options={allUsers}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option}
         onChange={handleSearchNameChange}
-        onInputChange={handleSearchNameChange}
+        onInputChange={(e) => {
+          handleSearchNameChange(e);
+        }}
         renderInput={(params) => <TextField {...params} variant='outlined' />}
       />
       <Button onClick={handleSearchNameClick} variant='contained'>

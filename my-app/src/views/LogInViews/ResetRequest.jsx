@@ -177,7 +177,6 @@ const ResetRequest = () => {
       const submitRequest = await solicitNewPassword({
         email: formState.values.email,
       });
-      console.log(submitRequest.data.message);
       setResponse({
         activateAlert: true,
         success: true,
@@ -187,11 +186,13 @@ const ResetRequest = () => {
         setResponse({ redirect: true });
       }, 3000);
     } catch (error) {
-      console.log(error.response.data);
       setResponse({
         activateAlert: true,
         success: false,
-        message: JSON.stringify(error.response.data),
+        message:
+          error.response !== undefined
+            ? JSON.stringify(error.response.data.message)
+            : 'server failure',
       });
     }
   };

@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  capitalize: {
+    textTransform: 'capitalize',
+  },
   avatar: {
     marginRight: theme.spacing(2),
   },
@@ -122,7 +125,7 @@ const UsersTable = (props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {users.slice(0, rowsPerPage).map((user) => (
+                    {users.slice(0, rowsPerPage).map((user, index) => (
                       <TableRow
                         classes={
                           user.blocked
@@ -130,18 +133,18 @@ const UsersTable = (props) => {
                             : { hover: classes.root }
                         }
                         hover
-                        key={user.id}
-                        selected={selectedUserId.indexOf(user.id) !== -1}
+                        key={user._id}
+                        selected={selectedUserId.indexOf(user._id) !== -1}
                       >
                         <TableCell padding='checkbox'>
                           <Radio
                             color='primary'
-                            value={user.id}
-                            name={user.name}
-                            id={`radioButton${user.count}`}
+                            value={user._id}
+                            name={user.first_name}
+                            id={`radioButton${user.index}`}
                             onClick={handleRadioChange}
                             disabled={
-                              user.id === currentlyLoggedUser.userId
+                              user._id === currentlyLoggedUser.userId
                                 ? true
                                 : false
                             }
@@ -150,14 +153,21 @@ const UsersTable = (props) => {
                         <TableCell>
                           <div className={classes.nameContainer}>
                             <Avatar className={classes.avatar} src={user.photo}>
-                              {getInitials(user.name)}
+                              {getInitials(
+                                user.first_name + ' ' + user.last_name
+                              )}
                             </Avatar>
-                            <Typography variant='body1'>{user.name}</Typography>
+                            <Typography
+                              variant='body1'
+                              className={classes.capitalize}
+                            >
+                              {user.first_name + ' ' + user.last_name}
+                            </Typography>
                           </div>
                         </TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.role}</TableCell>
-                        <TableCell>{user.createdAt}</TableCell>
+                        <TableCell>{user.creation_time}</TableCell>
                         <TableCell>
                           {user.blocked && (
                             <Button
@@ -165,8 +175,8 @@ const UsersTable = (props) => {
                               type='submit'
                               onClick={() => {
                                 handleOpenUnblock(
-                                  user.id,
-                                  user.name,
+                                  user._id,
+                                  user.first_name,
                                   user.email
                                 );
                               }}

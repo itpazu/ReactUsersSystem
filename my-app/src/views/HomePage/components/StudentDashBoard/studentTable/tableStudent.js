@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useContext } from 'react';
+import StudentSkillsContext from '../../../../../context/StudentSkillsContext';
 import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -8,8 +8,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import StudentTableRow from './TableRow';
 
-const TableStudent = (props) => {
-  const { tableInfo, tableHeaders } = props;
+const TableStudent = () => {
+  const context = useContext(StudentSkillsContext);
+  const { tableHeaders, tableInfo } = context;
 
   return (
     <TableContainer component={Paper}>

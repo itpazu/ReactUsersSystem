@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     position: 'absolute',
-    width: 500,
+    width: '50%',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -105,11 +105,8 @@ const UsersToolbar = (props) => {
     className,
     deleteUserValues,
     setErrorFetchUser,
-    users,
     allUsers,
-    selectedName,
     setSelectedName,
-    getSingleUser,
     getRelevantUsers,
     handleUpdate,
     disableButton,
@@ -223,12 +220,12 @@ const UsersToolbar = (props) => {
     handleDeleteUser();
   };
 
-  const handleDeleteUser = async (args) => {
+  const handleDeleteUser = async () => {
     await makeApiRequest(
       deleteUser,
-      args,
-      refreshAfterDelete,
       deleteUserValues.id,
+      refreshAfterDelete,
+      handleDeleteUser,
       setErrorFetchUser
     );
     handleCloseDelete();
@@ -368,12 +365,9 @@ const UsersToolbar = (props) => {
         </div>
         <div className={classes.row}>
           <SearchInput
-            className={classes.searchInput}
+            // className={classes.searchInput}
             placeholder='Search user'
-            users={users}
             allUsers={allUsers}
-            selectedName={selectedName}
-            getSingleUser={getSingleUser}
             handleUpdate={handleUpdate}
             setSelectedName={setSelectedName}
             getRelevantUsers={getRelevantUsers}

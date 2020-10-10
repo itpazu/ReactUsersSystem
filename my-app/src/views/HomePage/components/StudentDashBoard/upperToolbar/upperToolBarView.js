@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { AddNewStudent } from './components';
 import SearchInput from '../../../../../components/SearchInput';
-
+import studnetContext from '../../../../../context/StudentSkillsContext';
 const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -39,17 +39,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentToolbar = (props) => {
+const StudentToolbar = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { onUpdate } = props;
+  const studContext = useContext(studnetContext);
+  const {
+    firsNameList,
+    getStudentFromDb,
+    updateUserList,
+    setSearchResult,
+  } = studContext;
 
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    onUpdate();
+    getStudentFromDb();
     setOpen(false);
   };
 
@@ -58,11 +64,15 @@ const StudentToolbar = (props) => {
       <AddNewStudent />
     </div>
   );
-
   return (
     <div>
       <div className={classes.row}>
-        <SearchInput></SearchInput>
+        <SearchInput
+          allUsers={firsNameList}
+          getRelevantUsers={updateUserList}
+          setSelectedName={setSearchResult}
+          handleUpdate={getStudentFromDb}
+        ></SearchInput>
         <span className={classes.spacer} />
 
         <Button

@@ -46,7 +46,6 @@ const ExistingSkill = (props) => {
 
   const [skillChnageConfirmation, setSkillChangeConfirmation] = useState({
     activateAlert: false,
-    message: '',
   });
 
   useEffect(() => {
@@ -60,7 +59,6 @@ const ExistingSkill = (props) => {
     });
     setSkillChangeConfirmation({
       activateAlert: false,
-      message: '',
     });
     await makeApiRequest(
       changeSkillLevel,
@@ -78,7 +76,6 @@ const ExistingSkill = (props) => {
     });
     setSkillChangeConfirmation({
       activateAlert: false,
-      message: '',
     });
     await makeApiRequest(
       deleteStudentCapability,
@@ -92,10 +89,8 @@ const ExistingSkill = (props) => {
   const setConfirmationSkillChange = (data) => {
     setSkillChangeConfirmation({
       activateAlert: true,
-      message: `successful update: ${data.last_change}`,
     });
   };
-
   return (
     <React.Fragment>
       <TableRow>
@@ -156,7 +151,7 @@ const ExistingSkill = (props) => {
             <Alert severity='error'>{errosTable.message}</Alert>
           )}
           {skillChnageConfirmation.activateAlert && (
-            <Alert severity='success'>{skillChnageConfirmation.message}</Alert>
+            <Alert severity='success'>{studentInfo.last_change}</Alert>
           )}
         </TableCell>
       </TableRow>

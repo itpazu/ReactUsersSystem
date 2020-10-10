@@ -112,14 +112,12 @@ const AddSkill = (props) => {
 
     const newExSkills = Studentskills.filter((item) => !exSkill.includes(item));
     setFilteredSkills(newExSkills);
-    // console.log(newExSkills);
 
     if (currentStudent.interested_courses) {
       const interestedCourses = newExSkills.filter((item) => {
         return !currentStudent.interested_courses.includes(item);
       });
 
-      console.log(filteredSkills);
       setDesiredSkill(interestedCourses);
     } else {
       setDesiredSkill(newExSkills);
@@ -166,7 +164,6 @@ const AddSkill = (props) => {
       level: skillLevel || null,
       id: currentStudent._id,
     };
-    console.log(args);
     await makeApiRequest(
       addNewSkillToStudent,
       args,

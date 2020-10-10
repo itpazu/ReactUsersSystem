@@ -28,6 +28,7 @@ const useRowStyles = makeStyles((theme) => ({
     wordWrap: 'break-word',
     overflowWrap: 'break-word',
     maxWidth: '80px',
+    textTransform: 'capitalize',
   },
 
   rootCollapse: {
