@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// const baseURL = 'https://hogwarts-itpazu.herokuapp.com';
+const baseURL = 'https://hogwarts-itpazu.herokuapp.com';
 
-const baseURL = 'http://127.0.0.1:5000';
+// const baseURL = 'http://127.0.0.1:5000';
 
 export const LogIn = (data) => {
   return axios.post(`${baseURL}/login`, data, {
@@ -121,30 +121,8 @@ export const getUserInfoRefresh = (user) => {
   return axios.post(`${baseURL}/get_user_info`, data, headers);
 };
 
-export const addProfileImage = (data, userCredentials) => {
-  const headers = {
-    headers: {
-      credentials: 'cross-site',
-      Authorization: userCredentials.csrf,
-      'Content-Type': 'multipart/form-data',
-    },
-    withCredentials: true,
-  };
-  return axios.post(`${baseURL}/upload_file`, data, headers);
-};
 
-export const deleteProfileImage = (userCredentials) => {
-  const newData = {
-    headers: {
-      Authorization: userCredentials.csrf,
-      credentials: 'cross-site',
-    },
-    withCredentials: true,
-    data: { _id: userCredentials.userId },
-  };
 
-  return axios.delete(`${baseURL}/delete_photo`, newData);
-};
 
 export const getCostumerStatus = (email, userCredentials) => {
   const url = `${baseURL}/get_customer/${email.email}`;

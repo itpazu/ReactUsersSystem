@@ -7,6 +7,9 @@ import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
+import firebaseApp  from '../../bin';
+
+const storage = firebaseApp.storage()
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,11 +35,14 @@ const UserList = () => {
   const [disabled, setDisabled] = useState(true);
   const [errorFindUsers, setErrorFindUsers] = useState(false);
   const [searchResult, setSearchResult] = useState('');
+  const [userAvatar, setUserAvatar] = useState({})
 
   useEffect(() => {
     getAllUsers();
+    
   }, []);
 
+ 
   const getAllUsers = async () => {
     await makeApiRequest(
       allUsers,
@@ -64,6 +70,18 @@ const UserList = () => {
     const newList = list.map((item) => item.first_name);
     setAllUsersList(list);
     setfirsNameList(newList);
+
+      data.forEach((user)=>{
+        const pathReference = storage.ref(`images/avatar-${user._id}.jpg`)
+        pathReference.getDownloadURL()
+        .then((url)=>{
+          setUserAvatar((prevState)=> ({...prevState, [user._id]: url }))
+        })
+        .catch(()=>{
+          setUserAvatar((prevState)=> ({...prevState, [user._id]: '/images/defaultAvatar.jpg' }))
+        })
+  
+      })
   };
   const handleUpdate = () => {
     getAllUsers();
@@ -81,7 +99,7 @@ const UserList = () => {
       setDisabled(true);
     }
   };
-
+// console.log(userAvatar)
   return (
     <>
       <div className={classes.root}>
@@ -100,6 +118,7 @@ const UserList = () => {
             users={allUsersList}
             handleDeleteUser={updateDeleteUser}
             handleUpdate={handleUpdate}
+            userAvatar={userAvatar}
           />
         </div>
         {errorFetchUsers.activateAlert && (

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -13,9 +13,11 @@ import {
   TextField,
   Modal,
 } from '@material-ui/core';
-import { addProfileImage, deleteProfileImage } from '../../../../lib/api';
 import Context from '../../../../context/Context';
 import Alert from '@material-ui/lab/Alert';
+import firebaseApp  from '../../../../bin';
+
+const storage = firebaseApp.storage();
 
 const rand = () => {
   return Math.round(Math.random() * 20) - 10;
@@ -33,7 +35,9 @@ const getModalStyle = () => {
 };
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  name: {
+    textTransform: 'capitalize',
+  },
   avatar: {
     height: 100,
     width: 100,
@@ -63,21 +67,8 @@ const AccountProfile = (props) => {
   const classes = useStyles();
 
   const context = useContext(Context);
-  const { updateProfileInfo, userInput, makeApiRequest } = context;
-
-  const userName =
-    userInput.first_name.charAt(0).toUpperCase() +
-    userInput.first_name.slice(1) +
-    ' ' +
-    userInput.last_name.charAt(0).toUpperCase() +
-    userInput.last_name.slice(1);
-
-  const user = {
-    name: userName,
-    avatar:
-      userInput.photo === '' ? '/images/empty-avatar.png' : userInput.photo,
-  };
-
+  const { userInput } = context;
+  const [userAv, setUserAv] = useState('');
   const [modalStyle] = useState(getModalStyle);
   const [openAdd, setOpenAdd] = useState(false);
   const [response, setResponse] = useState(null);
@@ -86,12 +77,26 @@ const AccountProfile = (props) => {
     isValid: false,
     value: '',
   });
+  const pathReference = storage.ref(`images/avatar-${userInput._id}.jpg`);
 
+  useEffect(() => {
+    getAvatar();
+  }, []);
+
+  const getAvatar = () => {
+    pathReference
+      .getDownloadURL()
+      .then((url) => setUserAv(url))
+      .catch((err) => {
+        setUserAv('/images/defaultAvatar.jpg');
+        
+      });
+  };
   const handleOpenAdd = () => {
     setOpenAdd(true);
   };
 
-  const handleCloseAddUser = () => {
+  const handleCloseAddImage = () => {
     setOpenAdd(false);
     setImageState({
       isValid: false,
@@ -106,37 +111,33 @@ const AccountProfile = (props) => {
     });
   };
 
-  const handleAddImage = (event) => {
+  const handleSubmitImage = (event) => {
     event.preventDefault();
     setResponse(null);
     const file = imageState.value;
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('_id', userInput._id);
-    uploadImage(formData);
+    uploadImage(file);
   };
 
-  const uploadImage = async (formData) => {
-    await makeApiRequest(
-      addProfileImage,
-      formData,
-      updateInfo,
-      uploadImage,
-      setResponse
-    );
-    handleCloseAddUser();
+  const uploadImage = async (file) => {
+    handleCloseAddImage();
+    try {
+      await pathReference.put(file)
+      getAvatar();
+    } catch(err) {
+      console.error('error on upload');
+      setResponse({
+        activateAlert: true,
+        message:
+         err.message_ ||
+             'server failed',
+      })
+    }
   };
 
-  const updateInfo = () => {
-    updateProfileInfo();
-  };
-
-  const inputProps = {
-    accept: 'image/*',
-  };
+ 
 
   const addImage = (
-    <div style={modalStyle} className={classes.paper} onSubmit={handleAddImage}>
+    <div style={modalStyle} className={classes.paper} onSubmit={handleSubmitImage}>
       <Typography variant='h2'>Upload a new profile picture:</Typography>
       <form className={classes.root} autoComplete='off'>
         <TextField
@@ -147,7 +148,7 @@ const AccountProfile = (props) => {
           onChange={handleOnAddImageChange}
           name='image'
           className={classes.inputFields}
-          inputProps={inputProps}
+          inputProps={{ accept: 'image/*' }}
         />
         <Button
           type='submit'
@@ -166,18 +167,21 @@ const AccountProfile = (props) => {
 
   const handleCloseDelete = () => {
     setOpenDelete(false);
-  };
+  }; 
 
   const handleDeleteImage = async () => {
-    await makeApiRequest(
-      deleteProfileImage,
-      null,
-      updateInfo,
-      handleDeleteImage,
-      setResponse
-    );
     handleCloseDelete();
-  };
+    try {
+    await pathReference.delete()
+    getAvatar()
+    } catch(err) {
+      setResponse({
+        activateAlert: true,
+        message:
+         err.message_ ||
+             'server failed',
+      })
+  }};
 
   const deleteImage = (
     <div style={modalStyle} className={classes.paper}>
@@ -196,9 +200,14 @@ const AccountProfile = (props) => {
       <Card {...rest} className={clsx(classes.root, className)}>
         <CardContent>
           <Box alignItems='center' display='flex' flexDirection='column'>
-            <Avatar className={classes.avatar} src={user.avatar} />
-            <Typography color='textPrimary' gutterBottom variant='h3'>
-              {user.name}
+            <Avatar className={classes.avatar} src={userAv} />
+            <Typography
+              color='textPrimary'
+              gutterBottom
+              variant='h3'
+              className={classes.name}
+            >
+              {`${userInput.first_name} ${userInput.last_name}`}
             </Typography>
           </Box>
         </CardContent>
@@ -223,7 +232,7 @@ const AccountProfile = (props) => {
       </Card>
       <Modal
         open={openAdd}
-        onClose={handleCloseAddUser}
+        onClose={handleCloseAddImage}
         aria-labelledby='simple-modal-title'
         aria-describedby='simple-modal-description'
       >
