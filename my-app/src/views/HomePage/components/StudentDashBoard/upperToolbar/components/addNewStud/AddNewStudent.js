@@ -33,9 +33,8 @@ const AddNewStudent = () => {
     currentSkill: '',
     confirmedSkills: [],
   });
-  const [disableConfirmExSkillBtn, setDisableConfirmExSkillBtn] = useState(
-    true
-  );
+  const [disableConfirmExSkillBtn, setDisableConfirmExSkillBtn] =
+    useState(true);
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorFetchUsers, setErrorFetchUsers] = useState({
     activateAlert: null,
@@ -136,9 +135,9 @@ const AddNewStudent = () => {
       activateAlert: null,
       message: '',
     });
-    let arrayedSkills = Object.entries(
-      formInput.existing_skills
-    ).map((item) => ({ [item[0]]: item[1] }));
+    let arrayedSkills = Object.entries(formInput.existing_skills).map(
+      (item) => ({ [item[0]]: item[1] })
+    );
     dataToSubmit.existing_skills = arrayedSkills;
     makeApiRequest(
       addStudentToDb,
@@ -148,9 +147,6 @@ const AddNewStudent = () => {
       setErrorFetchUsers
     );
   };
-  // console.log(formInput);
-  // console.log(chosenSkills);
-  // console.log(skillList);
 
   return (
     <div>

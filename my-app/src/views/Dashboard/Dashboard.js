@@ -22,7 +22,6 @@ const Dashboard = () => {
   const { makeApiRequest } = context;
 
   const searchUser = async (mail) => {
-    console.log(mail);
     setErrorsFetch({ activateAlert: false, message: '' });
     await makeApiRequest(
       getCostumerStatus,
@@ -35,7 +34,6 @@ const Dashboard = () => {
 
   const handleStatusChange = async (formData) => {
     formData.costumer_id = costumerResult.userId;
-    console.log(formData);
     await makeApiRequest(
       changeVipSts,
       formData,

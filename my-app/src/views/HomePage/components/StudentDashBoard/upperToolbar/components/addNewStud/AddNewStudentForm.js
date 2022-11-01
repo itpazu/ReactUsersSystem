@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   TextField,
@@ -30,13 +30,6 @@ const schema = {
     length: {
       maximum: 20,
       minimum: 2,
-    },
-  },
-  email: {
-    presence: { allowEmpty: false, message: 'required field' },
-    email: true,
-    length: {
-      maximum: 64,
     },
   },
   email: {
@@ -198,7 +191,7 @@ function AddNewStudentForm(props) {
     formState.touched[field] && formState.errors[field] ? true : false;
 
   const handleLevelChange = (e) => {
-    const { name, value, key } = e.target;
+    const { name, value } = e.target;
     setSkillLevelValue({
       ...SkillLevelValue,
       [name]: value,

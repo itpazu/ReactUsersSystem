@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles';
 import Context from '../../context/Context';
 import StudentSkillsContext from '../../context/StudentSkillsContext';
 import { getAllStudent } from '../../lib/api';
-import SearchInput from '../../components/SearchInput';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
-  const [updateList, setUpdateList] = useState(null);
   const context = useContext(Context);
   const { makeApiRequest } = context;
   const [tableInfo, setTableInfo] = useState('');
@@ -74,7 +72,7 @@ const HomePage = () => {
         <div>
           <StudentToolbar /*onUpdate={onUpdtae}*/ />
         </div>
-        <StudentTable updateList={updateList} />
+        <StudentTable />
       </div>
     </StudentSkillsContext.Provider>
   );

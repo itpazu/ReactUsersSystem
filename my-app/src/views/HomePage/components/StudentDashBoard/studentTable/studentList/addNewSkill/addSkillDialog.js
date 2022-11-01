@@ -106,9 +106,9 @@ const AddSkill = (props) => {
   useEffect(() => {
     let exSkill = [];
     currentStudent.existing_skills &&
-      currentStudent.existing_skills.map((item) => {
-        exSkill.push(...Object.keys(item));
-      });
+      currentStudent.existing_skills.map((item) =>
+        exSkill.push(...Object.keys(item))
+      );
 
     const newExSkills = Studentskills.filter((item) => !exSkill.includes(item));
     setFilteredSkills(newExSkills);

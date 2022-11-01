@@ -112,7 +112,6 @@ const ChangeStatus = (props) => {
   const currentDate = new Date().toISOString().split('T');
 
   const getYearTime = () => {
-    // console.log(currentDate);
     const year = currentDate[0].split('-');
     const yearPlusOne = parseInt(year[0]) + 1;
     year.splice(0, 1, `${yearPlusOne}`);
@@ -133,7 +132,6 @@ const ChangeStatus = (props) => {
     }));
     setSwitchState(checked);
   };
-  // console.log(formState);
   return (
     <>
       <Grid item md={6} xs={12}>

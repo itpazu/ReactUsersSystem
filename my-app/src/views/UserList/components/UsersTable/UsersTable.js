@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
@@ -22,7 +22,6 @@ import Context from '../../../../context/Context';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { getInitials } from '../../../../helpers';
 import DialogUnblock from './dialogUnblock';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -55,7 +54,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UsersTable = (props) => {
-  const { className, users, handleDeleteUser, handleUpdate, userAvatar, ...rest } = props;
+  const {
+    className,
+    users,
+    handleDeleteUser,
+    handleUpdate,
+    userAvatar,
+    ...rest
+  } = props;
   const classes = useStyles();
   const context = useContext(Context);
   const { currentlyLoggedUser } = context;
@@ -83,7 +89,6 @@ const UsersTable = (props) => {
     }
   };
 
-
   const handlePageChange = (page) => {
     setPage(page);
   };
@@ -109,8 +114,6 @@ const UsersTable = (props) => {
     handleUpdate();
   };
 
- 
-
   return (
     <>
       <Card {...rest} className={clsx(classes.root, className)}>
@@ -131,7 +134,6 @@ const UsersTable = (props) => {
                   </TableHead>
                   <TableBody>
                     {users.slice(0, rowsPerPage).map((user, index) => (
-
                       <TableRow
                         classes={
                           user.blocked
@@ -158,7 +160,10 @@ const UsersTable = (props) => {
                         </TableCell>
                         <TableCell>
                           <div className={classes.nameContainer}>
-                            <Avatar className={classes.avatar} src={userAvatar[`${user._id}`]}>
+                            <Avatar
+                              className={classes.avatar}
+                              src={userAvatar[`${user._id}`]}
+                            >
                               {getInitials(
                                 user.first_name + ' ' + user.last_name
                               )}

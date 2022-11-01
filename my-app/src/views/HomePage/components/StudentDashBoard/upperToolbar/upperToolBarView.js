@@ -30,9 +30,7 @@ const useStyles = makeStyles((theme) => ({
   spacer: {
     flexGrow: 1,
   },
-  TopButtons: {
-    marginRight: theme.spacing(1),
-  },
+
   root: {
     display: 'grid',
     marginBottom: theme.spacing(2),
@@ -43,12 +41,8 @@ const StudentToolbar = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const studContext = useContext(studnetContext);
-  const {
-    firsNameList,
-    getStudentFromDb,
-    updateUserList,
-    setSearchResult,
-  } = studContext;
+  const { firsNameList, getStudentFromDb, updateUserList, setSearchResult } =
+    studContext;
 
   const handleOpen = () => {
     setOpen(true);
@@ -81,13 +75,6 @@ const StudentToolbar = () => {
           variant='contained'
         >
           Add user
-        </Button>
-        <Button
-          // onClick={handleOpenAdd}
-          variant='contained'
-          // disabled={disableButton}
-        >
-          Delete user
         </Button>
       </div>
       <Modal

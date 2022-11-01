@@ -37,12 +37,14 @@ const useStyles = makeStyles((theme) => ({
   },
   grid: {
     height: '100%',
+    justifyContent: 'space-between'
+
   },
   quoteContainer: {
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
-  },
+},
   quote: {
     backgroundColor: theme.palette.neutral,
     height: '100%',
@@ -155,8 +157,6 @@ const ResetPassword = () => {
   const [toggleAlertVisibility, setToggleAlertVisibility] = useState(null);
 
   useEffect(() => {
-    console.log(classes);
-
     if (IdFromToken && authToken) {
       checkTokenForPasswordReset(IdFromToken, authToken)
         .then(() => {
@@ -174,14 +174,14 @@ const ResetPassword = () => {
             activateAlert: false,
             message:
               error.response !== undefined
-                ? JSON.stringify(error.response.data)
+                ? JSON.stringify(error.response.data.message)
                 : 'server failed',
           }));
         });
     } else {
       setResponse({ redirect: true });
     }
-  }, []);
+  }, [IdFromToken, authToken]);
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -243,7 +243,7 @@ const ResetPassword = () => {
       setResponse({
         activateAlert: true,
         success: false,
-        message: JSON.stringify(error.response.data),
+        message: JSON.stringify(error.response.data.message),
         PassChangeErrorAlert: true,
       });
     }
@@ -259,7 +259,7 @@ const ResetPassword = () => {
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
+        <Grid className={classes.quoteContainer} item lg={4}>
           <div className={classes.quote} />
         </Grid>
 

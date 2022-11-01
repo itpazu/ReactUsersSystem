@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-const baseURL = 'https://hogwarts-itpazu.herokuapp.com';
-
-// const baseURL = 'http://127.0.0.1:5000';
+const baseURL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://127.0.0.1:5000'
+    : 'https://hogwarts-itpazu.herokuapp.com';
 
 export const LogIn = (data) => {
   return axios.post(`${baseURL}/login`, data, {
@@ -13,7 +14,6 @@ export const LogIn = (data) => {
 
 export const refreshToken = (credentials) => {
   const data = { _id: credentials.userId };
-  console.log(credentials);
   const headers = {
     headers: {
       credentials: 'cross-site',
@@ -25,6 +25,9 @@ export const refreshToken = (credentials) => {
 
 export const register = (newUser, userCredentials) => {
   const csrf = userCredentials.csrf;
+  if (!newUser.role) {
+    newUser.role = 'admin';
+  }
   const body = newUser;
   body._id = userCredentials.userId;
   const headers = {
@@ -120,9 +123,6 @@ export const getUserInfoRefresh = (user) => {
   };
   return axios.post(`${baseURL}/get_user_info`, data, headers);
 };
-
-
-
 
 export const getCostumerStatus = (email, userCredentials) => {
   const url = `${baseURL}/get_customer/${email.email}`;

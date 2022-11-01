@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import adminLayout from './Layouts/adminLayout/adminLayout';
 import userLayout from './Layouts/userLayout/userLayout';
 import developerLayout from './Layouts/developerLayout/developerLayout';
@@ -11,7 +11,6 @@ import Minimal from './Layouts/minimal/Minimal';
 import Context from './context/Context';
 import { PrivateRoute, LoginRoute } from './privateRoutes/PrivateRoute';
 import ResetPassword from './views/LogInViews/ResetPassword';
-import { StudentToolbar } from './views/HomePage/components';
 
 const Routes = (props) => {
   const [userInput, setUserInput] = useState({ email: '', password: '' });
@@ -113,7 +112,6 @@ const Routes = (props) => {
   return (
     <Context.Provider
       value={{
-        // backgroundType,
         handleSubmittedForm,
         currentlyLoggedUser,
         isAuthenticated,
@@ -128,7 +126,6 @@ const Routes = (props) => {
       }}
     >
       <Switch>
-        <Route exact path='/test' component={StudentToolbar} />
         <PrivateRoute
           exact
           path='/'
@@ -144,7 +141,7 @@ const Routes = (props) => {
               : userLayout
           }
         />
-        <LoginRoute exact path='/login' component={Minimal} />
+        <LoginRoute path={['/login', '/sign-up']} component={Minimal} />
         <LoginRoute path='/change_pass' component={ResetPassword} />
       </Switch>
     </Context.Provider>

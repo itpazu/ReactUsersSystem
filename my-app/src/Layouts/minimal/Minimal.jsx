@@ -26,7 +26,7 @@ const Minimal = () => {
           <TopBar />
         </div>
         <main className={classes.content}>
-          <LoginRoute exact path='/login' component={SignIn} />
+          <LoginRoute exact path={['/login', '/sign-up']} component={SignIn} />
           <LoginRoute exact path='/reset_pass' component={ResetRequest} />
         </main>
       </div>

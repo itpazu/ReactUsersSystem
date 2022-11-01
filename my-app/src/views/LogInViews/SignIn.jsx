@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { Link as RouterLink, withRouter, useLocation, useHistory } from 'react-router-dom';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -14,8 +14,10 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Context from '../../context/Context';
 import Alert from '@material-ui/lab/Alert';
+import { register } from '../../lib/api';
 
-const schema = {
+
+const SignInSchema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
     email: true,
@@ -29,7 +31,21 @@ const schema = {
       maximum: 128,
     },
   },
-};
+  first_name: {
+    presence: { allowEmpty: false, message: 'required field' },
+    length: {
+      maximum: 16,
+      minimum: 2,
+    },
+  },
+  last_name: {
+    presence: { allowEmpty: false, message: 'required field' },
+    length: {
+      maximum: 16,
+      minimum: 2,
+    },
+}
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,18 +53,17 @@ const useStyles = makeStyles((theme) => ({
   },
   grid: {
     height: '100%',
+    justifyContent: 'space-between'
   },
   quoteContainer: {
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
-  },
+      },
   quote: {
     backgroundColor: theme.palette.neutral,
     height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    overflow: 'auto',
     backgroundImage: 'url(/images/hogwartsMain.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
@@ -124,14 +139,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ALERT_DEFAULT = {
+  activateAlert: null,
+  success: null,
+  message: null,
+}
 const SignIn = () => {
-  const context = useContext(Context);
+  const {handleSubmittedForm, makeApiRequest} = useContext(Context);
   const classes = useStyles();
-  const [response, setResponse] = useState({
-    activateAlert: null,
-    success: null,
-    message: null,
-  });
+  const {pathname} = useLocation();
+  let history = useHistory()
+  const [response, setResponse] = useState(ALERT_DEFAULT);
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -140,6 +158,8 @@ const SignIn = () => {
   });
 
   useEffect(() => {
+    setResponse(ALERT_DEFAULT)
+    let schema = pathname === '/login' ? (({first_name, last_name, ...schema})=>schema)(SignInSchema) : (({password, ...schema})=>schema)(SignInSchema)
     const errors = validate(formState.values, schema);
 
     let mounted = true;
@@ -154,7 +174,7 @@ const SignIn = () => {
     return function cleanup() {
       mounted = false;
     };
-  }, [formState.values]);
+  }, [formState.values, pathname]);
   const [togglePasswordView, setTogglePasswordView] = useState(true);
 
   const toggleShowPassword = () => {
@@ -190,7 +210,7 @@ const SignIn = () => {
       errors: {},
     });
     try {
-      await context.handleSubmittedForm(
+      await handleSubmittedForm(
         formState.values.email,
         formState.values.password
       );
@@ -205,25 +225,50 @@ const SignIn = () => {
       });
     }
   };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+  const updateAddResponse = (data) => {
+    setResponse({
+      activateAlert: true,
+      message: data.message,
+      success: true,
+    });
+    setTimeout(() => {
+      history.push('/login')
+    }, 2500);
   };
-
-  const hasError = (field) =>
+  const addUserToDb = async () => {
+    await makeApiRequest(
+      register,
+      formState.values,
+      updateAddResponse,
+      addUserToDb,
+      setResponse
+    );
+  };
+  const handleAddUserSubmit = async (event) => {
+    event.preventDefault();
+    setResponse({
+      activateAlert: false,
+      message: '',
+      success: false,
+    });
+    addUserToDb();
+  };
+  const hasError = (field) => 
     formState.touched[field] && formState.errors[field] ? true : false;
+  
 
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
+        <Grid className={classes.quoteContainer} item lg={4}>
           <div className={classes.quote} />
         </Grid>
         <Grid className={classes.content} item lg={7} xs={12}>
           <div className={classes.contentBody}>
-            <form className={classes.form} onSubmit={handleSignIn}>
+            <form className={classes.form} onSubmit={pathname === '/login' ? 
+            handleSignIn : handleAddUserSubmit }>
               <Typography className={classes.title} variant='h2'>
-                Sign in
+                {pathname === '/login' ? 'Sign in' : 'Sign Up'}
               </Typography>
               <TextField
                 className={classes.textField}
@@ -239,6 +284,8 @@ const SignIn = () => {
                 value={formState.values.email || ''}
                 variant='outlined'
               />
+              {pathname === '/login' ? 
+              
               <TextField
                 className={classes.textField}
                 error={hasError('password')}
@@ -258,7 +305,6 @@ const SignIn = () => {
                       <IconButton
                         aria-label='toggle password visibility'
                         onClick={toggleShowPassword}
-                        onMouseDown={handleMouseDownPassword}
                         edge='end'
                       >
                         {togglePasswordView ? (
@@ -270,7 +316,38 @@ const SignIn = () => {
                     </InputAdornment>
                   ),
                 }}
+              /> :
+              <>
+              <TextField
+                className={classes.textField}
+                error={hasError('first_name')}
+                fullWidth
+                helperText={
+                  hasError('first_name') ? formState.errors.first_name[0] : null
+                }
+                label='Name'
+                name='first_name'
+                onChange={handleChange}
+                type='text'
+                value={formState.values.first_name || ''}
+                variant='outlined'
               />
+              <TextField
+                className={classes.textField}
+                error={hasError('last_name')}
+                fullWidth
+                helperText={
+                  hasError('last_name') ? formState.errors.last_name[0] : null
+                }
+                label='Last Name'
+                name='last_name'
+                onChange={handleChange}
+                type='text'
+                value={formState.values.last_name || ''}
+                variant='outlined'
+              />
+              </> 
+            }
               <Button
                 className={classes.signInButton}
                 disabled={!formState.isValid}
@@ -279,12 +356,18 @@ const SignIn = () => {
                 type='submit'
                 variant='contained'
               >
-                Sign in now
+                {pathname === '/login' ? 'Sign in now' : 'Sign Up Now'}
               </Button>
               <Typography color='textSecondary' variant='body1'>
                 Forgot your password? {'   '}{' '}
                 <RouterLink to='/reset_pass' variant='h6'>
                   Reset password
+                </RouterLink>
+              </Typography>
+              <Typography color='textSecondary' variant='body1'>
+                {pathname === '/login' ? 'New User? '  : 'Back to   ' }
+                <RouterLink to={pathname === '/login' ? '/sign-up' : '/login'} variant='h6'>
+                  {pathname === '/login'? 'Sign Up' : 'Login'}
                 </RouterLink>
               </Typography>
               {response.activateAlert && (

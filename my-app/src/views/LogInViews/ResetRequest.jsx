@@ -23,12 +23,14 @@ const useStyles = makeStyles((theme) => ({
   },
   grid: {
     height: '100%',
+    justifyContent: 'space-between'
   },
   quoteContainer: {
+    
     [theme.breakpoints.down('md')]: {
       display: 'none',
-    },
-  },
+  }
+},
   quote: {
     backgroundColor: theme.palette.neutral,
     height: '100%',
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
+    
   },
   quoteInner: {
     textAlign: 'center',
@@ -203,7 +206,7 @@ const ResetRequest = () => {
   return (
     <div className={classes.root}>
       <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
+        <Grid className={classes.quoteContainer} item lg={4}>
           <div className={classes.quote} />
         </Grid>
 
@@ -213,7 +216,7 @@ const ResetRequest = () => {
               <Typography className={classes.title} variant='h2'>
                 Password Reset
               </Typography>
-              <Typography className={classes.title} variant='h5'>
+              <Typography  variant='h5'>
                 Insert your email address:
               </Typography>
               <TextField

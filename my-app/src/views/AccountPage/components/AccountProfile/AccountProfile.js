@@ -13,11 +13,15 @@ import {
   TextField,
   Modal,
 } from '@material-ui/core';
+import {
+  ref,
+  getDownloadURL,
+  deleteObject,
+  uploadBytesResumable,
+} from 'firebase/storage';
 import Context from '../../../../context/Context';
 import Alert from '@material-ui/lab/Alert';
-import firebaseApp  from '../../../../bin';
-
-const storage = firebaseApp.storage();
+import storage from '../../../../bin';
 
 const rand = () => {
   return Math.round(Math.random() * 20) - 10;
@@ -77,19 +81,17 @@ const AccountProfile = (props) => {
     isValid: false,
     value: '',
   });
-  const pathReference = storage.ref(`images/avatar-${userInput._id}.jpg`);
+  const pathReference = ref(storage, `images/avatar-${userInput._id}.jpg`);
 
   useEffect(() => {
     getAvatar();
   }, []);
 
   const getAvatar = () => {
-    pathReference
-      .getDownloadURL()
+    getDownloadURL(pathReference)
       .then((url) => setUserAv(url))
       .catch((err) => {
         setUserAv('/images/defaultAvatar.jpg');
-        
       });
   };
   const handleOpenAdd = () => {
@@ -121,23 +123,23 @@ const AccountProfile = (props) => {
   const uploadImage = async (file) => {
     handleCloseAddImage();
     try {
-      await pathReference.put(file)
+      await uploadBytesResumable(pathReference, file);
       getAvatar();
-    } catch(err) {
+    } catch (err) {
       console.error('error on upload');
       setResponse({
         activateAlert: true,
-        message:
-         err.message_ ||
-             'server failed',
-      })
+        message: err.message_ || 'server failed',
+      });
     }
   };
 
- 
-
   const addImage = (
-    <div style={modalStyle} className={classes.paper} onSubmit={handleSubmitImage}>
+    <div
+      style={modalStyle}
+      className={classes.paper}
+      onSubmit={handleSubmitImage}
+    >
       <Typography variant='h2'>Upload a new profile picture:</Typography>
       <form className={classes.root} autoComplete='off'>
         <TextField
@@ -167,21 +169,20 @@ const AccountProfile = (props) => {
 
   const handleCloseDelete = () => {
     setOpenDelete(false);
-  }; 
+  };
 
   const handleDeleteImage = async () => {
     handleCloseDelete();
     try {
-    await pathReference.delete()
-    getAvatar()
-    } catch(err) {
+      await deleteObject(pathReference);
+      getAvatar();
+    } catch (err) {
       setResponse({
         activateAlert: true,
-        message:
-         err.message_ ||
-             'server failed',
-      })
-  }};
+        message: err.message_ || 'server failed',
+      });
+    }
+  };
 
   const deleteImage = (
     <div style={modalStyle} className={classes.paper}>

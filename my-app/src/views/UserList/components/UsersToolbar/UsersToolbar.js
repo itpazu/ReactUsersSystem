@@ -306,8 +306,6 @@ const UsersToolbar = (props) => {
             <option aria-label='None' value='' />
             <option value='admin'>Admin</option>
             <option value='user'>User</option>
-            <option value='developer'>Developer</option>
-            <option value='product manager'>Product Manager</option>
           </Select>
         </FormControl>
         <Button
@@ -346,8 +344,8 @@ const UsersToolbar = (props) => {
       <div {...rest} className={clsx(classes.root, className)}>
         <div className={classes.row}>
           <span className={classes.spacer} />
-          <Button className={classes.TopButtons}>Import</Button>
-          <Button className={classes.TopButtons}>Export</Button>
+          {/* <Button className={classes.TopButtons}>Import</Button>
+          <Button className={classes.TopButtons}>Export</Button> */}
           <Button
             className={classes.TopButtons}
             onClick={handleOpenAdd}
